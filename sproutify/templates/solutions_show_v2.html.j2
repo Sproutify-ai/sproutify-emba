@@ -1,12 +1,30 @@
 {% extends "_base.html.j2" %}
 {% block content %}
     <section class="section">
-        <h1 class="title">Section v2</h1>
+        <h1 class="title">Section v1</h1>
         <h2 class="subtitle">
             A simple container to divide your page into <strong>sections</strong>, like
             the one you're currently reading.
         </h2>
-
-        
+        {% for field in solution %}
+            <article class="message">
+                <div class="message-header is-clickable">{{ field }}</div>
+                <div class="message-body">
+                    {{ solution[field] }}
+                </div>
+            </article>
+        {% endfor %}
     </section>
 {% endblock content %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        console.log("document is ready")
+      $(".message-header").click(function() {
+        console.log("clicked")
+        $(this).next(".message-body").slideToggle();
+      });
+    });
+</script>
+{% endblock scripts %}
