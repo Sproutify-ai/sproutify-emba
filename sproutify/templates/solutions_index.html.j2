@@ -19,7 +19,7 @@
         </div>
         <ul>
             {% for solution in solutions %}
-                <li>
+                <li class="mb-1">
                     <a href="{{ url_for('main.show_solutions_v1', id=solution['Solution ID']) }}">{{ solution['Solution ID'] }}. {{ solution['title'] }}</a>
                 </li>
             {% endfor %}
