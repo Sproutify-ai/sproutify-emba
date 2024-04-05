@@ -8,6 +8,9 @@ from . import db
 
 main = Blueprint("main", __name__)
 
+csv_path = os.path.join(os.path.dirname(__file__), 'static/csv/solutions.csv')
+df = pd.read_csv(csv_path)
+
 @main.route("/")
 def index():
     return render_template("index.html.j2")
@@ -25,11 +28,22 @@ def dashboard():
 @main.route("/solutions")
 @login_required
 def index_solutions():
-    csv_path = os.path.join(os.path.dirname(__file__), 'static/csv/solutions.csv')
-    df = pd.read_csv(csv_path)
     return render_template("solutions_index.html.j2", titles=df['Provide a one-line summary of your solution.'])
 
-@main.route("/solutions/<id>")
+@main.route("/solutions/<int:id>/v1")
 @login_required
-def show_solutions(id):
-    return render_template("solutions_show.html.j2", id=id)
+def show_solutions_v1(id):
+    solutions = df[df['Solution ID'] == id].to_dict(orient='records')
+    if not solutions:
+        return "Solution not found", 404
+    return render_template("solutions_show_v1.html.j2", id=id, solution=solutions[0])
+
+@main.route("/solutions/<int:id>/v2")
+@login_required
+def show_solutions_v2(id):
+    return render_template("solutions_show_v2.html.j2", id=id)
+
+@main.route("/solutions/<int:id>/v3")
+@login_required
+def show_solutions_v3(id):
+    return render_template("solutions_show_v3.html.j2", id=id)
