@@ -17,6 +17,15 @@ pip install -r requirements.txt
 ./start.sh
 ```
 
+## 🖥️ Usage
+
+To switch different versions of the solution, you can use the following URLs:
+```
+/solutions/<id>/v1
+/solutions/<id>/v2
+/solutions/<id>/v3
+```
+
 ## 📚 Project Structure
 
 - `sproutify/`: Main application code.
