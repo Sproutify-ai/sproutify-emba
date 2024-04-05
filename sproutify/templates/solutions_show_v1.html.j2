@@ -8,7 +8,7 @@
         </h2>
         {% for field in solution %}
             <article class="message">
-                <div class="message-header">{{ field }}</div>
+                <div class="message-header is-clickable">{{ field }}</div>
                 <div class="message-body">
                     {{ solution[field] }}
                 </div>
@@ -17,12 +17,14 @@
     </section>
 {% endblock content %}
 
-{% block script %}
+{% block scripts %}
 <script>
     $(document).ready(function() {
-      $(".accordion-title").click(function() {
-        $(this).next(".accordion-content").slideToggle();
+        console.log("document is ready")
+      $(".message-header").click(function() {
+        console.log("clicked")
+        $(this).next(".message-body").slideToggle();
       });
     });
 </script>
-{% endblock script %}
+{% endblock scripts %}
