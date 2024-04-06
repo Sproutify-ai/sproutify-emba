@@ -32,8 +32,13 @@ def dashboard():
 @main.route("/solutions")
 @login_required
 def index_solutions():
-    df['title'] = df['Provide a one-line summary of your solution.'].astype(str).apply(lambda x: x[:100])
-    solutions = df.to_dict(orient="records")
+    d = df.copy()
+    d["title"] = (
+        d["Provide a one-line summary of your solution."]
+        .astype(str)
+        .apply(lambda x: x[:100])
+    )
+    solutions = d.to_dict(orient="records")
     return render_template(
         "solutions_index.html.j2",
         solutions=solutions,
@@ -43,21 +48,31 @@ def index_solutions():
 @main.route("/solutions/<int:id>/v1")
 @login_required
 def show_solutions_v1(id):
-    df.drop(
-        columns=[
+    d = df.copy()
+    solution = d[d["Solution ID"] == id].iloc[0]
+    if solution.empty:
+        return "Solution not found", 404
+
+    tags = d[["Solution ID", "Challenge Name", "Solution Status"]].to_dict(
+        orient="records"
+    )[0]
+    solution.drop(
+        [
             "Advance",
             "Pass_1",
             "FailReason_1",
             "Pass_2",
             "FailReason_2",
+            "Solution ID",
+            "Challenge Name",
+            "Solution Status",
         ],
         inplace=True,
         errors="ignore",
     )
-    solutions = df[df["Solution ID"] == id].to_dict(orient="records")
-    if not solutions:
-        return "Solution not found", 404
-    return render_template("solutions_show_v1.html.j2", id=id, solution=solutions[0])
+    return render_template(
+        "solutions_show_v1.html.j2", id=id, solution=solution.to_dict(), tags=tags
+    )
 
 
 @main.route("/solutions/<int:id>/v2")
