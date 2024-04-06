@@ -1,32 +1,33 @@
 {% extends "_base.html.j2" %}
 {% block content %}
-    <div class="container">
-        <div class="tabs">
+    <section class="section">
+        <div class="container">
+            <div class="tabs">
+                <ul>
+                    <li class="is-active">
+                        <a>All</a>
+                    </li>
+                    <li>
+                        <a>Pass</a>
+                    </li>
+                    <li>
+                        <a>Fail</a>
+                    </li>
+                    <li>
+                        <a>Todo</a>
+                    </li>
+                </ul>
+            </div>
             <ul>
-                <li class="is-active">
-                    <a>All</a>
-                </li>
-                <li>
-                    <a>Pass</a>
-                </li>
-                <li>
-                    <a>Fail</a>
-                </li>
-                <li>
-                    <a>Todo</a>
-                </li>
+                {% for solution in solutions %}
+                    <li class="mb-1">
+                        <a href="{{ url_for('main.show_solutions_v1', id=solution['Solution ID']) }}">{{ solution['Solution ID'] }}. {{ solution['title'] }}</a>
+                    </li>
+                {% endfor %}
             </ul>
         </div>
-        <ul>
-            {% for solution in solutions %}
-                <li class="mb-1">
-                    <a href="{{ url_for('main.show_solutions_v1', id=solution['Solution ID']) }}">{{ solution['Solution ID'] }}. {{ solution['title'] }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+    </section>
 {% endblock content %}
-
 {% block scripts %}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
