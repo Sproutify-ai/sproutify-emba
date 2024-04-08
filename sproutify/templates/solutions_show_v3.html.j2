@@ -1,24 +1,43 @@
 {% extends "_base.html.j2" %}
 {% block content %}
     <section class="section">
-        <h1 class="title">Section v1</h1>
-        <h2 class="subtitle">
-            A simple container to divide your page into <strong>sections</strong>, like
-            the one you're currently reading.
-        </h2>
-        {% for field in solution %}
-            <article class="message">
-                <div class="message-header is-clickable">{{ field }}</div>
-                <div class="message-body">
-                    {{ solution[field] }}
-                </div>
-            </article>
-        {% endfor %}
+        <h1 class="title">{{ solution['Solution ID'] }}</h1>
+        <h2 class="subtitle">{{ solution['Provide a one-line summary of your solution.'] }}</h2>
+        <nav class="level">
+            <div class="level-left">
+                <p class="level-item has-text-centered">
+                    <span class="tag is-primary">{{ tags['Solution ID'] }}</span>
+                </p>
+                <p class="level-item has-text-centered">
+                    <span class="tag is-warning">{{ tags['Challenge Name'] }}</span>
+                </p>
+                <p class="level-item has-text-centered">
+                    <span class="tag is-link">{{ tags['Solution Status'] }}</span>
+                </p>
+            </div>
+        </nav>
+        <div class="columns">
+            <div class="column">
+                {% for field in solution %}
+                    <article class="message">
+                        <div class="message-header is-clickable">{{ field }}</div>
+                        <div class="message-body">{{ solution[field] }}</div>
+                    </article>
+                {% endfor %}
+            </div>
+            <div class="column is-one-third">
+                {% for criterion in criteria %}
+                    <article class="message">
+                        <div class="message-header is-clickable">{{ criterion }}</div>
+                        <div class="message-body">{{ criteria[criterion] }}</div>
+                    </article>
+                {% endfor %}
+            </div>
+        </div>
     </section>
 {% endblock content %}
-
 {% block scripts %}
-<script>
+    <script>
     $(document).ready(function() {
         console.log("document is ready")
       $(".message-header").click(function() {
@@ -26,5 +45,5 @@
         $(this).next(".message-body").slideToggle();
       });
     });
-</script>
+    </script>
 {% endblock scripts %}

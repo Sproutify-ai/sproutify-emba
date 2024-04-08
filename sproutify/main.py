@@ -70,18 +70,119 @@ def show_solutions_v1(id):
         inplace=True,
         errors="ignore",
     )
+
+    criteria = {
+        "Is the solution application complete, appropriate, and intelligible?": "",
+        "Is the solution at least in Prototype stage?": "",
+        "Does the solution address the Challenge question?": "",
+        "Is the solution powered by technology?": "",
+        "The quality of the solution is good enough that an external reviewer should take the time to read and score it": "",
+    }
+
     return render_template(
-        "solutions_show_v1.html.j2", id=id, solution=solution.to_dict(), tags=tags
+        "solutions_show_v1.html.j2",
+        id=id,
+        solution=solution.to_dict(),
+        tags=tags,
+        criteria=criteria,
     )
 
 
 @main.route("/solutions/<int:id>/v2")
 @login_required
 def show_solutions_v2(id):
-    return render_template("solutions_show_v2.html.j2", id=id)
+    d = df.copy()
+    solution = d[d["Solution ID"] == id].iloc[0]
+    if solution.empty:
+        return "Solution not found", 404
 
+    tags = d[["Solution ID", "Challenge Name", "Solution Status"]].to_dict(
+        orient="records"
+    )[0]
+    solution.drop(
+        [
+            "Advance",
+            "Pass_1",
+            "FailReason_1",
+            "Pass_2",
+            "FailReason_2",
+            "Solution ID",
+            "Challenge Name",
+            "Solution Status",
+        ],
+        inplace=True,
+        errors="ignore",
+    )
+
+    criteria = {
+        "Is the solution application complete, appropriate, and intelligible?": {
+            "is_passed": True,
+            "reason": "",
+        },
+        "Is the solution at least in Prototype stage?": {
+            "is_passed": True,
+            "reason": "",
+        },
+        "Does the solution address the Challenge question?": {
+            "is_passed": False,
+            "reason": "reason1",
+        },
+        "Is the solution powered by technology?": {
+            "is_passed": False,
+            "reason": "reason2",
+        },
+        "The quality of the solution is good enough that an external reviewer should take the time to read and score it": {
+            "is_passed": True,
+            "reason": "",
+        },
+    }
+
+    return render_template(
+        "solutions_show_v2.html.j2",
+        id=id,
+        solution=solution.to_dict(),
+        tags=tags,
+        criteria=criteria,
+    )
 
 @main.route("/solutions/<int:id>/v3")
 @login_required
 def show_solutions_v3(id):
-    return render_template("solutions_show_v3.html.j2", id=id)
+    d = df.copy()
+    solution = d[d["Solution ID"] == id].iloc[0]
+    if solution.empty:
+        return "Solution not found", 404
+
+    tags = d[["Solution ID", "Challenge Name", "Solution Status"]].to_dict(
+        orient="records"
+    )[0]
+    solution.drop(
+        [
+            "Advance",
+            "Pass_1",
+            "FailReason_1",
+            "Pass_2",
+            "FailReason_2",
+            "Solution ID",
+            "Challenge Name",
+            "Solution Status",
+        ],
+        inplace=True,
+        errors="ignore",
+    )
+
+    criteria = {
+        "Is the solution application complete, appropriate, and intelligible?": "summary1",
+        "Is the solution at least in Prototype stage?": "summary2",
+        "Does the solution address the Challenge question?": "summary3",
+        "Is the solution powered by technology?": "summary4",
+        "The quality of the solution is good enough that an external reviewer should take the time to read and score it": "summary5",
+    }
+
+    return render_template(
+        "solutions_show_v3.html.j2",
+        id=id,
+        solution=solution.to_dict(),
+        tags=tags,
+        criteria=criteria,
+    )
