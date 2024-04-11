@@ -11,29 +11,58 @@
                 <p class="level-item has-text-centered">
                     <span class="tag is-warning">{{ tags['Challenge Name'] }}</span>
                 </p>
-                <p class="level-item has-text-centered">
-                    <span class="tag is-link">{{ tags['Solution Status'] }}</span>
-                </p>
+                <p class="subtitle has-text-danger">Please remember to record your answers on Quartric.</p>
             </div>
         </nav>
         <div class="columns">
             <div class="column">
+                <div class="tabs">
+                    <ul>
+                        <li class="is-active">
+                            <a>All</a>
+                        </li>
+                        <li>
+                            <a>C1</a>
+                        </li>
+                        <li>
+                            <a>C2</a>
+                        </li>
+                        <li>
+                            <a>C3</a>
+                        </li>
+                        <li>
+                            <a>C4</a>
+                        </li>
+                        <li>
+                            <a>C5</a>
+                        </li>
+                    </ul>
+                </div>
                 {% for field in solution %}
                     <article class="message">
                         <div class="message-header is-clickable">{{ field }}</div>
-                        <div class="message-body">{{ solution[field] }}</div>
+                        <div class="message-body content">{{ solution[field] }}</div>
                     </article>
                 {% endfor %}
             </div>
             <div class="column is-one-third">
+                <h1 class="title has-text-centered">❌ Fail</h1>
                 {% for criterion in criteria %}
                     <article class="message">
-                        <div class="message-header is-clickable">{% if criteria[criterion]['is_passed'] %}
-                        ✅
-                        {% else %}
-                        ❌
-                        {% endif %}{{ criterion }}</div>
-                        <div class="message-body">{{ criteria[criterion]['reason'] }}</div>
+                        <div class="message-header is-clickable has-background-info-dark">
+                            {% if criteria[criterion]['is_passed'] %}
+                                ✅
+                            {% else %}
+                                ❌
+                            {% endif %}
+                            {{ criterion }}
+                            <span class="icon has-text-info has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[loop.index0] }}">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                        </div>
+                        {% if not criteria[criterion]['is_passed'] %}
+                            <div class="message-body">{{ criteria[criterion]['reason'] }}</div>
+                        {% endif %}
                     </article>
                 {% endfor %}
             </div>

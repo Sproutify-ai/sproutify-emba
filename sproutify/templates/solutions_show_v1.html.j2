@@ -1,7 +1,6 @@
 {% extends "_base.html.j2" %}
 {% block content %}
     <section class="section">
-        <h1 class="title">{{ solution['Solution ID'] }}</h1>
         <h2 class="subtitle">{{ solution['Provide a one-line summary of your solution.'] }}</h2>
         <nav class="level">
             <div class="level-left">
@@ -11,9 +10,7 @@
                 <p class="level-item has-text-centered">
                     <span class="tag is-warning">{{ tags['Challenge Name'] }}</span>
                 </p>
-                <p class="level-item has-text-centered">
-                    <span class="tag is-link">{{ tags['Solution Status'] }}</span>
-                </p>
+                <p class="subtitle has-text-danger">Please remember to record your answers on Quartric.</p>
             </div>
         </nav>
         <div class="columns">
@@ -21,15 +18,19 @@
                 {% for field in solution %}
                     <article class="message">
                         <div class="message-header is-clickable">{{ field }}</div>
-                        <div class="message-body">{{ solution[field] }}</div>
+                        <div class="message-body content">{{ solution[field] }}</div>
                     </article>
                 {% endfor %}
             </div>
             <div class="column is-one-third">
                 {% for criterion in criteria %}
                     <article class="message">
-                        <div class="message-header is-clickable">{{ criterion }}</div>
-                        <!-- <div class="message-body">{{ criteria[field] }}</div> -->
+                        <div class="message-header has-background-info-dark">
+                            {{ criterion }}
+                            <span class="icon has-text-info has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[loop.index0] }}">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                        </div>
                     </article>
                 {% endfor %}
             </div>
