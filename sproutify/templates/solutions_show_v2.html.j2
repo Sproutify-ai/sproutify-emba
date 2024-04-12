@@ -1,8 +1,7 @@
 {% extends "_base.html.j2" %}
 {% block content %}
     <section class="section">
-        <h1 class="title">{{ solution['Solution ID'] }}</h1>
-        <h2 class="subtitle">{{ solution['Provide a one-line summary of your solution.'] }}</h2>
+        <h1 class="title">Solution Title</h1>
         <nav class="level">
             <div class="level-left">
                 <p class="level-item has-text-centered">
@@ -11,7 +10,7 @@
                 <p class="level-item has-text-centered">
                     <span class="tag is-warning">{{ tags['Challenge Name'] }}</span>
                 </p>
-                <p class="subtitle has-text-danger">Please remember to record your answers on Quartric.</p>
+                <p class="subtitle has-text-danger">Please remember to record your answers on Qualtrics.</p>
             </div>
         </nav>
         <div class="columns">
@@ -36,17 +35,41 @@
                         <li>
                             <a>C5</a>
                         </li>
+                        <li>
+                            <a>Summary</a>
+                        </li>
                     </ul>
                 </div>
+                <div id="submission-form-all">
                 {% for field in solution %}
                     <article class="message">
                         <div class="message-header is-clickable">{{ field }}</div>
                         <div class="message-body content">{{ solution[field] }}</div>
                     </article>
                 {% endfor %}
+                </div>
+                <div id="submission-form-c1">
+                    <p>c1</p>
+                </div>
+                <div id="submission-form-c2">
+                    <p>c2</p>
+                </div>
+                <div id="submission-form-c3">
+                    <p>c3</p>
+                </div>
+                <div id="submission-form-c4">
+                    <p>c4</p>
+                </div>
+                <div id="submission-form-c5">
+                    <p>c5</p>
+                </div>
+                <div id="submission-form-summary">
+                    <p>summary</p>
+                </div>
             </div>
             <div class="column is-one-third">
                 <h1 class="title has-text-centered">❌ Fail</h1>
+                {# <p class="has-text-centered">Fails on "Is the solution at least in Prototype stage?"</p>  #}
                 {% for criterion in criteria %}
                     <article class="message">
                         <div class="message-header is-clickable has-background-info-dark">
@@ -60,9 +83,9 @@
                                 <i class="fas fa-info-circle"></i>
                             </span>
                         </div>
-                        {% if not criteria[criterion]['is_passed'] %}
+                        {# {% if not criteria[criterion]['is_passed'] %}
                             <div class="message-body">{{ criteria[criterion]['reason'] }}</div>
-                        {% endif %}
+                        {% endif %} #}
                     </article>
                 {% endfor %}
             </div>
@@ -70,13 +93,5 @@
     </section>
 {% endblock content %}
 {% block scripts %}
-    <script>
-    $(document).ready(function() {
-        console.log("document is ready")
-      $(".message-header").click(function() {
-        console.log("clicked")
-        $(this).next(".message-body").slideToggle();
-      });
-    });
-    </script>
+    <script src="{{ url_for("static", filename="js/show.js") }}"></script>
 {% endblock scripts %}

@@ -1,7 +1,7 @@
 {% extends "_base.html.j2" %}
 {% block content %}
     <section class="section">
-        <h2 class="subtitle">{{ solution['Provide a one-line summary of your solution.'] }}</h2>
+        <h1 class="title">Solution Title</h1>
         <nav class="level">
             <div class="level-left">
                 <p class="level-item has-text-centered">
@@ -15,19 +15,65 @@
         </nav>
         <div class="columns">
             <div class="column">
-                {% for field in solution %}
-                    <article class="message">
-                        <div class="message-header is-clickable">{{ field }}</div>
-                        <div class="message-body content">{{ solution[field] }}</div>
-                    </article>
-                {% endfor %}
+                <div class="tabs">
+                    <ul>
+                        <li class="is-active">
+                            <a>All</a>
+                        </li>
+                        <li>
+                            <a>C1</a>
+                        </li>
+                        <li>
+                            <a>C2</a>
+                        </li>
+                        <li>
+                            <a>C3</a>
+                        </li>
+                        <li>
+                            <a>C4</a>
+                        </li>
+                        <li>
+                            <a>C5</a>
+                        </li>
+                        <li>
+                            <a>Summary</a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="submission-form-all">
+                    {% for field in solution %}
+                        <article class="message">
+                            <div class="message-header is-clickable">{{ field }}</div>
+                            <div class="message-body content">{{ solution[field] }}</div>
+                        </article>
+                    {% endfor %}
+                </div>
+                <div id="submission-form-c1">
+                    <p>c1</p>
+                </div>
+                <div id="submission-form-c2">
+                    <p>c2</p>
+                </div>
+                <div id="submission-form-c3">
+                    <p>c3</p>
+                </div>
+                <div id="submission-form-c4">
+                    <p>c4</p>
+                </div>
+                <div id="submission-form-c5">
+                    <p>c5</p>
+                </div>
+                <div id="submission-form-summary">
+                    <p>summary</p>
+                </div>
             </div>
             <div class="column is-one-third">
                 {% for criterion in criteria %}
                     <article class="message">
                         <div class="message-header has-background-info-dark">
                             {{ criterion }}
-                            <span class="icon has-text-info has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[loop.index0] }}">
+                            <span class="icon has-text-info has-tooltip-left has-tooltip-multiline"
+                                  data-tooltip="{{ tooltips[loop.index0] }}">
                                 <i class="fas fa-info-circle"></i>
                             </span>
                         </div>
@@ -38,13 +84,5 @@
     </section>
 {% endblock content %}
 {% block scripts %}
-    <script>
-    $(document).ready(function() {
-        console.log("document is ready")
-      $(".message-header").click(function() {
-        console.log("clicked")
-        $(this).next(".message-body").slideToggle();
-      });
-    });
-    </script>
+    <script src="{{ url_for("static", filename="js/show.js") }}"></script>
 {% endblock scripts %}
