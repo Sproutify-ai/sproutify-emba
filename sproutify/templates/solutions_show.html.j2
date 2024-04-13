@@ -10,7 +10,7 @@
                 <p class="level-item has-text-centered">
                     <span class="tag is-warning">{{ tags['Challenge Name'] }}</span>
                 </p>
-                <p class="subtitle has-text-danger">Please remember to record your answers on Quartric.</p>
+                <p class="subtitle has-text-danger">Please remember to record your answers on Qualtrics.</p>
             </div>
         </nav>
         <div class="columns">
@@ -42,43 +42,50 @@
                 </div>
                 <div id="submission-form-all">
                     {% for field in solution %}
-                        <article class="message">
-                            <div class="message-header is-clickable">{{ field }}</div>
-                            <div class="message-body content">{{ solution[field] }}</div>
-                        </article>
+                        <div class="card">
+                            <header class="card-header is-clickable has-background-light">
+                                <p class="card-header-title">{{ field }}</p>
+                                    <button class="card-header-icon" aria-label="more options">
+                                    <span class="icon">
+                                        <i class="content-chevron fas fa-angle-down" aria-hidden="true"></i>
+                                    </span>
+                                    </button>
+                            </header>
+                            <div class="card-content">
+                                <div class="content">
+                                    {{ solution[field] }}
+                                </div>
+                            </div>
+                        </div>
                     {% endfor %}
                 </div>
-                <div id="submission-form-c1">
+                <div id="submission-form-c1" style="display: none;">
                     <p>c1</p>
                 </div>
-                <div id="submission-form-c2">
+                <div id="submission-form-c2" style="display: none;">
                     <p>c2</p>
                 </div>
-                <div id="submission-form-c3">
+                <div id="submission-form-c3" style="display: none;"> 
                     <p>c3</p>
                 </div>
-                <div id="submission-form-c4">
+                <div id="submission-form-c4" style="display: none;">
                     <p>c4</p>
                 </div>
-                <div id="submission-form-c5">
+                <div id="submission-form-c5" style="display: none;">
                     <p>c5</p>
                 </div>
-                <div id="submission-form-summary">
+                <div id="submission-form-summary" style="display: none;">
                     <p>summary</p>
                 </div>
             </div>
             <div class="column is-one-third">
-                {% for criterion in criteria %}
-                    <article class="message">
-                        <div class="message-header has-background-info-dark">
-                            {{ criterion }}
-                            <span class="icon has-text-info has-tooltip-left has-tooltip-multiline"
-                                  data-tooltip="{{ tooltips[loop.index0] }}">
-                                <i class="fas fa-info-circle"></i>
-                            </span>
-                        </div>
-                    </article>
-                {% endfor %}
+                {% if request.endpoint == 'main.show_solutions_v1' %}
+                    {% include "_ai_v1.html.j2" %}
+                {% elif request.endpoint == 'main.show_solutions_v2' %}
+                    {% include "_ai_v2.html.j2" %}
+                {% elif request.endpoint == 'main.show_solutions_v3' %}
+                    {% include "_ai_v3.html.j2" %}
+                {% endif %}
             </div>
         </div>
     </section>

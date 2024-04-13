@@ -1,8 +1,18 @@
 $(document).ready(function () {
   console.log("document is ready");
-  $(".message-header").click(function () {
+  $(".card-header").click(function () {
     console.log("clicked");
-    $(this).next(".message-body").slideToggle();
+    $(this).next(".card-content").slideToggle();
+
+    // toggle the chevron
+    var chevron = $(this).find(".content-chevron");
+    if (chevron.hasClass("fa-angle-down")) {
+      chevron.removeClass("fa-angle-down");
+      chevron.addClass("fa-angle-up");
+    } else {
+      chevron.removeClass("fa-angle-up");
+      chevron.addClass("fa-angle-down");
+    }
   });
 
   $(".tabs ul li").click(function () {

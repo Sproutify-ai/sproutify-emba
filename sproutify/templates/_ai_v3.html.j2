@@ -1,0 +1,20 @@
+<h1 class="title has-text-centered">❌ Fail</h1>
+{% for criterion in criteria %}
+    <article class="message">
+        <div class="message-header is-clickable has-background-info-dark">
+            {% if criteria[criterion]['is_passed'] %}
+                ✅
+            {% else %}
+                ❌
+            {% endif %}
+            {{ criterion }}
+            <span class="icon has-text-info has-tooltip-left has-tooltip-multiline"
+                  data-tooltip="{{ tooltips[loop.index0] }}">
+                <i class="fas fa-info-circle"></i>
+            </span>
+        </div>
+        {# {% if not criteria[criterion]['is_passed'] %} #}
+        <div class="message-body">{{ criteria[criterion]['reason'] }}</div>
+        {# {% endif %} #}
+    </article>
+{% endfor %}

@@ -1,0 +1,13 @@
+{% for criterion in criteria %}
+    <div class="card">
+        <div class="card-content">
+            <div class="content">
+                {{ criterion }}
+                <span class="icon has-text-info has-tooltip-left has-tooltip-multiline"
+                      data-tooltip="{{ tooltips[loop.index0] }}">
+                    <i class="fas fa-info-circle"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+{% endfor %}

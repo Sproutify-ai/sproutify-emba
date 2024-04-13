@@ -96,7 +96,7 @@ def show_solutions_v1(id):
     }
 
     return render_template(
-        "solutions_show_v1.html.j2",
+        "solutions_show.html.j2",
         id=id,
         solution=solution.to_dict(),
         tags=tags,
@@ -154,7 +154,7 @@ def show_solutions_v2(id):
     }
 
     return render_template(
-        "solutions_show_v2.html.j2",
+        "solutions_show.html.j2",
         id=id,
         solution=solution.to_dict(),
         tags=tags,
@@ -211,7 +211,7 @@ def show_solutions_v3(id):
     }
 
     return render_template(
-        "solutions_show_v3.html.j2",
+        "solutions_show.html.j2",
         id=id,
         solution=solution.to_dict(),
         tags=tags,
