@@ -51,3 +51,18 @@ Contributions, issues, and feature requests are welcome!
 ## 🙏 Acknowledgments
 
 Thanks to all contributors who have helped to improve this project.
+
+
+
+## NOTES
+
+The original experiment intent
+1. No Justification v2
+2. With Justification v3
+
+Business target
+1. Make non-expert screners be as fast and as similar to the expert screeners
+2. We want the process to be fast
+3. The goal is to be super lazy! Just trust AI!
+
+V2 just give the first failure reason.

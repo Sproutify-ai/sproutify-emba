@@ -14,6 +14,15 @@
             </div>
         </nav>
         <div class="columns">
+            <div class="column is-one-third">
+                {% if request.endpoint == 'main.show_solutions_v1' %}
+                    {% include "_ai_v1.html.j2" %}
+                {% elif request.endpoint == 'main.show_solutions_v2' %}
+                    {% include "_ai_v2.html.j2" %}
+                {% elif request.endpoint == 'main.show_solutions_v3' %}
+                    {% include "_ai_v3.html.j2" %}
+                {% endif %}
+            </div>
             <div class="column">
                 <div class="tabs">
                     <ul>
@@ -21,22 +30,22 @@
                             <a>All</a>
                         </li>
                         <li>
-                            <a>C1</a>
+                            <a>Criterion 1</a>
                         </li>
                         <li>
-                            <a>C2</a>
+                            <a>Criterion 2</a>
                         </li>
                         <li>
-                            <a>C3</a>
+                            <a>Criterion 3</a>
                         </li>
                         <li>
-                            <a>C4</a>
+                            <a>Criterion 4</a>
                         </li>
                         <li>
-                            <a>C5</a>
+                            <a>Criterion 5</a>
                         </li>
                         <li>
-                            <a>Summary</a>
+                            <a>Solution Summary</a>
                         </li>
                     </ul>
                 </div>
@@ -77,15 +86,6 @@
                 <div id="submission-form-summary" style="display: none;">
                     <p>summary</p>
                 </div>
-            </div>
-            <div class="column is-one-third">
-                {% if request.endpoint == 'main.show_solutions_v1' %}
-                    {% include "_ai_v1.html.j2" %}
-                {% elif request.endpoint == 'main.show_solutions_v2' %}
-                    {% include "_ai_v2.html.j2" %}
-                {% elif request.endpoint == 'main.show_solutions_v3' %}
-                    {% include "_ai_v3.html.j2" %}
-                {% endif %}
             </div>
         </div>
     </section>
