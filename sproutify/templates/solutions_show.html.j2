@@ -1,95 +1,141 @@
 {% extends "_base.html.j2" %}
 {% block content %}
-    <section class="section">
-        <h1 class="title">Solution Title</h1>
-        <nav class="level">
-            <div class="level-left">
-                <p class="level-item has-text-centered">
-                    <span class="tag is-primary">{{ tags['Solution ID'] }}</span>
-                </p>
-                <p class="level-item has-text-centered">
-                    <span class="tag is-warning">{{ tags['Challenge Name'] }}</span>
-                </p>
-                <p class="subtitle has-text-danger">Please remember to record your answers on Qualtrics.</p>
+<section class="section">
+    <h1 class="title">Solution Title</h1>
+    <nav class="level">
+        <div class="level-left">
+            <p class="level-item has-text-centered">
+                <span class="tag is-primary">{{ tags['Solution ID'] }}</span>
+            </p>
+            <p class="level-item has-text-centered">
+                <span class="tag is-warning">{{ tags['Challenge Name'] }}</span>
+            </p>
+            <p class="subtitle has-text-danger">Please remember to record your answers on Qualtrics.</p>
+        </div>
+    </nav>
+    <div class="columns">
+        <div class="column is-one-third">
+            {% if request.endpoint == 'main.show_solutions_v1' %}
+                {% include "_ai_v1.html.j2" %}
+            {% elif request.endpoint == 'main.show_solutions_v2' %}
+                {% include "_ai_v2.html.j2" %}
+            {% elif request.endpoint == 'main.show_solutions_v3' %}
+                {% include "_ai_v3.html.j2" %}
+            {% endif %}
+        </div>
+        <div class="column">
+            <div class="tabs">
+                <ul>
+                    <li class="is-active" onclick="showTab('all')"><a href="#">All (Criterion 1, Criterion 5)</a></li>
+                    <li onclick="showTab('c2')"><a href="#">Criterion 2</a></li>
+                    <li onclick="showTab('c3')"><a href="#">Criterion 3</a></li>
+                    <li onclick="showTab('c4')"><a href="#">Criterion 4</a></li>
+                    <li onclick="showTab('summary')"><a href="#">Solution Summary</a></li>
+                </ul>
             </div>
-        </nav>
-        <div class="columns">
-            <div class="column is-one-third">
-                {% if request.endpoint == 'main.show_solutions_v1' %}
-                    {% include "_ai_v1.html.j2" %}
-                {% elif request.endpoint == 'main.show_solutions_v2' %}
-                    {% include "_ai_v2.html.j2" %}
-                {% elif request.endpoint == 'main.show_solutions_v3' %}
-                    {% include "_ai_v3.html.j2" %}
-                {% endif %}
-            </div>
-            <div class="column">
-                <div class="tabs">
-                    <ul>
-                        <li class="is-active">
-                            <a>All</a>
-                        </li>
-                        <li>
-                            <a>Criterion 1</a>
-                        </li>
-                        <li>
-                            <a>Criterion 2</a>
-                        </li>
-                        <li>
-                            <a>Criterion 3</a>
-                        </li>
-                        <li>
-                            <a>Criterion 4</a>
-                        </li>
-                        <li>
-                            <a>Criterion 5</a>
-                        </li>
-                        <li>
-                            <a>Solution Summary</a>
-                        </li>
-                    </ul>
-                </div>
-                <div id="submission-form-all">
-                    {% for field in solution %}
-                        <div class="card">
-                            <header class="card-header is-clickable has-background-light">
-                                <p class="card-header-title">{{ field }}</p>
-                                    <button class="card-header-icon" aria-label="more options">
-                                    <span class="icon">
-                                        <i class="content-chevron fas fa-angle-down" aria-hidden="true"></i>
-                                    </span>
-                                    </button>
-                            </header>
-                            <div class="card-content">
-                                <div class="content">
-                                    {{ solution[field] }}
-                                </div>
-                            </div>
+            <div id="submission-form-all" style="display: block;">
+                {% for key, value in solution_all.items() %}
+                <div class="card">
+                    <header class="card-header is-clickable" onclick="toggleContent('content-all-{{ key | replace(' ', '-') }}')">
+                        <p class="card-header-title">{{ key }}</p>
+                        <a class="card-header-icon" aria-label="more options">
+                            <span class="icon">
+                                <i class="fas fa-angle-down"></i>
+                            </span>
+                        </a>
+                    </header>
+                    <div class="card-content" id="content-all-{{ key | replace(' ', '-') }}" style="display: block;">
+                        <div class="content">
+                            {{ value }}
                         </div>
-                    {% endfor %}
+                    </div>
                 </div>
-                <div id="submission-form-c1" style="display: none;">
-                    <p>c1</p>
+                {% endfor %}
+            </div>
+            <div id="submission-form-c2" style="display: none;">
+                {% for key, value in solution_c2.items() %}
+                <div class="card">
+                    <header class="card-header is-clickable" onclick="toggleContent('content-c2-{{ key | replace(' ', '-') }}')">
+                        <p class="card-header-title">{{ key }}</p>
+                        <a class="card-header-icon" aria-label="more options">
+                            <span class="icon">
+                                <i class="fas fa-angle-down"></i>
+                            </span>
+                        </a>
+                    </header>
+                    <div class="card-content" id="content-c2-{{ key | replace(' ', '-') }}" style="display: block;">
+                        <div class="content">
+                            {{ value }}
+                        </div>
+                    </div>
                 </div>
-                <div id="submission-form-c2" style="display: none;">
-                    <p>c2</p>
+                {% endfor %}
+            </div>
+            <div id="submission-form-c3" style="display: none;">
+                {% for key, value in solution_c3.items() %}
+                <div class="card">
+                    <header class="card-header is-clickable" onclick="toggleContent('content-c3-{{ key | replace(' ', '-') }}')">
+                        <p class="card-header-title">{{ key }}</p>
+                        <a class="card-header-icon" aria-label="more options">
+                            <span class="icon">
+                                <i class="fas fa-angle-down"></i>
+                            </span>
+                        </a>
+                    </header>
+                    <div class="card-content" id="content-c3-{{ key | replace(' ', '-') }}" style="display: block;">
+                        <div class="content">
+                            {{ value }}
+                        </div>
+                    </div>
                 </div>
-                <div id="submission-form-c3" style="display: none;"> 
-                    <p>c3</p>
+                {% endfor %}
+            </div>
+            <div id="submission-form-c4" style="display: none;">
+                {% for key, value in solution_c4.items() %}
+                <div class="card">
+                    <header class="card-header is-clickable" onclick="toggleContent('content-c4-{{ key | replace(' ', '-') }}')">
+                        <p class="card-header-title">{{ key }}</p>
+                        <a class="card-header-icon" aria-label="more options">
+                            <span class="icon">
+                                <i class="fas fa-angle-down"></i>
+                            </span>
+                        </a>
+                    </header>
+                    <div class="card-content" id="content-c4-{{ key | replace(' ', '-') }}" style="display: block;">
+                        <div class="content">
+                            {{ value }}
+                        </div>
+                    </div>
                 </div>
-                <div id="submission-form-c4" style="display: none;">
-                    <p>c4</p>
-                </div>
-                <div id="submission-form-c5" style="display: none;">
-                    <p>c5</p>
-                </div>
-                <div id="submission-form-summary" style="display: none;">
-                    <p>summary</p>
-                </div>
+                {% endfor %}
+            </div>
+            <div id="submission-form-summary" style="display: none;">
+                <p>{{ solution_summary | replace('\n', '<br>') | safe }}</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 {% endblock content %}
 {% block scripts %}
-    <script src="{{ url_for("static", filename="js/show.js") }}"></script>
+<script>
+    function showTab(tabName) {
+        const tabs = ['all', 'c2', 'c3', 'c4', 'summary'];
+        tabs.forEach(tab => {
+            document.getElementById('submission-form-' + tab).style.display = tab === tabName ? 'block' : 'none';
+        });
+        document.querySelectorAll('.tabs ul li').forEach(li => {
+            li.classList.remove('is-active');
+        });
+        document.querySelector(`.tabs a[onclick*="showTab('${tabName}')"]`).parentNode.classList.add('is-active');
+    }
+
+    function toggleContent(contentId) {
+        const content = document.getElementById(contentId);
+        if (content.style.display === 'none' || content.style.display === '') {
+            content.style.display = 'block';
+        } else {
+            content.style.display = 'none';
+        }
+    }
+</script>
 {% endblock scripts %}

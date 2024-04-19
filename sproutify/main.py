@@ -3,13 +3,94 @@ import os
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 import pandas as pd
+import json
 
 from . import db
 
 main = Blueprint("main", __name__)
 
-csv_path = os.path.join(os.path.dirname(__file__), "static/csv/solutions.csv")
+csv_path = os.path.join(os.path.dirname(__file__), "static/csv/48sample.csv")
+drop_cols = [
+            "Solution ID",
+            "Challenge Name",
+            "Solution Status",
+            "Advance",
+            "Pass_1",
+            "FailReason_1",
+            "Pass_2",
+            "FailReason_2",
+            "Solution ID",
+            "Challenge Name",
+            "Solution Status",
+            "gpt_full_result", 
+            "gpt_full_advance", 
+            "gpt_selected_result", 
+            "gpt_selected_advance", 
+            "gpt_summary_result", 
+            "gpt_summary_advance", 
+            "summary"]
 df = pd.read_csv(csv_path)
+
+def parse_criteria(selected_results, version):
+    base_criteria = {
+        "Criterion 1 - Is the solution application complete, appropriate, and intelligible?": {},
+        "Criterion 2 - Is the solution at least in Prototype stage?": {},
+        "Criterion 3 - Does the solution address the Challenge question?": {},
+        "Criterion 4 - Is the solution powered by technology?": {},
+        "Criterion 5 - The quality of the solution is good enough that an external reviewer should take the time to read and score it": {},
+    }
+    
+    if version == "v1":
+        return {key: "" for key in base_criteria.keys()} 
+    
+    for key, criteria in selected_results.items():
+        criterion_key = {
+            "criteria_1": "Criterion 1 - Is the solution application complete, appropriate, and intelligible?",
+            "criteria_2": "Criterion 2 - Is the solution at least in Prototype stage?",
+            "criteria_3": "Criterion 3 - Does the solution address the Challenge question?",
+            "criteria_4": "Criterion 4 - Is the solution powered by technology?",
+            "criteria_5": "Criterion 5 - The quality of the solution is good enough that an external reviewer should take the time to read and score it"
+        }.get(key)
+        
+        is_passed = criteria['result'] == 'pass'
+        base_criteria[criterion_key] = {
+            "is_passed": is_passed,
+            "reason": f"Reason: {criteria['reason']}" if version == "v3" else ""
+        }
+    
+    return base_criteria
+
+def show_solutions_generic(id, version):
+    d = df.copy()
+    solution = d[d["Solution ID"] == id]
+    if solution.empty:
+        return "Solution not found", 404
+    
+    tags = d[["Solution ID", "Challenge Name"]].to_dict(
+        orient="records"
+    )[0]
+
+    selected_results = json.loads(solution['gpt_selected_result'].iloc[0])
+
+    solution_all = solution.iloc[:, 3:40].to_dict(orient="records")[0] if not solution.empty else {}
+    solution_c2 = solution.iloc[:, [7, 11, 12, 13, 29]].to_dict(orient="records")[0] if not solution.empty else {}
+    solution_c3 = solution.iloc[:, [4, 5, 6, 7]].to_dict(orient="records")[0] if not solution.empty else {}
+    solution_c4 = solution.iloc[:, [5, 20, 25, 26, 28]].to_dict(orient="records")[0] if not solution.empty else {}
+    summary = solution['summary'].iloc[0] if 'summary' in solution.columns else "No summary available."
+
+    criteria = parse_criteria(selected_results, version)
+
+    return render_template(
+        "solutions_show.html.j2",
+        id=id, 
+        solution_all=solution_all, 
+        solution_c2=solution_c2, 
+        solution_c3=solution_c3, 
+        solution_c4=solution_c4, 
+        solution_summary=summary,
+        tags=tags,
+        criteria=criteria
+    )
 
 @main.context_processor
 def cache_busters():
@@ -64,156 +145,14 @@ def index_solutions():
 @main.route("/solutions/<int:id>/v1")
 @login_required
 def show_solutions_v1(id):
-    d = df.copy()
-    solution = d[d["Solution ID"] == id].iloc[0]
-    if solution.empty:
-        return "Solution not found", 404
-
-    tags = d[["Solution ID", "Challenge Name"]].to_dict(
-        orient="records"
-    )[0]
-    solution.drop(
-        [
-            "Advance",
-            "Pass_1",
-            "FailReason_1",
-            "Pass_2",
-            "FailReason_2",
-            "Solution ID",
-            "Challenge Name",
-            "Solution Status",
-        ],
-        inplace=True,
-        errors="ignore",
-    )
-
-    criteria = {
-        "[Criterion 1] Is the solution application complete, appropriate, and intelligible?": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        "[Criterion 2] Is the solution at least in Prototype stage?": "",
-        "[Criterion 3] Does the solution address the Challenge question?": "",
-        "[Criterion 4] Is the solution powered by technology?": "",
-        "[Criterion 5] The quality of the solution is good enough that an external reviewer should take the time to read and score it": "",
-    }
-
-    return render_template(
-        "solutions_show.html.j2",
-        id=id,
-        solution=solution.to_dict(),
-        tags=tags,
-        criteria=criteria,
-    )
-
+    return show_solutions_generic(id, "v1")
 
 @main.route("/solutions/<int:id>/v2")
 @login_required
 def show_solutions_v2(id):
-    d = df.copy()
-    solution = d[d["Solution ID"] == id].iloc[0]
-    if solution.empty:
-        return "Solution not found", 404
-
-    tags = d[["Solution ID", "Challenge Name"]].to_dict(
-        orient="records"
-    )[0]
-    solution.drop(
-        [
-            "Advance",
-            "Pass_1",
-            "FailReason_1",
-            "Pass_2",
-            "FailReason_2",
-            "Solution ID",
-            "Challenge Name",
-            "Solution Status",
-        ],
-        inplace=True,
-        errors="ignore",
-    )
-
-    criteria = {
-        "[Criterion 1] Is the solution application complete, appropriate, and intelligible?": {
-            "is_passed": True,
-            "reason": "",
-        },
-        "[Criterion 2] Is the solution at least in Prototype stage?": {
-            "is_passed": True,
-            "reason": "",
-        },
-        "[Criterion 3] Does the solution address the Challenge question?": {
-            "is_passed": False,
-            "reason": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        "[Criterion 4] Is the solution powered by technology?": {
-            "is_passed": False,
-            "reason": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        "[Criterion 5] The quality of the solution is good enough that an external reviewer should take the time to read and score it": {
-            "is_passed": True,
-            "reason": "",
-        },
-    }
-
-    return render_template(
-        "solutions_show.html.j2",
-        id=id,
-        solution=solution.to_dict(),
-        tags=tags,
-        criteria=criteria,
-    )
+    return show_solutions_generic(id, "v2")
 
 @main.route("/solutions/<int:id>/v3")
 @login_required
 def show_solutions_v3(id):
-    d = df.copy()
-    solution = d[d["Solution ID"] == id].iloc[0]
-    if solution.empty:
-        return "Solution not found", 404
-
-    tags = d[["Solution ID", "Challenge Name"]].to_dict(
-        orient="records"
-    )[0]
-    solution.drop(
-        [
-            "Advance",
-            "Pass_1",
-            "FailReason_1",
-            "Pass_2",
-            "FailReason_2",
-            "Solution ID",
-            "Challenge Name",
-            "Solution Status",
-        ],
-        inplace=True,
-        errors="ignore",
-    )
-
-    criteria = {
-        "[Criterion 1] Is the solution application complete, appropriate, and intelligible?": {
-            "is_passed": True,
-            "reason": "Reason: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        "[Criterion 2] Is the solution at least in Prototype stage?": {
-            "is_passed": True,
-            "reason": "Reason: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        "[Criterion 3] Does the solution address the Challenge question?": {
-            "is_passed": False,
-            "reason": "Reason: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        "[Criterion 4] Is the solution powered by technology?": {
-            "is_passed": False,
-            "reason": "Reason: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        "[Criterion 5] The quality of the solution is good enough that an external reviewer should take the time to read and score it": {
-            "is_passed": True,
-            "reason": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-    }
-
-    return render_template(
-        "solutions_show.html.j2",
-        id=id,
-        solution=solution.to_dict(),
-        tags=tags,
-        criteria=criteria,
-    )
+    return show_solutions_generic(id, "v3")
