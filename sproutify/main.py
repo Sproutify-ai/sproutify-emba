@@ -79,6 +79,9 @@ def show_solutions_generic(id, version):
     summary = solution['summary'].iloc[0] if 'summary' in solution.columns else "No summary available."
 
     criteria = parse_criteria(selected_results, version)
+    is_pass = False
+    if version in ["v2", "v3"]:
+        is_pass = all([criteria[key]['is_passed'] for key in criteria.keys()])
 
     return render_template(
         "solutions_show.html.j2",
@@ -89,7 +92,8 @@ def show_solutions_generic(id, version):
         solution_c4=solution_c4, 
         solution_summary=summary,
         tags=tags,
-        criteria=criteria
+        criteria=criteria,
+        is_pass=is_pass,
     )
 
 @main.context_processor
