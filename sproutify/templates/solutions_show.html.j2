@@ -157,26 +157,21 @@
 </section>
 {% endblock content %}
 {% block scripts %}
-<script>
-    function showTab(tabName) {
-        console.log(tabName);   
-        const tabs = ['all', 'c1', 'c2', 'c3', 'c4', 'c5', 'summary'];
-        tabs.forEach(tab => {
-            document.getElementById('submission-form-' + tab).style.display = tab === tabName ? 'block' : 'none';
+    <script src="{{ url_for("static", filename="js/show.js") }}"></script>
+    <script>  
+        function showTab(tabName) {
+        console.log(tabName);
+        const tabs = ["all", "c1", "c2", "c3", "c4", "c5", "summary"];
+        tabs.forEach((tab) => {
+            document.getElementById("submission-form-" + tab).style.display =
+            tab === tabName ? "block" : "none";
         });
-        document.querySelectorAll('.tabs ul li').forEach(li => {
-            li.classList.remove('is-active');
+        document.querySelectorAll(".tabs ul li").forEach((li) => {
+            li.classList.remove("is-active");
         });
-        document.querySelector(`.tabs li[onclick*="showTab('${tabName}')"]`).classList.add('is-active');
-    }
-
-    function toggleContent(contentId) {
-        const content = document.getElementById(contentId);
-        if (content.style.display === 'none' || content.style.display === '') {
-            content.style.display = 'block';
-        } else {
-            content.style.display = 'none';
+        document
+            .querySelector(`.tabs li[onclick*="showTab('${tabName}')"]`)
+            .classList.add("is-active");
         }
-    }
-</script>
+  </script>
 {% endblock scripts %}

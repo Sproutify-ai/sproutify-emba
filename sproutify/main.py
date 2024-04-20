@@ -55,7 +55,7 @@ def parse_criteria(selected_results, version):
         is_passed = criteria['result'] == 'pass'
         base_criteria[criterion_key] = {
             "is_passed": is_passed,
-            "reason": f"Reason: {criteria['reason']}" if version == "v3" else ""
+            "reason": f'''<span class="has-text-weight-semibold">Reason:</span> <span>{criteria['reason']}<span>''' if version == "v3" else ""
         }
     
     return base_criteria
