@@ -146,17 +146,17 @@ def index_solutions():
     )
 
 
-@main.route("/solutions/<int:id>/v1")
+@main.route("/solutions/<int:id>/98q3hiwnaj")
 @login_required
 def show_solutions_v1(id):
     return show_solutions_generic(id, "v1")
 
-@main.route("/solutions/<int:id>/v2")
+@main.route("/solutions/<int:id>/98hy3fqeh3")
 @login_required
 def show_solutions_v2(id):
     return show_solutions_generic(id, "v2")
 
-@main.route("/solutions/<int:id>/v3")
+@main.route("/solutions/<int:id>/0o3e8u5t8i")
 @login_required
 def show_solutions_v3(id):
     return show_solutions_generic(id, "v3")
