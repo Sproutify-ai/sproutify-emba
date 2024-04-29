@@ -9,7 +9,7 @@ from . import db
 
 main = Blueprint("main", __name__)
 
-csv_path = os.path.join(os.path.dirname(__file__), "static/csv/48sample.csv")
+csv_path = os.path.join(os.path.dirname(__file__), "static/csv/48solutions_2024_v2.csv")
 drop_cols = [
             "Solution ID",
             "Challenge Name",
