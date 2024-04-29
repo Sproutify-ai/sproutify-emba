@@ -9,7 +9,7 @@ from . import db
 
 main = Blueprint("main", __name__)
 
-csv_path = os.path.join(os.path.dirname(__file__), "static/csv/48_2024.csv")
+csv_path = os.path.join(os.path.dirname(__file__), "static/csv/t.csv")
 drop_cols = [
             "Solution ID",
             "Challenge Name",
@@ -72,10 +72,10 @@ def show_solutions_generic(id, version):
 
     #selected_results = json.loads(solution['hd_selected_result'].iloc[0])
 
-    solution_all = solution.iloc[:, 3:40].to_dict(orient="records")[0] if not solution.empty else {}
-    solution_c2 = solution.iloc[:, [7, 11, 12, 13, 29]].to_dict(orient="records")[0] if not solution.empty else {}
-    solution_c3 = solution.iloc[:, [4, 5, 6, 7]].to_dict(orient="records")[0] if not solution.empty else {}
-    solution_c4 = solution.iloc[:, [5, 20, 25, 26, 28]].to_dict(orient="records")[0] if not solution.empty else {}
+    solution_all = solution.iloc[:, 2:42].to_dict(orient="records")[0] if not solution.empty else {}
+    solution_c2 = solution.iloc[:, [13, 14, 34, 10]].to_dict(orient="records")[0] if not solution.empty else {}
+    solution_c3 = solution.iloc[:, [8, 7, 9, 11]].to_dict(orient="records")[0] if not solution.empty else {}
+    solution_c4 = solution.iloc[:, [8, 26, 29, 32]].to_dict(orient="records")[0] if not solution.empty else {}
     summary = solution['summary'].iloc[0] if 'summary' in solution.columns else "No summary available."
 
     #criteria = parse_criteria(selected_results, version)
