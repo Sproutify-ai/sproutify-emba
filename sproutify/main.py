@@ -80,23 +80,31 @@ def show_solutions_generic(id, version):
 
     #criteria = parse_criteria(selected_results, version)
 
+    criteria_names = {
+        "criteria_1": "Criterion 1 - Is the solution application complete, appropriate, and intelligible?",
+        "criteria_2": "Criterion 2 - Is the solution at least in Prototype stage?",
+        "criteria_3": "Criterion 3 - Does the solution address the Challenge question?",
+        "criteria_4": "Criterion 4 - Is the solution powered by technology?",
+        "criteria_5": "Criterion 5 - The quality of the solution is good enough that an external reviewer should take the time to read and score it",
+    }
     criteria = {}
     s = solution.iloc[0].to_dict()
-    criteria['criteria_1'] = {}
-    criteria['criteria_1']['is_passed'] = s['Pass Criterion1']
-    criteria['criteria_1']['reason'] = s['Rationale Criterion 1']
-    criteria['criteria_2'] = {}
-    criteria['criteria_2']['is_passed'] = s['Pass Criterion2']
-    criteria['criteria_2']['reason'] = s['Rationale Criterion 2']
-    criteria['criteria_3'] = {}
-    criteria['criteria_3']['is_passed'] = s['Pass Criterion3']
-    criteria['criteria_3']['reason'] = s['Rationale Criterion 3']
-    criteria['criteria_4'] = {}
-    criteria['criteria_4']['is_passed'] = s['Pass Criterion4']
-    criteria['criteria_4']['reason'] = s['Rationale Criterion 4']
-    criteria['criteria_5'] = {}
-    criteria['criteria_5']['is_passed'] = s['Pass Criterion5']
-    criteria['criteria_5']['reason'] = s['Rationale Criterion 5']
+    reason_format = '''<span class="has-text-weight-semibold">Reason:</span> <span>{}<span>'''
+    criteria[criteria_names['criteria_1']] = {}
+    criteria[criteria_names['criteria_1']]['is_passed'] = s['Pass Criterion1']
+    criteria[criteria_names['criteria_1']]['reason'] = reason_format.format(s['Rationale Criterion 1'])
+    criteria[criteria_names['criteria_2']] = {}
+    criteria[criteria_names['criteria_2']]['is_passed'] = s['Pass Criterion2']
+    criteria[criteria_names['criteria_2']]['reason'] = reason_format.format(s['Rationale Criterion 2'])
+    criteria[criteria_names['criteria_3']] = {}
+    criteria[criteria_names['criteria_3']]['is_passed'] = s['Pass Criterion3']
+    criteria[criteria_names['criteria_3']]['reason'] = reason_format.format(s['Rationale Criterion 3'])
+    criteria[criteria_names['criteria_4']] = {}
+    criteria[criteria_names['criteria_4']]['is_passed'] = s['Pass Criterion4']
+    criteria[criteria_names['criteria_4']]['reason'] = reason_format.format(s['Rationale Criterion 4'])
+    criteria[criteria_names['criteria_5']] = {}
+    criteria[criteria_names['criteria_5']]['is_passed'] = s['Pass Criterion5']
+    criteria[criteria_names['criteria_5']]['reason'] = reason_format.format(s['Rationale Criterion 5'])
 
     is_pass = False
     if version in ["v2", "v3"]:
