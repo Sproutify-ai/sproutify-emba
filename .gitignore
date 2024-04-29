@@ -4,3 +4,4 @@ venv
 instance
 __pycache__
 .env
+.DS_Store

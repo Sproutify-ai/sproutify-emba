@@ -66,7 +66,7 @@ def show_solutions_generic(id, version):
     if solution.empty:
         return "Solution not found", 404
     
-    tags = solution[["Organization", "Solution ID", "Challenge Name"]].to_dict(
+    tags = solution[["Name", "Solution ID", "Challenge Name"]].to_dict(
         orient="records"
     )[0]
 
