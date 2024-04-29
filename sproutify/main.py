@@ -52,7 +52,7 @@ def parse_criteria(selected_results, version):
             "criteria_5": "Criterion 5 - The quality of the solution is good enough that an external reviewer should take the time to read and score it"
         }.get(key)
         
-        is_passed = criteria['result'] == 'pass'
+        is_passed = criteria['result']
         base_criteria[criterion_key] = {
             "is_passed": is_passed,
             "reason": f'''<span class="has-text-weight-semibold">Reason:</span> <span>{criteria['reason']}<span>''' if version == "v3" else ""
@@ -70,7 +70,7 @@ def show_solutions_generic(id, version):
         orient="records"
     )[0]
 
-    selected_results = json.loads(solution['gpt_selected_result'].iloc[0])
+    #selected_results = json.loads(solution['hd_selected_result'].iloc[0])
 
     solution_all = solution.iloc[:, 3:40].to_dict(orient="records")[0] if not solution.empty else {}
     solution_c2 = solution.iloc[:, [7, 11, 12, 13, 29]].to_dict(orient="records")[0] if not solution.empty else {}
@@ -78,7 +78,26 @@ def show_solutions_generic(id, version):
     solution_c4 = solution.iloc[:, [5, 20, 25, 26, 28]].to_dict(orient="records")[0] if not solution.empty else {}
     summary = solution['summary'].iloc[0] if 'summary' in solution.columns else "No summary available."
 
-    criteria = parse_criteria(selected_results, version)
+    #criteria = parse_criteria(selected_results, version)
+
+    criteria = {}
+    s = solution.iloc[0].to_dict()
+    criteria['criteria_1'] = {}
+    criteria['criteria_1']['is_passed'] = s['Pass Criterion1']
+    criteria['criteria_1']['reason'] = s['Rationale Criterion 1']
+    criteria['criteria_2'] = {}
+    criteria['criteria_2']['is_passed'] = s['Pass Criterion2']
+    criteria['criteria_2']['reason'] = s['Rationale Criterion 2']
+    criteria['criteria_3'] = {}
+    criteria['criteria_3']['is_passed'] = s['Pass Criterion3']
+    criteria['criteria_3']['reason'] = s['Rationale Criterion 3']
+    criteria['criteria_4'] = {}
+    criteria['criteria_4']['is_passed'] = s['Pass Criterion4']
+    criteria['criteria_4']['reason'] = s['Rationale Criterion 4']
+    criteria['criteria_5'] = {}
+    criteria['criteria_5']['is_passed'] = s['Pass Criterion5']
+    criteria['criteria_5']['reason'] = s['Rationale Criterion 5']
+
     is_pass = False
     if version in ["v2", "v3"]:
         is_pass = all([criteria[key]['is_passed'] for key in criteria.keys()])
