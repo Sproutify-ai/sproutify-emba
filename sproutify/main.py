@@ -73,7 +73,7 @@ def show_solutions_generic(id, version):
     #selected_results = json.loads(solution['hd_selected_result'].iloc[0])
 
     solution_all = solution.iloc[:, 2:42].to_dict(orient="records")[0] if not solution.empty else {}
-    solution_c2 = solution.iloc[:, [13, 14, 34, 10]].to_dict(orient="records")[0] if not solution.empty else {}
+    solution_c2 = solution.iloc[:, [13, 14, 9, 34, 10]].to_dict(orient="records")[0] if not solution.empty else {}
     solution_c3 = solution.iloc[:, [8, 7, 9, 11]].to_dict(orient="records")[0] if not solution.empty else {}
     solution_c4 = solution.iloc[:, [8, 26, 29, 32]].to_dict(orient="records")[0] if not solution.empty else {}
     summary = solution['summary'].iloc[0] if 'summary' in solution.columns else "No summary available."
