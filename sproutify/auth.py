@@ -7,18 +7,19 @@ from . import db
 
 auth = Blueprint("auth", __name__)
 
+
 @auth.route("/login")
 def login():
-    return render_template("login.html.j2")
+    return render_template("login.html")
+
 
 @auth.route("/login", methods=["POST"])
 def login_post():
     email = request.form.get("email")
     password = request.form.get("password")
-    #remember = True if request.form.get("remember") else False
+    # remember = True if request.form.get("remember") else False
     # Always remember the user
     remember = True
-
 
     user = User.query.filter_by(email=email).first()
 
@@ -29,9 +30,11 @@ def login_post():
     login_user(user, remember=remember)
     return redirect(url_for("main.profile"))
 
+
 @auth.route("/signup")
 def signup():
-    return render_template("signup.html.j2")
+    return render_template("signup.html")
+
 
 @auth.route("/signup", methods=["POST"])
 def signup_post():
@@ -44,13 +47,18 @@ def signup_post():
     if user:
         flash("Email address already exists")
         return redirect(url_for("auth.signup"))
-    
-    new_user = User(email=email, name=name, password=generate_password_hash(password, method="scrypt"))
+
+    new_user = User(
+        email=email,
+        name=name,
+        password=generate_password_hash(password, method="scrypt"),
+    )
 
     db.session.add(new_user)
     db.session.commit()
 
     return redirect(url_for("auth.login"))
+
 
 @auth.route("/logout")
 @login_required

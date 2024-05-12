@@ -1,0 +1,27 @@
+<div class="mb-3">
+  <h1 class="has-text-centered title" style="display: inline; margin-left: 35%">
+    {% if is_pass %}
+      ✅ Pass
+    {% else %}
+      ❌ Fail
+    {% endif %}
+  </h1><small class="is-size-7" style="display: inline-block;">AI insights by GPT-4</small>
+</div>
+{% for criterion in criteria %}
+  <div class="card">
+    <div class="card-header is-clickable">
+      <p class="card-header-title">
+        {% if criteria[criterion]['is_passed'] %}
+          ✅
+        {% else %}
+          ❌
+        {% endif %}
+        {{ criterion }}
+      </p>
+      <button class="card-header-icon"><span class="icon has-text-info has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[loop.index0] }}"><i class="fas fa-info-circle"></i></span></button>
+    </div>
+    <div class="card-content">
+      <div class="content">{{ criteria[criterion]['reason'] }}</div>
+    </div>
+  </div>
+{% endfor %}
