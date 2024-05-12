@@ -1,224 +1,224 @@
 {% extends '_base.html' %}
 {% block style %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   <style>
-    .wrapper {
-      background-color: whitesmoke;
-      list-style-type: none;
-      padding: 0;
-      border-radius: 3px;
-    }
-    .form-row {
-      display: flex;
-      justify-content: flex-end;
-      padding: 0.5em;
-    }
-    .form-row > label {
-      padding: 0.5em 1em 0.5em 0;
-      flex: 1;
-    }
-    .form-row > input,
-    .form-row > button,
-    .form-row > div,
-    .form-row > select {
-      flex: 2;
-    }
-    .form-row > input,
-    .form-row > button {
-      padding: 0.5em;
-    }
-    .form-row > button {
-      background: gray;
-      color: white;
-      border: 0;
-    }
-    .radio-group {
-      display: flex;
-      gap: 20px; /* Space between the radio buttons */
-    }
-    .radio-group > label {
-      display: flex;
-      align-items: center;
+    .custom-container {
+      margin-left: 15px;
+      margin-right: 15px;
     }
   </style>
 {% endblock %}
 
 {% block content %}
   <section class="section">
-    <div class="columns">
-      <div class="column is-one-third">
-        <h1 class="title">{{ tags['Name'] }}</h1>
-        <nav class="level">
-          <div class="level-left">
-            <p class="level-item has-text-centered">
-              <span class="tag is-primary">{{ tags['Solution ID'] }}</span>
-            </p>
-            <p class="level-item has-text-centered">
-              <span class="tag is-warning">{{ tags['Challenge Name'] }}</span>
-            </p>
-            <!-- <p class="subtitle has-text-danger">Please remember to record your answers on Qualtrics.</p> -->
+    <div class="container custom-container">
+      <div class="columns">
+        <div class="column is-one-third">
+          <h1 class="title">{{ tags['Name'] }}</h1>
+          <nav class="level">
+            <div class="level-left">
+              <p class="level-item has-text-centered">
+                <span class="tag is-primary">{{ tags['Solution ID'] }}</span>
+              </p>
+              <p class="level-item has-text-centered">
+                <span class="tag is-warning">{{ tags['Challenge Name'] }}</span>
+              </p>
+            </div>
+          </nav>
+        </div>
+        <div class="column is-two-thirds">
+          <form action="/record" method="POST" onsubmit="return validateForm()">
+            <input type="hidden" name="solution_id" value="{{ tags['Solution ID'] }}" />
+            <div class="box">
+              <div class="field">
+                <label class="label">Decision</label>
+                <div class="control">
+                  <label class="radio">
+                    <input type="radio" name="result" value="pass" checked>
+                    Pass
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="result" value="fail">
+                    Fail
+                  </label>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Fail Reason</label>
+                <div class="control">
+                  <div class="select">
+                    <select name="reason" id="reason" required>
+                      <option value="">Select a reason</option>
+                      <option value="1">1 - The solution is incomplete, inappropriate, and not intelligible</option>
+                      <option value="2">2 - The solution does not reach Prototype stage?</option>
+                      <option value="3">3 - The solution does not address the Challenge question</option>
+                      <option value="4">4 - The solution is not powered by technology</option>
+                      <option value="5">5 - The quality of the solution is not good enough</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Confidence Level</label>
+                <div class="control">
+                  <label class="radio">
+                    <input type="radio" name="confidence" value="1" checked>
+                    1 - Not at all confident
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="confidence" value="2">
+                    2 
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="confidence" value="3">
+                    3 - Moderately confident
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="confidence" value="4">
+                    4 
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="confidence" value="5">
+                    5 - Extremely confident
+                  </label>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <button class="button is-primary" type="submit">Submit</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="column is-one-third">
+          {% if request.endpoint == 'main.show_solutions_v1' %}
+            {% include '_ai_v1.html' %}
+          {% elif request.endpoint == 'main.show_solutions_v2' %}
+            {% include '_ai_v2.html' %}
+          {% elif request.endpoint == 'main.show_solutions_v3' %}
+            {% include '_ai_v3.html' %}
+          {% endif %}
+        </div>
+        <div class="column is-two-thirds">
+          <div class="tabs">
+            <ul>
+              <li class="is-active" onclick="showTab('all')">
+                <a href="#">All</a>
+              </li>
+              <li onclick="showTab('c1')">
+                <a href="#">Criterion 1</a>
+              </li>
+              <li onclick="showTab('c2')">
+                <a href="#">Criterion 2</a>
+              </li>
+              <li onclick="showTab('c3')">
+                <a href="#">Criterion 3</a>
+              </li>
+              <li onclick="showTab('c4')">
+                <a href="#">Criterion 4</a>
+              </li>
+              <li onclick="showTab('c5')">
+                <a href="#">Criterion 5</a>
+              </li>
+              <li onclick="showTab('summary')">
+                <a href="#">Solution Summary</a>
+              </li>
+            </ul>
           </div>
-        </nav>
-      </div>
-      <div class="column">
-        <form action="/record" method="POST" onsubmit="return validateForm()">
-          <input type="hidden" name="solution_id" value="{{ tags['Solution ID'] }}" />
-          <ul class="wrapper">
-            <li class="form-row">
-              <label for="result">Result</label>
-              <div class="radio-group">
-                <label><input type="radio" name="result" value="pass" />Pass</label>
-                <label><input type="radio" name="result" value="fail" />Fail</label>
+          <div id="submission-form-all" style="display: block;">
+            {% for key, value in solution_all.items() %}
+              <div class="card">
+                <header class="card-header is-clickable" onclick="toggleContent('content-all-{{ key|replace(' ', '-') }}')">
+                  <p class="card-header-title">{{ key }}</p>
+                  <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
+                </header>
+                <div class="card-content" id="content-all-{{ key|replace(' ', '-') }}" style="display: block;">
+                  <div class="content">{{ value|safe }}</div>
+                </div>
               </div>
-            </li>
-            <li class="form-row">
-              <label for="reason">Reason</label>
-              <select name="reason" id="reason" required>
-                <option value="">Please select one</option>
-                <option value="1">Criterion 1 - Is the solution application complete, appropriate, and intelligible?</option>
-                <option value="2">Criterion 2 - Is the solution at least in Prototype stage?</option>
-                <option value="3">Criterion 3 - Does the solution address the Challenge question?</option>
-                <option value="4">Criterion 4 - Is the solution powered by technology?</option>
-                <option value="5">Criterion 5 - The quality of the solution is good enough that an external reviewer should take the time to read and score it</option>
-              </select>
-            </li>
-            <li class="form-row">
-              <label for="confidence">How confident are you with the decision? (1 low, 5 high)</label>
-              <div class="radio-group">
-                <label><input type="radio" name="confidence" value="1" />1</label>
-                <label><input type="radio" name="confidence" value="2" />2</label>
-                <label><input type="radio" name="confidence" value="3" />3</label>
-                <label><input type="radio" name="confidence" value="4" />4</label>
-                <label><input type="radio" name="confidence" value="5" />5</label>
+            {% endfor %}
+          </div>
+          <div id="submission-form-c1" style="display: none;">
+            {% for key, value in solution_all.items() %}
+              <div class="card">
+                <header class="card-header is-clickable" onclick="toggleContent('content-c1-{{ key|replace(' ', '-') }}')">
+                  <p class="card-header-title">{{ key }}</p>
+                  <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
+                </header>
+                <div class="card-content" id="content-c1-{{ key|replace(' ', '-') }}" style="display: block;">
+                  <div class="content">{{ value }}</div>
+                </div>
               </div>
-            </li>
-            <li class="form-row">
-              <button type="submit">Submit</button>
-            </li>
-          </ul>
-        </form>
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column is-one-third">
-        {% if request.endpoint == 'main.show_solutions_v1' %}
-          {% include '_ai_v1.html' %}
-        {% elif request.endpoint == 'main.show_solutions_v2' %}
-          {% include '_ai_v2.html' %}
-        {% elif request.endpoint == 'main.show_solutions_v3' %}
-          {% include '_ai_v3.html' %}
-        {% endif %}
-      </div>
-      <div class="column">
-        <div class="tabs">
-          <ul>
-            <li class="is-active" onclick="showTab('all')">
-              <a href="#">All</a>
-            </li>
-            <li onclick="showTab('c1')">
-              <a href="#">Criterion 1</a>
-            </li>
-            <li onclick="showTab('c2')">
-              <a href="#">Criterion 2</a>
-            </li>
-            <li onclick="showTab('c3')">
-              <a href="#">Criterion 3</a>
-            </li>
-            <li onclick="showTab('c4')">
-              <a href="#">Criterion 4</a>
-            </li>
-            <li onclick="showTab('c5')">
-              <a href="#">Criterion 5</a>
-            </li>
-            <li onclick="showTab('summary')">
-              <a href="#">Solution Summary</a>
-            </li>
-          </ul>
-        </div>
-        <div id="submission-form-all" style="display: block;">
-          {% for key, value in solution_all.items() %}
-            <div class="card">
-              <header class="card-header is-clickable" onclick="toggleContent('content-all-{{ key|replace(' ', '-') }}')">
-                <p class="card-header-title">{{ key }}</p>
-                <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
-              </header>
-              <div class="card-content" id="content-all-{{ key|replace(' ', '-') }}" style="display: block;">
-                <div class="content">{{ value|safe }}</div>
+            {% endfor %}
+          </div>
+          <div id="submission-form-c2" style="display: none;">
+            {% for key, value in solution_c2.items() %}
+              <div class="card">
+                <header class="card-header is-clickable" onclick="toggleContent('content-c2-{{ key|replace(' ', '-') }}')">
+                  <p class="card-header-title">{{ key }}</p>
+                  <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
+                </header>
+                <div class="card-content" id="content-c2-{{ key|replace(' ', '-') }}" style="display: block;">
+                  <div class="content">{{ value }}</div>
+                </div>
               </div>
-            </div>
-          {% endfor %}
-        </div>
-        <div id="submission-form-c1" style="display: none;">
-          {% for key, value in solution_all.items() %}
-            <div class="card">
-              <header class="card-header is-clickable" onclick="toggleContent('content-c1-{{ key|replace(' ', '-') }}')">
-                <p class="card-header-title">{{ key }}</p>
-                <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
-              </header>
-              <div class="card-content" id="content-c1-{{ key|replace(' ', '-') }}" style="display: block;">
-                <div class="content">{{ value }}</div>
+            {% endfor %}
+          </div>
+          <div id="submission-form-c3" style="display: none;">
+            {% for key, value in solution_c3.items() %}
+              <div class="card">
+                <header class="card-header is-clickable" onclick="toggleContent('content-c3-{{ key|replace(' ', '-') }}')">
+                  <p class="card-header-title">{{ key }}</p>
+                  <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
+                </header>
+                <div class="card-content" id="content-c3-{{ key|replace(' ', '-') }}" style="display: block;">
+                  <div class="content">{{ value }}</div>
+                </div>
               </div>
-            </div>
-          {% endfor %}
-        </div>
-        <div id="submission-form-c2" style="display: none;">
-          {% for key, value in solution_c2.items() %}
-            <div class="card">
-              <header class="card-header is-clickable" onclick="toggleContent('content-c2-{{ key|replace(' ', '-') }}')">
-                <p class="card-header-title">{{ key }}</p>
-                <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
-              </header>
-              <div class="card-content" id="content-c2-{{ key|replace(' ', '-') }}" style="display: block;">
-                <div class="content">{{ value }}</div>
+            {% endfor %}
+          </div>
+          <div id="submission-form-c4" style="display: none;">
+            {% for key, value in solution_c4.items() %}
+              <div class="card">
+                <header class="card-header is-clickable" onclick="toggleContent('content-c4-{{ key|replace(' ', '-') }}')">
+                  <p class="card-header-title">{{ key }}</p>
+                  <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
+                </header>
+                <div class="card-content" id="content-c4-{{ key|replace(' ', '-') }}" style="display: block;">
+                  <div class="content">{{ value }}</div>
+                </div>
               </div>
-            </div>
-          {% endfor %}
-        </div>
-        <div id="submission-form-c3" style="display: none;">
-          {% for key, value in solution_c3.items() %}
-            <div class="card">
-              <header class="card-header is-clickable" onclick="toggleContent('content-c3-{{ key|replace(' ', '-') }}')">
-                <p class="card-header-title">{{ key }}</p>
-                <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
-              </header>
-              <div class="card-content" id="content-c3-{{ key|replace(' ', '-') }}" style="display: block;">
-                <div class="content">{{ value }}</div>
+            {% endfor %}
+          </div>
+          <div id="submission-form-c5" style="display: none;">
+            {% for key, value in solution_all.items() %}
+              <div class="card">
+                <header class="card-header is-clickable" onclick="toggleContent('content-c5-{{ key|replace(' ', '-') }}')">
+                  <p class="card-header-title">{{ key }}</p>
+                  <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
+                </header>
+                <div class="card-content" id="content-c5-{{ key|replace(' ', '-') }}" style="display: block;">
+                  <div class="content">{{ value }}</div>
+                </div>
               </div>
-            </div>
-          {% endfor %}
-        </div>
-        <div id="submission-form-c4" style="display: none;">
-          {% for key, value in solution_c4.items() %}
-            <div class="card">
-              <header class="card-header is-clickable" onclick="toggleContent('content-c4-{{ key|replace(' ', '-') }}')">
-                <p class="card-header-title">{{ key }}</p>
-                <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
-              </header>
-              <div class="card-content" id="content-c4-{{ key|replace(' ', '-') }}" style="display: block;">
-                <div class="content">{{ value }}</div>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-        <div id="submission-form-c5" style="display: none;">
-          {% for key, value in solution_all.items() %}
-            <div class="card">
-              <header class="card-header is-clickable" onclick="toggleContent('content-c5-{{ key|replace(' ', '-') }}')">
-                <p class="card-header-title">{{ key }}</p>
-                <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
-              </header>
-              <div class="card-content" id="content-c5-{{ key|replace(' ', '-') }}" style="display: block;">
-                <div class="content">{{ value }}</div>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-        <div id="submission-form-summary" style="display: none;">
-          <p>{{ solution_summary|replace('\n', '<br>')|safe }}</p>
+            {% endfor %}
+          </div>
+          <div id="submission-form-summary" style="display: none;">
+            <p>{{ solution_summary|replace('\n', '<br>')|safe }}</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 {% endblock %}
+
 {% block scripts %}
   <script src="{{ url_for('static', filename='js/show.js') }}"></script>
   <script>
@@ -238,7 +238,7 @@
     function validateForm() {
       var result = document.querySelector('input[name="result"]:checked')
       var confidence = document.querySelector('input[name="confidence"]:checked')
-    
+
       if (!result) {
         alert('Please select a result.')
         return false
