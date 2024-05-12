@@ -10,3 +10,17 @@ class User(UserMixin, db.Model):
     password = db.Column(db.Text())
     name = db.Column(db.String(1000))
     is_admin = db.Column(db.Boolean, default=False)
+
+
+class Question(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    solution_id = db.Column(db.Integer)
+    result = db.Column(db.Text())
+    reason = db.Column(db.Text())
+    confidence = db.Column(db.Integer)
+    started_at = db.Column(db.DateTime)
+    completed_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=db.func.now())
+    updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user = db.relationship("User", backref="questions")
