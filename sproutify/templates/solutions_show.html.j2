@@ -1,7 +1,7 @@
 {% extends "_base.html.j2" %}
 {% block content %}
 <section class="section">
-    <h1 class="title">Solution Title</h1>
+    <h1 class="title">{{ tags['Name'] }}</h1>
     <nav class="level">
         <div class="level-left">
             <p class="level-item has-text-centered">
@@ -26,10 +26,12 @@
         <div class="column">
             <div class="tabs">
                 <ul>
-                    <li class="is-active" onclick="showTab('all')"><a href="#">All (Criterion 1, Criterion 5)</a></li>
+                    <li class="is-active" onclick="showTab('all')"><a href="#">All</a></li>
+                    <li onclick="showTab('c1')"><a href="#">Criterion 1</a></li>
                     <li onclick="showTab('c2')"><a href="#">Criterion 2</a></li>
                     <li onclick="showTab('c3')"><a href="#">Criterion 3</a></li>
                     <li onclick="showTab('c4')"><a href="#">Criterion 4</a></li>
+                    <li onclick="showTab('c5')"><a href="#">Criterion 5</a></li>
                     <li onclick="showTab('summary')"><a href="#">Solution Summary</a></li>
                 </ul>
             </div>
@@ -45,6 +47,25 @@
                         </a>
                     </header>
                     <div class="card-content" id="content-all-{{ key | replace(' ', '-') }}" style="display: block;">
+                        <div class="content">
+                            {{ value }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div id="submission-form-c1" style="display: none;">
+                {% for key, value in solution_all.items() %}
+                <div class="card">
+                    <header class="card-header is-clickable" onclick="toggleContent('content-c1-{{ key | replace(' ', '-') }}')">
+                        <p class="card-header-title">{{ key }}</p>
+                        <a class="card-header-icon" aria-label="more options">
+                            <span class="icon">
+                                <i class="fas fa-angle-down"></i>
+                            </span>
+                        </a>
+                    </header>
+                    <div class="card-content" id="content-c1-{{ key | replace(' ', '-') }}" style="display: block;">
                         <div class="content">
                             {{ value }}
                         </div>
@@ -109,6 +130,25 @@
                 </div>
                 {% endfor %}
             </div>
+            <div id="submission-form-c5" style="display: none;">
+                {% for key, value in solution_all.items() %}
+                <div class="card">
+                    <header class="card-header is-clickable" onclick="toggleContent('content-c5-{{ key | replace(' ', '-') }}')">
+                        <p class="card-header-title">{{ key }}</p>
+                        <a class="card-header-icon" aria-label="more options">
+                            <span class="icon">
+                                <i class="fas fa-angle-down"></i>
+                            </span>
+                        </a>
+                    </header>
+                    <div class="card-content" id="content-c5-{{ key | replace(' ', '-') }}" style="display: block;">
+                        <div class="content">
+                            {{ value }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
             <div id="submission-form-summary" style="display: none;">
                 <p>{{ solution_summary | replace('\n', '<br>') | safe }}</p>
             </div>
@@ -117,25 +157,21 @@
 </section>
 {% endblock content %}
 {% block scripts %}
-<script>
-    function showTab(tabName) {
-        const tabs = ['all', 'c2', 'c3', 'c4', 'summary'];
-        tabs.forEach(tab => {
-            document.getElementById('submission-form-' + tab).style.display = tab === tabName ? 'block' : 'none';
+    <script src="{{ url_for("static", filename="js/show.js") }}"></script>
+    <script>  
+        function showTab(tabName) {
+        console.log(tabName);
+        const tabs = ["all", "c1", "c2", "c3", "c4", "c5", "summary"];
+        tabs.forEach((tab) => {
+            document.getElementById("submission-form-" + tab).style.display =
+            tab === tabName ? "block" : "none";
         });
-        document.querySelectorAll('.tabs ul li').forEach(li => {
-            li.classList.remove('is-active');
+        document.querySelectorAll(".tabs ul li").forEach((li) => {
+            li.classList.remove("is-active");
         });
-        document.querySelector(`.tabs a[onclick*="showTab('${tabName}')"]`).parentNode.classList.add('is-active');
-    }
-
-    function toggleContent(contentId) {
-        const content = document.getElementById(contentId);
-        if (content.style.display === 'none' || content.style.display === '') {
-            content.style.display = 'block';
-        } else {
-            content.style.display = 'none';
+        document
+            .querySelector(`.tabs li[onclick*="showTab('${tabName}')"]`)
+            .classList.add("is-active");
         }
-    }
-</script>
+  </script>
 {% endblock scripts %}

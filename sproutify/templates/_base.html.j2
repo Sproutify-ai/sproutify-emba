@@ -48,7 +48,15 @@
             <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
                     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
                     crossorigin="anonymous"></script>
+            {% if current_user.is_authenticated %}
+                <script>
+                    posthog.identify("{{ current_user.id }}", {
+                        email: "{{ current_user.email }}"
+                    });
+                </script>
+            {% endif %}
             {% block scripts %}
             {% endblock scripts %}
+            <p class="is-size-7 has-text-centered">PostHog is enabled on this website.</p>
         </body>
     </html>

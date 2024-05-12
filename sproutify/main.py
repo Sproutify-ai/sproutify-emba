@@ -9,7 +9,7 @@ from . import db
 
 main = Blueprint("main", __name__)
 
-csv_path = os.path.join(os.path.dirname(__file__), "static/csv/48sample.csv")
+csv_path = os.path.join(os.path.dirname(__file__), "static/csv/t.csv")
 drop_cols = [
             "Solution ID",
             "Challenge Name",
@@ -52,10 +52,10 @@ def parse_criteria(selected_results, version):
             "criteria_5": "Criterion 5 - The quality of the solution is good enough that an external reviewer should take the time to read and score it"
         }.get(key)
         
-        is_passed = criteria['result'] == 'pass'
+        is_passed = criteria['result']
         base_criteria[criterion_key] = {
             "is_passed": is_passed,
-            "reason": f"Reason: {criteria['reason']}" if version == "v3" else ""
+            "reason": f'''<span class="has-text-weight-semibold">Reason:</span> <span>{criteria['reason']}<span>''' if version == "v3" else ""
         }
     
     return base_criteria
@@ -66,19 +66,46 @@ def show_solutions_generic(id, version):
     if solution.empty:
         return "Solution not found", 404
     
-    tags = d[["Solution ID", "Challenge Name"]].to_dict(
+    tags = solution[["Name", "Solution ID", "Challenge Name"]].to_dict(
         orient="records"
     )[0]
 
-    selected_results = json.loads(solution['gpt_selected_result'].iloc[0])
+    #selected_results = json.loads(solution['hd_selected_result'].iloc[0])
 
-    solution_all = solution.iloc[:, 3:40].to_dict(orient="records")[0] if not solution.empty else {}
-    solution_c2 = solution.iloc[:, [7, 11, 12, 13, 29]].to_dict(orient="records")[0] if not solution.empty else {}
-    solution_c3 = solution.iloc[:, [4, 5, 6, 7]].to_dict(orient="records")[0] if not solution.empty else {}
-    solution_c4 = solution.iloc[:, [5, 20, 25, 26, 28]].to_dict(orient="records")[0] if not solution.empty else {}
+    solution_all = solution.iloc[:, 2:42].to_dict(orient="records")[0] if not solution.empty else {}
+    solution_c2 = solution.iloc[:, [13, 14, 9, 34, 10]].to_dict(orient="records")[0] if not solution.empty else {}
+    solution_c3 = solution.iloc[:, [8, 7, 9, 11]].to_dict(orient="records")[0] if not solution.empty else {}
+    solution_c4 = solution.iloc[:, [8, 26, 29, 32]].to_dict(orient="records")[0] if not solution.empty else {}
     summary = solution['summary'].iloc[0] if 'summary' in solution.columns else "No summary available."
 
-    criteria = parse_criteria(selected_results, version)
+    #criteria = parse_criteria(selected_results, version)
+
+    criteria_names = {
+        "criteria_1": "Criterion 1 - Is the solution application complete, appropriate, and intelligible?",
+        "criteria_2": "Criterion 2 - Is the solution at least in Prototype stage?",
+        "criteria_3": "Criterion 3 - Does the solution address the Challenge question?",
+        "criteria_4": "Criterion 4 - Is the solution powered by technology?",
+        "criteria_5": "Criterion 5 - The quality of the solution is good enough that an external reviewer should take the time to read and score it",
+    }
+    criteria = {}
+    s = solution.iloc[0].to_dict()
+    reason_format = '''<span class="has-text-weight-semibold">Reason:</span> <span>{}<span>'''
+    criteria[criteria_names['criteria_1']] = {}
+    criteria[criteria_names['criteria_1']]['is_passed'] = s['Pass Criterion1']
+    criteria[criteria_names['criteria_1']]['reason'] = reason_format.format(s['Rationale Criterion 1'])
+    criteria[criteria_names['criteria_2']] = {}
+    criteria[criteria_names['criteria_2']]['is_passed'] = s['Pass Criterion2']
+    criteria[criteria_names['criteria_2']]['reason'] = reason_format.format(s['Rationale Criterion 2'])
+    criteria[criteria_names['criteria_3']] = {}
+    criteria[criteria_names['criteria_3']]['is_passed'] = s['Pass Criterion3']
+    criteria[criteria_names['criteria_3']]['reason'] = reason_format.format(s['Rationale Criterion 3'])
+    criteria[criteria_names['criteria_4']] = {}
+    criteria[criteria_names['criteria_4']]['is_passed'] = s['Pass Criterion4']
+    criteria[criteria_names['criteria_4']]['reason'] = reason_format.format(s['Rationale Criterion 4'])
+    criteria[criteria_names['criteria_5']] = {}
+    criteria[criteria_names['criteria_5']]['is_passed'] = s['Pass Criterion5']
+    criteria[criteria_names['criteria_5']]['reason'] = reason_format.format(s['Rationale Criterion 5'])
+
     is_pass = False
     if version in ["v2", "v3"]:
         is_pass = all([criteria[key]['is_passed'] for key in criteria.keys()])
@@ -146,17 +173,17 @@ def index_solutions():
     )
 
 
-@main.route("/solutions/<int:id>/v1")
+@main.route("/solutions/<int:id>/98q3hiwnaj")
 @login_required
 def show_solutions_v1(id):
     return show_solutions_generic(id, "v1")
 
-@main.route("/solutions/<int:id>/v2")
+@main.route("/solutions/<int:id>/98hy3fqeh3")
 @login_required
 def show_solutions_v2(id):
     return show_solutions_generic(id, "v2")
 
-@main.route("/solutions/<int:id>/v3")
+@main.route("/solutions/<int:id>/0o3e8u5t8i")
 @login_required
 def show_solutions_v3(id):
     return show_solutions_generic(id, "v3")

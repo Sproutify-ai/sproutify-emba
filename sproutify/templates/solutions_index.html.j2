@@ -21,7 +21,7 @@
             <ul>
                 {% for solution in solutions %}
                     <li class="mb-1">
-                        <a href="{{ url_for('main.show_solutions_v1', id=solution['Solution ID']) }}">{{ solution['Solution ID'] }}. {{ solution['title'] }}</a>
+                        <span>{{ solution['Solution ID'] }}. </span><a href="{{ url_for('main.show_solutions_v1', id=solution['Solution ID']) }}">V1</a> | <a href="{{ url_for('main.show_solutions_v2', id=solution['Solution ID']) }}">V2</a> | <a href="{{ url_for('main.show_solutions_v3', id=solution['Solution ID']) }}">V3</a>
                     </li>
                 {% endfor %}
             </ul>

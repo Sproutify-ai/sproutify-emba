@@ -21,9 +21,9 @@ pip install -r requirements.txt
 
 To switch different versions of the solution, you can use the following URLs:
 ```
-/solutions/<id>/v1
-/solutions/<id>/v2
-/solutions/<id>/v3
+/solutions/<id>/98q3hiwnaj
+/solutions/<id>/98hy3fqeh3
+/solutions/<id>/0o3e8u5t8i
 ```
 
 ## 📚 Project Structure
