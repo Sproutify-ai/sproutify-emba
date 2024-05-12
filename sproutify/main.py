@@ -186,6 +186,11 @@ def test():
     return render_template("test.html")
 
 
+@main.route("/start")
+def start():
+    return "OK"
+
+
 @main.route("/profile")
 @login_required
 def profile():
