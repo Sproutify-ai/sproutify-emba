@@ -21,7 +21,7 @@
       <button class="card-header-icon"><span class="icon has-text-info has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[loop.index0] }}"><i class="fas fa-info-circle"></i></span></button>
     </div>
     <div class="card-content">
-      <div class="content">{{ criteria[criterion]['reason'] }}</div>
+      <div class="content">{{ criteria[criterion]['reason']|safe }}</div>
     </div>
   </div>
 {% endfor %}
