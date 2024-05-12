@@ -61,6 +61,7 @@
       </div>
       <div class="column">
         <form action="/record" method="POST" onsubmit="return validateForm()">
+          <input type="hidden" name="solution_id" value="{{ tags['Solution ID'] }}" />
           <ul class="wrapper">
             <li class="form-row">
               <label for="result">Result</label>

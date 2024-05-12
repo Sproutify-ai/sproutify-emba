@@ -10,11 +10,14 @@ class User(UserMixin, db.Model):
     password = db.Column(db.Text())
     name = db.Column(db.String(1000))
     is_admin = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=db.func.now())
+    updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     solution_id = db.Column(db.Integer)
+    version = db.Column(db.Text())
     result = db.Column(db.Text())
     reason = db.Column(db.Text())
     confidence = db.Column(db.Integer)
