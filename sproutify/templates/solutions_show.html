@@ -1,4 +1,7 @@
 {% extends '_base.html' %}
+{% block head %}
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+{% endblock %}
 {% block style %}
   <style>
     .wrapper {
@@ -73,7 +76,7 @@
                 <label><input type="radio" name="result" value="fail" />Fail</label>
               </div>
             </li>
-            <li class="form-row">
+            <li class="form-row" id="reason-form-row">
               <label for="reason">Reason</label>
               <select name="reason" id="reason" required>
                 <option value="">Please select one</option>
@@ -252,5 +255,19 @@
       }
       return true
     }
+  </script>
+  <script>
+    $(document).ready(function () {
+      $('input[name="result"]').on('change', function () {
+        if ($(this).val() === 'fail') {
+          $('#reason-form-row').show()
+          $('#reason').prop('required', true)
+        } else {
+          $('#reason-form-row').hide()
+          $('#reason').prop('required', false)
+          $('#reason').val('')
+        }
+      })
+    })
   </script>
 {% endblock %}

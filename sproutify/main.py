@@ -164,10 +164,10 @@ def show_solutions_generic(id, version):
         is_pass=is_pass,
     )
 
+
 def show_complete():
-    return render_template(
-        "complete.html"
-    )
+    return render_template("complete.html")
+
 
 @main.context_processor
 def cache_busters():
@@ -218,7 +218,11 @@ def start():
         db.session.add(question)
         db.session.commit()
 
-    return redirect(url_for("main.show_solutions_%s" % version1, id=random_rows[0]))
+    first_id = random_rows[0]
+    question = Question.query.filter_by(solution_id=first_id).first()
+    question.started_at = db.func.now()
+    db.session.commit()
+    return redirect(url_for("main.show_solutions_%s" % version1, id=first_id))
 
 
 @main.route("/profile")
@@ -288,6 +292,7 @@ def record():
     question.result = data["result"]
     question.reason = data["reason"]
     question.confidence = data["confidence"]
+    question.completed_at = db.func.now()
     db.session.commit()
 
     return redirect(url_for("main.show_solutions_v2", id=1))
