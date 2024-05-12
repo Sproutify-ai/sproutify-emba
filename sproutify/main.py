@@ -151,6 +151,13 @@ def show_solutions_generic(id, version):
     if version in ["v2", "v3"]:
         is_pass = all([criteria[key]["is_passed"] for key in criteria.keys()])
 
+    total_solutions = 10
+    num_questions = (
+        total_solutions
+        + 1
+        - Question.query.filter_by(user_id=current_user.id, result=None).count()
+    )
+
     return render_template(
         "solutions_show.html",
         id=id,
@@ -162,6 +169,8 @@ def show_solutions_generic(id, version):
         tags=tags,
         criteria=criteria,
         is_pass=is_pass,
+        total_solutions=total_solutions,
+        solution_count=num_questions,
     )
 
 
@@ -295,4 +304,18 @@ def record():
     question.completed_at = db.func.now()
     db.session.commit()
 
-    return redirect(url_for("main.show_solutions_v2", id=1))
+    next_question = Question.query.filter_by(
+        user_id=current_user.id, result=None
+    ).first()
+
+    if next_question:
+        next_question.started_at = db.func.now()
+        db.session.commit()
+        return redirect(
+            url_for(
+                "main.show_solutions_%s" % next_question.version,
+                id=next_question.solution_id,
+            )
+        )
+    else:
+        return redirect(url_for("main.complete"))

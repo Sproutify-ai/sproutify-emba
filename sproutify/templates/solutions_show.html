@@ -3,22 +3,12 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 {% endblock %}
 {% block style %}
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <style>
-    .custom-container {
-      margin-left: 15px;
-      margin-right: 15px;
-    }
-    .progress-container {
-      margin-top: 10px;
-      margin-bottom: 20px;
-    }
-  </style>
+
 {% endblock %}
 
 {% block content %}
   <section class="section">
-    <div class="container custom-container">
+    <div class="container">
       <div class="columns">
         <div class="column is-one-third">
           <h1 class="title">{{ tags['Name'] }}</h1>
@@ -33,9 +23,7 @@
             </div>
           </nav>
           <div class="progress-container">
-            <progress class="progress is-primary" value="{{ solution_count }}" max="{{ total_solutions }}"> 
-              {{ solution_count }} / {{ total_solutions }}
-            </progress>
+            <progress class="progress is-primary" value="{{ solution_count }}" max="{{ total_solutions }}">{{ solution_count }} / {{ total_solutions }}</progress>
             <p class="has-text-centered">{{ solution_count }} / {{ total_solutions }} Solutions</p>
           </div>
         </div>
@@ -46,18 +34,12 @@
               <div class="field">
                 <label class="label">Decision</label>
                 <div class="control">
-                  <label class="radio">
-                    <input type="radio" name="result" value="pass" checked>
-                    Pass
-                  </label>
-                  <label class="radio">
-                    <input type="radio" name="result" value="fail">
-                    Fail
-                  </label>
+                  <label class="radio"><input type="radio" name="result" value="pass" />Pass</label>
+                  <label class="radio"><input type="radio" name="result" value="fail" />Fail</label>
                 </div>
               </div>
 
-              <div class="field">
+              <div class="field" id="reason-field">
                 <label class="label">Fail Reason</label>
                 <div class="control">
                   <div class="select">
@@ -76,26 +58,11 @@
               <div class="field">
                 <label class="label">How confident are you with the decision?</label>
                 <div class="control">
-                  <label class="radio">
-                    <input type="radio" name="confidence" value="1" checked>
-                    1 - Not at all confident
-                  </label>
-                  <label class="radio">
-                    <input type="radio" name="confidence" value="2">
-                    2 
-                  </label>
-                  <label class="radio">
-                    <input type="radio" name="confidence" value="3">
-                    3 
-                  </label>
-                  <label class="radio">
-                    <input type="radio" name="confidence" value="4">
-                    4 
-                  </label>
-                  <label class="radio">
-                    <input type="radio" name="confidence" value="5">
-                    5 - Extremely confident
-                  </label>
+                  <label class="radio"><input type="radio" name="confidence" value="1" />1 - Not at all confident</label>
+                  <label class="radio"><input type="radio" name="confidence" value="2" />2</label>
+                  <label class="radio"><input type="radio" name="confidence" value="3" />3</label>
+                  <label class="radio"><input type="radio" name="confidence" value="4" />4</label>
+                  <label class="radio"><input type="radio" name="confidence" value="5" />5 - Extremely confident</label>
                 </div>
               </div>
 
@@ -155,8 +122,6 @@
                 <div class="card-content" id="content-all-{{ key|replace(' ', '-') }}" style="display: block;">
                   <div class="content">{{ value|safe }}</div>
                 </div>
-              </div>
-
               </div>
             {% endfor %}
           </div>
@@ -240,7 +205,7 @@
     function validateForm() {
       var result = document.querySelector('input[name="result"]:checked')
       var confidence = document.querySelector('input[name="confidence"]:checked')
-
+    
       if (!result) {
         alert('Please select a result.')
         return false
@@ -256,10 +221,10 @@
     $(document).ready(function () {
       $('input[name="result"]').on('change', function () {
         if ($(this).val() === 'fail') {
-          $('#reason-form-row').show()
+          $('#reason-field').show()
           $('#reason').prop('required', true)
         } else {
-          $('#reason-form-row').hide()
+          $('#reason-field').hide()
           $('#reason').prop('required', false)
           $('#reason').val('')
         }
