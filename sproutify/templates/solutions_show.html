@@ -1,0 +1,252 @@
+{% extends '_base.html' %}
+{% block style %}
+  <style>
+    .wrapper {
+      background-color: whitesmoke;
+      list-style-type: none;
+      padding: 0;
+      border-radius: 3px;
+    }
+    .form-row {
+      display: flex;
+      justify-content: flex-end;
+      padding: 0.5em;
+    }
+    .form-row > label {
+      padding: 0.5em 1em 0.5em 0;
+      flex: 1;
+    }
+    .form-row > input,
+    .form-row > button,
+    .form-row > div,
+    .form-row > select {
+      flex: 2;
+    }
+    .form-row > input,
+    .form-row > button {
+      padding: 0.5em;
+    }
+    .form-row > button {
+      background: gray;
+      color: white;
+      border: 0;
+    }
+    .radio-group {
+      display: flex;
+      gap: 20px; /* Space between the radio buttons */
+    }
+    .radio-group > label {
+      display: flex;
+      align-items: center;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="section">
+    <div class="columns">
+      <div class="column is-one-third">
+        <h1 class="title">{{ tags['Name'] }}</h1>
+        <nav class="level">
+          <div class="level-left">
+            <p class="level-item has-text-centered">
+              <span class="tag is-primary">{{ tags['Solution ID'] }}</span>
+            </p>
+            <p class="level-item has-text-centered">
+              <span class="tag is-warning">{{ tags['Challenge Name'] }}</span>
+            </p>
+            <!-- <p class="subtitle has-text-danger">Please remember to record your answers on Qualtrics.</p> -->
+          </div>
+        </nav>
+      </div>
+      <div class="column">
+        <form action="/record" method="POST" onsubmit="return validateForm()">
+          <ul class="wrapper">
+            <li class="form-row">
+              <label for="result">Result</label>
+              <div class="radio-group">
+                <label><input type="radio" name="result" value="pass" />Pass</label>
+                <label><input type="radio" name="result" value="fail" />Fail</label>
+              </div>
+            </li>
+            <li class="form-row">
+              <label for="reason">Reason</label>
+              <select name="reason" id="reason" required>
+                <option value="">Please select one</option>
+                <option value="1">Criterion 1 - Is the solution application complete, appropriate, and intelligible?</option>
+                <option value="2">Criterion 2 - Is the solution at least in Prototype stage?</option>
+                <option value="3">Criterion 3 - Does the solution address the Challenge question?</option>
+                <option value="4">Criterion 4 - Is the solution powered by technology?</option>
+                <option value="5">Criterion 5 - The quality of the solution is good enough that an external reviewer should take the time to read and score it</option>
+              </select>
+            </li>
+            <li class="form-row">
+              <label for="confidence">How confident are you with the decision? (1 low, 5 high)</label>
+              <div class="radio-group">
+                <label><input type="radio" name="confidence" value="1" />1</label>
+                <label><input type="radio" name="confidence" value="2" />2</label>
+                <label><input type="radio" name="confidence" value="3" />3</label>
+                <label><input type="radio" name="confidence" value="4" />4</label>
+                <label><input type="radio" name="confidence" value="5" />5</label>
+              </div>
+            </li>
+            <li class="form-row">
+              <button type="submit">Submit</button>
+            </li>
+          </ul>
+        </form>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column is-one-third">
+        {% if request.endpoint == 'main.show_solutions_v1' %}
+          {% include '_ai_v1.html' %}
+        {% elif request.endpoint == 'main.show_solutions_v2' %}
+          {% include '_ai_v2.html' %}
+        {% elif request.endpoint == 'main.show_solutions_v3' %}
+          {% include '_ai_v3.html' %}
+        {% endif %}
+      </div>
+      <div class="column">
+        <div class="tabs">
+          <ul>
+            <li class="is-active" onclick="showTab('all')">
+              <a href="#">All</a>
+            </li>
+            <li onclick="showTab('c1')">
+              <a href="#">Criterion 1</a>
+            </li>
+            <li onclick="showTab('c2')">
+              <a href="#">Criterion 2</a>
+            </li>
+            <li onclick="showTab('c3')">
+              <a href="#">Criterion 3</a>
+            </li>
+            <li onclick="showTab('c4')">
+              <a href="#">Criterion 4</a>
+            </li>
+            <li onclick="showTab('c5')">
+              <a href="#">Criterion 5</a>
+            </li>
+            <li onclick="showTab('summary')">
+              <a href="#">Solution Summary</a>
+            </li>
+          </ul>
+        </div>
+        <div id="submission-form-all" style="display: block;">
+          {% for key, value in solution_all.items() %}
+            <div class="card">
+              <header class="card-header is-clickable" onclick="toggleContent('content-all-{{ key|replace(' ', '-') }}')">
+                <p class="card-header-title">{{ key }}</p>
+                <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
+              </header>
+              <div class="card-content" id="content-all-{{ key|replace(' ', '-') }}" style="display: block;">
+                <div class="content">{{ value|safe }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div id="submission-form-c1" style="display: none;">
+          {% for key, value in solution_all.items() %}
+            <div class="card">
+              <header class="card-header is-clickable" onclick="toggleContent('content-c1-{{ key|replace(' ', '-') }}')">
+                <p class="card-header-title">{{ key }}</p>
+                <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
+              </header>
+              <div class="card-content" id="content-c1-{{ key|replace(' ', '-') }}" style="display: block;">
+                <div class="content">{{ value }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div id="submission-form-c2" style="display: none;">
+          {% for key, value in solution_c2.items() %}
+            <div class="card">
+              <header class="card-header is-clickable" onclick="toggleContent('content-c2-{{ key|replace(' ', '-') }}')">
+                <p class="card-header-title">{{ key }}</p>
+                <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
+              </header>
+              <div class="card-content" id="content-c2-{{ key|replace(' ', '-') }}" style="display: block;">
+                <div class="content">{{ value }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div id="submission-form-c3" style="display: none;">
+          {% for key, value in solution_c3.items() %}
+            <div class="card">
+              <header class="card-header is-clickable" onclick="toggleContent('content-c3-{{ key|replace(' ', '-') }}')">
+                <p class="card-header-title">{{ key }}</p>
+                <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
+              </header>
+              <div class="card-content" id="content-c3-{{ key|replace(' ', '-') }}" style="display: block;">
+                <div class="content">{{ value }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div id="submission-form-c4" style="display: none;">
+          {% for key, value in solution_c4.items() %}
+            <div class="card">
+              <header class="card-header is-clickable" onclick="toggleContent('content-c4-{{ key|replace(' ', '-') }}')">
+                <p class="card-header-title">{{ key }}</p>
+                <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
+              </header>
+              <div class="card-content" id="content-c4-{{ key|replace(' ', '-') }}" style="display: block;">
+                <div class="content">{{ value }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div id="submission-form-c5" style="display: none;">
+          {% for key, value in solution_all.items() %}
+            <div class="card">
+              <header class="card-header is-clickable" onclick="toggleContent('content-c5-{{ key|replace(' ', '-') }}')">
+                <p class="card-header-title">{{ key }}</p>
+                <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
+              </header>
+              <div class="card-content" id="content-c5-{{ key|replace(' ', '-') }}" style="display: block;">
+                <div class="content">{{ value }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div id="submission-form-summary" style="display: none;">
+          <p>{{ solution_summary|replace('\n', '<br>')|safe }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/show.js') }}"></script>
+  <script>
+    function showTab(tabName) {
+      console.log(tabName)
+      const tabs = ['all', 'c1', 'c2', 'c3', 'c4', 'c5', 'summary']
+      tabs.forEach((tab) => {
+        document.getElementById('submission-form-' + tab).style.display = tab === tabName ? 'block' : 'none'
+      })
+      document.querySelectorAll('.tabs ul li').forEach((li) => {
+        li.classList.remove('is-active')
+      })
+      document.querySelector(`.tabs li[onclick*="showTab('${tabName}')"]`).classList.add('is-active')
+    }
+  </script>
+  <script>
+    function validateForm() {
+      var result = document.querySelector('input[name="result"]:checked')
+      var confidence = document.querySelector('input[name="confidence"]:checked')
+    
+      if (!result) {
+        alert('Please select a result.')
+        return false
+      }
+      if (!confidence) {
+        alert('Please select a confidence.')
+        return false
+      }
+      return true
+    }
+  </script>
+{% endblock %}

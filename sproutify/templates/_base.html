@@ -17,7 +17,8 @@
         </script>
         </head>
         <body>
-            {% include "_navbar.html.j2" %}
+            {% block style %}{% endblock style %}
+            {% include "_navbar.html" %}
             {% block content %}
             {% endblock content %}
             <!-- navbar script -->
