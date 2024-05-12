@@ -123,6 +123,11 @@ def show_solutions_generic(id, version):
         is_pass=is_pass,
     )
 
+def show_complete():
+    return render_template(
+        "complete.html"
+    )
+
 @main.context_processor
 def cache_busters():
     return {
@@ -187,3 +192,8 @@ def show_solutions_v2(id):
 @login_required
 def show_solutions_v3(id):
     return show_solutions_generic(id, "v3")
+
+@main.route("/complete")
+@login_required
+def complete():
+    return show_complete()
