@@ -163,10 +163,6 @@ def show_solutions_generic(id, version):
     )
 
 
-def show_complete():
-    return render_template("complete.html")
-
-
 @main.context_processor
 def cache_busters():
     return {
@@ -239,7 +235,7 @@ def show_solutions_v3(id):
 @main.route("/complete")
 @login_required
 def complete():
-    return show_complete()
+    return render_template("complete.html")
 
 
 @main.route("/record", methods=["POST"])
