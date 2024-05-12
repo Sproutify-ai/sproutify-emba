@@ -1,4 +1,5 @@
 import os
+import random
 
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
@@ -6,6 +7,7 @@ import pandas as pd
 import json
 
 from . import db
+from .models import Question
 
 main = Blueprint("main", __name__)
 
@@ -188,7 +190,31 @@ def test():
 
 @main.route("/start")
 def start():
-    return "OK"
+    random_rows = df.sample(n=10)["Solution ID"].to_list()
+    versions = ["v1", "v2", "v3"]
+    version1 = random.choice(versions)
+    versions.pop(versions.index(version1))
+    version2 = random.choice(versions)
+
+    print(random_rows, version1, version2)
+    for row in random_rows[:5]:
+        question = Question(
+            user_id=current_user.id,
+            solution_id=row,
+            version=version1,
+        )
+        db.session.add(question)
+        db.session.commit()
+    for row in random_rows[5:]:
+        question = Question(
+            user_id=current_user.id,
+            solution_id=row,
+            version=version2,
+        )
+        db.session.add(question)
+        db.session.commit()
+
+    return redirect(url_for("main.show_solutions_%s" % version1, id=random_rows[0]))
 
 
 @main.route("/profile")
@@ -248,8 +274,16 @@ def complete():
 def record():
     data = {}
     form = request.form
+    data["solution_id"] = form.get("solution_id")
     data["result"] = form.get("result")
     data["reason"] = form.get("reason")
     data["confidence"] = form.get("confidence")
     print(data)
+
+    question = Question.query.filter_by(solution_id=data["solution_id"]).first()
+    question.result = data["result"]
+    question.reason = data["reason"]
+    question.confidence = data["confidence"]
+    db.session.commit()
+
     return redirect(url_for("main.show_solutions_v2", id=1))
