@@ -125,7 +125,7 @@ def show_solutions_generic(id, version):
 
 def show_complete():
     return render_template(
-        "complete.html"
+        "complete.html.j2"
     )
 
 @main.context_processor
