@@ -133,7 +133,7 @@
                   <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
                 </header>
                 <div class="card-content" id="content-c1-{{ key|replace(' ', '-') }}" style="display: block;">
-                  <div class="content">{{ value }}</div>
+                  <div class="content">{{ value|safe }}</div>
                 </div>
               </div>
             {% endfor %}
@@ -146,7 +146,7 @@
                   <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
                 </header>
                 <div class="card-content" id="content-c2-{{ key|replace(' ', '-') }}" style="display: block;">
-                  <div class="content">{{ value }}</div>
+                  <div class="content">{{ value|safe }}</div>
                 </div>
               </div>
             {% endfor %}
@@ -159,7 +159,7 @@
                   <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
                 </header>
                 <div class="card-content" id="content-c3-{{ key|replace(' ', '-') }}" style="display: block;">
-                  <div class="content">{{ value }}</div>
+                  <div class="content">{{ value|safe }}</div>
                 </div>
               </div>
             {% endfor %}
@@ -172,7 +172,7 @@
                   <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
                 </header>
                 <div class="card-content" id="content-c4-{{ key|replace(' ', '-') }}" style="display: block;">
-                  <div class="content">{{ value }}</div>
+                  <div class="content">{{ value|safe }}</div>
                 </div>
               </div>
             {% endfor %}
@@ -185,7 +185,7 @@
                   <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
                 </header>
                 <div class="card-content" id="content-c5-{{ key|replace(' ', '-') }}" style="display: block;">
-                  <div class="content">{{ value }}</div>
+                  <div class="content">{{ value|safe }}</div>
                 </div>
               </div>
             {% endfor %}
