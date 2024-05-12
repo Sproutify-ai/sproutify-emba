@@ -1,10 +1,49 @@
 {% extends '_base.html' %}
+
 {% block content %}
-  <section class="hero is-large">
-    <div class="hero-body">
-      <div class="container has-text-centered">
-        <a href="{{ url_for('main.start') }}" class="button is-primary is-large">Start Assignment</a>
+
+<section class="hero is-medium">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">Assignment Instructions</h1>
+      <div class="content">
+        <p>In this assignment, you will be evaluating 10 solutions submitted for MIT Solve's 2024 Global Health Equity Challenge. You will use two different versions of solution assessment tools, with the first 5 questions using one version and the remaining 5 questions using another version.</p>
+        <p>Before beginning the assessment, please follow the provided hyperlink to learn details about the challenge and its objectives.</p>
+        <p><a href="https://solve.mit.edu/challenges/2024-global-health-challenge" target="_blank">2024 Global Health Equity Challenge</a></p>
+        <h2 class="subtitle">Assessment Process:</h2>
+        <ol>
+          <li>For each solution, assess it based on the 5 given criteria.</li>
+          <li>After completing your assessment, fill in your decision in the upper corner of the assessment page:
+            <ul>
+              <li>a) Decision: Select either "Pass" or "Fail."</li>
+              <li>b) Fail Reason (if applicable): If the solution fails, select the most obvious criterion that it fails to meet.</li>
+              <li>c) Confidence Level: Indicate your confidence level in making the decision on a scale of 1 (low) to 5 (high).</li>
+            </ul>
+          </li>
+          <li>Click the "Next" button to move on to the next solution.</li>
+        </ol>
+        <h2 class="subtitle">Completion:</h2>
+        <p>After evaluating all 10 solutions, you will be directed to a complete assessment page. This page will guide you back to Canvas, where you will complete a post-evaluation survey.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="notification is-warning my-6 py-5 px-6">
+      <p><strong>Important:</strong> Once you start the assessment, you cannot interrupt the assessment or return to the previous page using your browser's navigation buttons. Please ensure you have sufficient time to complete the assessment in one sitting. This assessment may take you approximately 30 to 50 minutes to complete.</p>
+    </div>
+  </div>
+</section>
+
+
+<section class="hero is-small">
+  <div class="hero-body py-4">
+    <div class="container has-text-centered">
+      <a href="{{ url_for('main.start') }}" class="button is-primary is-large">Start Assignment</a>
+    </div>
+  </div>
+</section>
+
 {% endblock %}
