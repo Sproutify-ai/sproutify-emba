@@ -125,6 +125,19 @@
               </div>
             {% endfor %}
           </div>
+          <div id="submission-form-c1" style="display: none;">
+            {% for key, value in solution_all.items() %}
+              <div class="card">
+                <header class="card-header is-clickable" onclick="toggleContent('content-c1-{{ key|replace(' ', '-') }}')">
+                  <p class="card-header-title">{{ key }}</p>
+                  <a class="card-header-icon" aria-label="more options"><span class="icon"><i class="fas fa-angle-down"></i></span></a>
+                </header>
+                <div class="card-content" id="content-c1-{{ key|replace(' ', '-') }}" style="display: block;">
+                  <div class="content">{{ value }}</div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
           <div id="submission-form-c2" style="display: none;">
             {% for key, value in solution_c2.items() %}
               <div class="card">

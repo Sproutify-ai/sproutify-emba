@@ -297,7 +297,9 @@ def record():
     data["confidence"] = form.get("confidence")
     print(data)
 
-    question = Question.query.filter_by(solution_id=data["solution_id"]).first()
+    question = Question.query.filter_by(
+        solution_id=data["solution_id"], user_id=current_user.id
+    ).first()
     question.result = data["result"]
     question.reason = data["reason"]
     question.confidence = data["confidence"]
