@@ -7,6 +7,8 @@ from . import db
 
 auth = Blueprint("auth", __name__)
 
+default_password = "password"
+
 
 @auth.route("/login")
 def login():
@@ -16,7 +18,11 @@ def login():
 @auth.route("/login", methods=["POST"])
 def login_post():
     email = request.form.get("email")
-    password = request.form.get("password")
+    # password = request.form.get("password")
+
+    # no password required
+    password = default_password
+
     # remember = True if request.form.get("remember") else False
     # Always remember the user
     remember = True
@@ -40,7 +46,10 @@ def signup():
 def signup_post():
     email = request.form.get("email")
     name = request.form.get("name")
-    password = request.form.get("password")
+    # password = request.form.get("password")
+
+    # no password required
+    password = default_password
 
     user = User.query.filter_by(email=email).first()
 
