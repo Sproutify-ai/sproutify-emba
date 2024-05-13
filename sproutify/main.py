@@ -11,7 +11,12 @@ from .models import Question, Practice
 
 main = Blueprint("main", __name__)
 
+# assessment version
 csv_path = os.path.join(os.path.dirname(__file__), "static/csv/t.csv")
+
+# practice version
+practice_path = os.path.join(os.path.dirname(__file__), "static/csv/sample_5_2023.csv")
+
 drop_cols = [
     "Solution ID",
     "Challenge Name",
@@ -33,7 +38,7 @@ drop_cols = [
     "summary",
 ]
 df = pd.read_csv(csv_path)
-
+practice_df = pd.read_csv(practice_path)
 
 def parse_criteria(selected_results, version):
     base_criteria = {
@@ -70,7 +75,7 @@ def parse_criteria(selected_results, version):
 
 
 def show_solutions_generic(id, version, is_practice=False):
-    d = df.copy()
+    d = practice_df if is_practice else df
     solution = d[d["Solution ID"] == id]
     if solution.empty:
         return "Solution not found", 404
@@ -213,7 +218,7 @@ def test():
 @main.route("/practice")
 def practice():
     tbl = Practice
-    random_rows = df["Solution ID"].to_list()[:5]
+    random_rows = practice_df["Solution ID"].to_list()[:5]
     versions = ["v1", "v1"]
     version1 = random.choice(versions)
 
