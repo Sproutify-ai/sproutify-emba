@@ -7,7 +7,7 @@ import pandas as pd
 import json
 
 from . import db
-from .models import Question
+from .models import Question, Practice
 
 main = Blueprint("main", __name__)
 
@@ -69,7 +69,7 @@ def parse_criteria(selected_results, version):
     return base_criteria
 
 
-def show_solutions_generic(id, version):
+def show_solutions_generic(id, version, is_practice=False):
     d = df.copy()
     solution = d[d["Solution ID"] == id]
     if solution.empty:
@@ -151,12 +151,20 @@ def show_solutions_generic(id, version):
     if version in ["v2", "v3"]:
         is_pass = all([criteria[key]["is_passed"] for key in criteria.keys()])
 
-    total_solutions = 10
-    num_questions = (
-        total_solutions
-        + 1
-        - Question.query.filter_by(user_id=current_user.id, result=None).count()
-    )
+    if not is_practice:
+        total_solutions = 10
+        num_questions = (
+            total_solutions
+            + 1
+            - Question.query.filter_by(user_id=current_user.id, result=None).count()
+        )
+    else:
+        total_solutions = 5
+        num_questions = (
+            total_solutions
+            + 1
+            - Practice.query.filter_by(user_id=current_user.id, result=None).count()
+        )
 
     return render_template(
         "solutions_show.html",
@@ -169,6 +177,7 @@ def show_solutions_generic(id, version):
         tags=tags,
         criteria=criteria,
         is_pass=is_pass,
+        is_practice=is_practice,
         total_solutions=total_solutions,
         solution_count=num_questions,
     )
@@ -199,6 +208,32 @@ def index():
 @main.route("/test")
 def test():
     return render_template("test.html")
+
+
+@main.route("/practice")
+def practice():
+    tbl = Practice
+    random_rows = df["Solution ID"].to_list()[:5]
+    versions = ["v1", "v1"]
+    version1 = random.choice(versions)
+
+    print(random_rows, version1)
+    for row in random_rows[:5]:
+        question = tbl(
+            user_id=current_user.id,
+            solution_id=row,
+            version=version1,
+        )
+        db.session.add(question)
+        db.session.commit()
+
+    first_id = random_rows[0]
+    question = tbl.query.filter_by(solution_id=first_id).first()
+    question.started_at = db.func.now()
+    db.session.commit()
+    return redirect(
+        url_for("main.show_solutions_%s" % version1, id=first_id, is_practice=True)
+    )
 
 
 @main.route("/start")
@@ -265,19 +300,22 @@ def index_solutions():
 @main.route("/solutions/<int:id>/98q3hiwnaj")
 @login_required
 def show_solutions_v1(id):
-    return show_solutions_generic(id, "v1")
+    is_practice = request.args.get("is_practice")
+    return show_solutions_generic(id, "v1", is_practice=is_practice)
 
 
 @main.route("/solutions/<int:id>/98hy3fqeh3")
 @login_required
 def show_solutions_v2(id):
-    return show_solutions_generic(id, "v2")
+    is_practice = request.args.get("is_practice")
+    return show_solutions_generic(id, "v2", is_practice=is_practice)
 
 
 @main.route("/solutions/<int:id>/0o3e8u5t8i")
 @login_required
 def show_solutions_v3(id):
-    return show_solutions_generic(id, "v3")
+    is_practice = request.args.get("is_practice")
+    return show_solutions_generic(id, "v3", is_practice=is_practice)
 
 
 @main.route("/complete")
@@ -289,26 +327,29 @@ def complete():
 @main.route("/record", methods=["POST"])
 @login_required
 def record():
-    data = {}
     form = request.form
-    data["solution_id"] = form.get("solution_id")
-    data["result"] = form.get("result")
-    data["reason"] = form.get("reason")
-    data["confidence"] = form.get("confidence")
-    print(data)
+    is_practice = form.get("is_practice")
+    solution_id = form.get("solution_id")
+    result = form.get("result")
+    reason = form.get("reason")
+    confidence = form.get("confidence")
 
-    question = Question.query.filter_by(
-        solution_id=data["solution_id"], user_id=current_user.id
+    print(form, is_practice, solution_id, result, reason, confidence)
+
+    tbl = Question
+    if is_practice:
+        tbl = Practice
+
+    question = tbl.query.filter_by(
+        solution_id=solution_id, user_id=current_user.id
     ).first()
-    question.result = data["result"]
-    question.reason = data["reason"]
-    question.confidence = data["confidence"]
+    question.result = result
+    question.reason = reason
+    question.confidence = confidence
     question.completed_at = db.func.now()
     db.session.commit()
 
-    next_question = Question.query.filter_by(
-        user_id=current_user.id, result=None
-    ).first()
+    next_question = tbl.query.filter_by(user_id=current_user.id, result=None).first()
 
     if next_question:
         next_question.started_at = db.func.now()
@@ -317,6 +358,7 @@ def record():
             url_for(
                 "main.show_solutions_%s" % next_question.version,
                 id=next_question.solution_id,
+                is_practice=is_practice,
             )
         )
     else:

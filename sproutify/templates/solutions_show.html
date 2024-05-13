@@ -29,6 +29,9 @@
         </div>
         <div class="column is-two-thirds">
           <form action="/record" method="POST" onsubmit="return validateForm()">
+            {% if is_practice %}
+              <input type="hidden" name="is_practice" value="1" />
+            {% endif %}
             <input type="hidden" name="solution_id" value="{{ tags['Solution ID'] }}" />
             <div class="box">
               <div class="field">
