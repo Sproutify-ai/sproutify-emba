@@ -7,6 +7,8 @@ from . import db
 
 auth = Blueprint("auth", __name__)
 
+default_password = "password"
+
 
 @auth.route("/login")
 def login():
@@ -16,16 +18,25 @@ def login():
 @auth.route("/login", methods=["POST"])
 def login_post():
     email = request.form.get("email")
-    password = request.form.get("password")
+    # password = request.form.get("password")
+
+    # no password required
+    password = default_password
+
     # remember = True if request.form.get("remember") else False
     # Always remember the user
     remember = True
 
     user = User.query.filter_by(email=email).first()
 
-    if not user or not check_password_hash(user.password, password):
-        flash("Please check your login details and try again.")
-        return redirect(url_for("auth.login"))
+    if not user:
+        user = User(
+            email=email,
+            password=generate_password_hash(password, method="scrypt"),
+        )
+
+        db.session.add(user)
+        db.session.commit()
 
     login_user(user, remember=remember)
     return redirect(url_for("main.profile"))
@@ -40,7 +51,10 @@ def signup():
 def signup_post():
     email = request.form.get("email")
     name = request.form.get("name")
-    password = request.form.get("password")
+    # password = request.form.get("password")
+
+    # no password required
+    password = default_password
 
     user = User.query.filter_by(email=email).first()
 
@@ -57,7 +71,12 @@ def signup_post():
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect(url_for("auth.login"))
+    # login and redirect to profile
+    login_user(new_user, remember=True)
+    return redirect(url_for("main.profile"))
+
+    # redirect to the login page
+    # return redirect(url_for("auth.login"))
 
 
 @auth.route("/logout")
