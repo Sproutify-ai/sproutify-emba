@@ -207,7 +207,7 @@ def cache_busters():
 
 @main.route("/")
 def index():
-    return render_template("index.html")
+    return redirect(url_for("main.instructions"))
 
 
 @main.route("/test")
@@ -311,10 +311,10 @@ def start():
     return redirect(url_for("main.show_solutions_%s" % version1, id=first_id))
 
 
-@main.route("/profile")
+@main.route("/instructions")
 @login_required
-def profile():
-    return render_template("profile.html", name=current_user.name)
+def instructions():
+    return render_template("instructions.html", name=current_user.name)
 
 
 @main.route("/dashboard")

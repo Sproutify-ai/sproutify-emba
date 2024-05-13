@@ -39,7 +39,7 @@ def login_post():
         db.session.commit()
 
     login_user(user, remember=remember)
-    return redirect(url_for("main.profile"))
+    return redirect(url_for("main.instructions"))
 
 
 @auth.route("/signup")
