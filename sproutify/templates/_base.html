@@ -7,7 +7,9 @@
         <title>Sproutify</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@creativebulma/bulma-tooltip@1.2.0/dist/bulma-tooltip.min.css">        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@creativebulma/bulma-tooltip@1.2.0/dist/bulma-tooltip.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="{{ url_for("static", filename="css/index.css") }}">
         <meta name="description" content="Add your meta description here">
         <meta name="keywords" content="Add your meta keywords here">
@@ -59,6 +61,35 @@
             {% endif %}
             {% block scripts %}
             {% endblock scripts %}
-            <p class="is-size-7 has-text-centered">PostHog is enabled on this website.</p>
+            <footer class="footer">
+                <div class="content">
+                    <div class="columns is-vcentered">
+                        <div class="column has-text-left">
+                            <p class="is-size-7">
+                                © 2024 Hinoki Labs. All rights reserved.
+                            </p>
+                        </div>
+                        <div class="column has-text-centered">
+                            <p class="is-size-7">
+                                Team: 
+                                <a href="mailto:ann94613@uw.edu" class="has-text-link">
+                                    Camila Lin <i class="fas fa-envelope"></i>
+                                </a>, 
+                                <a href="mailto:ychen349@uw.edu" class="has-text-link">
+                                    Ian Chen <i class="fas fa-envelope"></i>
+                                </a>, 
+                                <a href="mailto:phwamy@uw.edu" class="has-text-link">
+                                    Pei-Hsin (Amy) Wang <i class="fas fa-envelope"></i>
+                                </a>
+                            </p>
+                        </div>
+                        <div class="column has-text-right">
+                            <p class="is-size-7">
+                                PostHog is enabled on this website.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </body>
     </html>
