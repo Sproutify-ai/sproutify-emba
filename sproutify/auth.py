@@ -29,9 +29,14 @@ def login_post():
 
     user = User.query.filter_by(email=email).first()
 
-    if not user or not check_password_hash(user.password, password):
-        flash("Please check your login details and try again.")
-        return redirect(url_for("auth.login"))
+    if not user:
+        user = User(
+            email=email,
+            password=generate_password_hash(password, method="scrypt"),
+        )
+
+        db.session.add(user)
+        db.session.commit()
 
     login_user(user, remember=remember)
     return redirect(url_for("main.profile"))
@@ -66,7 +71,12 @@ def signup_post():
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect(url_for("auth.login"))
+    # login and redirect to profile
+    login_user(new_user, remember=True)
+    return redirect(url_for("main.profile"))
+
+    # redirect to the login page
+    # return redirect(url_for("auth.login"))
 
 
 @auth.route("/logout")
