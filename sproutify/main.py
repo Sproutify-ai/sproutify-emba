@@ -40,6 +40,7 @@ drop_cols = [
 df = pd.read_csv(csv_path)
 practice_df = pd.read_csv(practice_path)
 
+
 def parse_criteria(selected_results, version):
     base_criteria = {
         "Criterion 1 - Is the solution application complete, appropriate, and intelligible?": {},
@@ -237,6 +238,16 @@ def practice():
             )
         )
 
+    if tbl.query.filter(tbl.user_id == current_user.id).count() > 0:
+        last_question = tbl.query.filter_by(user_id=current_user.id).first()
+        return redirect(
+            url_for(
+                "main.show_solutions_%s" % last_question.version,
+                id=last_question.solution_id,
+                is_practice=True,
+            )
+        )
+
     random_rows = practice_df["Solution ID"].to_list()[:5]
     versions = ["v1", "v1"]
     version1 = random.choice(versions)
@@ -273,6 +284,15 @@ def start():
         last_question = tbl.query.filter_by(
             user_id=current_user.id, result=None
         ).first()
+        return redirect(
+            url_for(
+                "main.show_solutions_%s" % last_question.version,
+                id=last_question.solution_id,
+            )
+        )
+
+    if tbl.query.filter(tbl.user_id == current_user.id).count() > 0:
+        last_question = tbl.query.filter_by(user_id=current_user.id).first()
         return redirect(
             url_for(
                 "main.show_solutions_%s" % last_question.version,
