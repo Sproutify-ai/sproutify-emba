@@ -40,14 +40,48 @@
       a:hover {
         background-color: #0056b3;
       }
+      .button {
+      display: inline-block;
+      margin: 20px 10px;
+      padding: 10px 20px;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .button.is-secondary {
+      background-color: rgb(255, 255, 255);
+      border-bottom-color: rgb(214, 217, 224);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      box-shadow: rgba(51, 51, 51, 0.05) 0px 1.5px 3px 0px, rgba(51, 51, 51, 0.05) 0px 3px 6px 0px ;
+      color:rgb(46, 51, 61) ;
+    }
+    .button.is-primary {
+      background-color: #00d1b2;
+      color: rgb(0, 31, 26);
+
+    }
+    .button:hover {
+      opacity: 0.8;
+    }
     </style>
   </head>
   <body>
     <div class="container">
       <h1>Congratulations!</h1>
       <p>You have completed all solutions assessments.</p>
-      <p>Please go back to Canvas to fill out the post-evaluation.</p>
-      <a href="https://canvas.uw.edu/">Go to Canvas</a>
+      <p>Please take a snapshot of this page and go back to Canvas to fill out the post-evaluation.</p>
+      <!-- <a href="https://canvas.uw.edu/">Go to Canvas</a> -->
+      <div>
+        <a href="{{ url_for('main.instructions') }}" class="button is-secondary">Back to Instructions</a>
+        <a href="https://canvas.uw.edu/" class="button is-primary">Go to Canvas</a>
+      </div>
     </div>
+
+
   </body>
+
+
 </html>

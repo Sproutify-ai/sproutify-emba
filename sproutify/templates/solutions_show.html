@@ -3,7 +3,22 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 {% endblock %}
 {% block style %}
+  <style>
+        .timer-wrapper {
+      display: flex;
+      align-items: center;
+    }
 
+    .timer-text {
+      font-size: 1em;
+      margin-right: 10px;
+    }
+
+    .timer {
+      font-size: 1em;
+      font-weight: bold;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -11,6 +26,33 @@
     <div class="container">
       <div class="columns">
         <div class="column is-one-third">
+          <div class="timer-wrapper">
+            <div class="timer-text">Recommended spending time</div>
+            <div class="timer" id="timer">2:30</div>
+          </div>
+          <script>
+            const timerElement = document.getElementById('timer');
+            let timeLeft = 150; // 2 minutes and 30 seconds in seconds
+        
+            function updateTimer() {
+              const minutes = Math.floor(timeLeft / 60);
+              let seconds = timeLeft % 60;
+        
+              seconds = seconds < 10 ? '0' + seconds : seconds;
+        
+              timerElement.innerHTML = `${minutes}:${seconds}`;
+        
+              if (timeLeft === 0) {
+                clearInterval(countdown);
+                timerElement.innerHTML = 'Time is up!';
+              }
+        
+              timeLeft--;
+            }
+        
+            const countdown = setInterval(updateTimer, 1000);
+          </script>
+          <div class="mt-3"></div> <!-- Add a div with margin-top -->
           <h1 class="title">{{ tags['Name'] }}</h1>
           <nav class="level">
             <div class="level-left">
@@ -27,6 +69,8 @@
             <p class="has-text-centered">{{ solution_count }} / {{ total_solutions }} Solutions</p>
           </div>
         </div>
+        
+
         <div class="column is-two-thirds">
           <form action="/record" method="POST" onsubmit="return validateForm()">
             {% if is_practice %}
