@@ -18,6 +18,16 @@
       font-size: 1em;
       font-weight: bold;
     }
+
+    .is-invalid {
+      border-color: red;
+    }
+
+    .warning-text {
+      color: red;
+      font-size: 0.875em;
+      margin-top: 0.25em;
+    }
   </style>
 {% endblock %}
 
@@ -27,7 +37,7 @@
       <div class="columns">
         <div class="column is-one-third">
           <div class="timer-wrapper">
-            <div class="timer-text">Recommended spending time</div>
+            <div class="timer-text">Remaining time</div>
             <div class="timer" id="timer">2:30</div>
           </div>
           <script>
@@ -72,7 +82,7 @@
         
 
         <div class="column is-two-thirds">
-          <form action="/record" method="POST" onsubmit="return validateForm()">
+          <form action="/record" method="POST" onsubmit="return validateForm()" novalidate>
             {% if is_practice %}
               <input type="hidden" name="is_practice" value="1" />
             {% endif %}
@@ -84,6 +94,7 @@
                   <label class="radio"><input type="radio" name="result" value="pass" /> Pass</label>
                   <label class="radio"><input type="radio" name="result" value="fail" /> Fail</label>
                 </div>
+                <p class="warning-text" id="result-warning" style="display: none;">Please select your decision</p>
               </div>
 
               <div class="field" id="reason-field">
@@ -100,6 +111,7 @@
                     </select>
                   </div>
                 </div>
+                <p class="warning-text" id="reason-warning" style="display: none;">Please select the major fail reason</p>
               </div>
 
               <div class="field">
@@ -111,6 +123,7 @@
                   <label class="radio"><input type="radio" name="confidence" value="4" /> 4</label>
                   <label class="radio"><input type="radio" name="confidence" value="5" /> 5 - Extremely confident</label>
                 </div>
+                <p class="warning-text" id="confidence-warning" style="display: none;">Please select your confidence level</p>
               </div>
 
               <div class="field">
@@ -261,7 +274,7 @@
       document.querySelector(`.tabs li[onclick*="showTab('${tabName}')"]`).classList.add('is-active')
     }
   </script>
-  <script>
+  <!-- <script>
     function validateForm() {
       var result = document.querySelector('input[name="result"]:checked')
       var confidence = document.querySelector('input[name="confidence"]:checked')
@@ -276,7 +289,42 @@
       }
       return true
     }
+  </script> -->
+  <script>
+    function validateForm() {
+      var result = document.querySelector('input[name="result"]:checked');
+      var reason = document.getElementById('reason');
+      var confidence = document.querySelector('input[name="confidence"]:checked');
+      var isValid = true;
+
+      // Reset warnings and classes
+      document.getElementById('result-warning').style.display = 'none';
+      document.getElementById('reason-warning').style.display = 'none';
+      document.getElementById('confidence-warning').style.display = 'none';
+      document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+
+      if (!result) {
+        document.getElementById('result-warning').style.display = 'block';
+        document.querySelectorAll('input[name="result"]').forEach(el => el.classList.add('is-invalid'));
+        isValid = false;
+      }
+
+      if (result && result.value === 'fail' && reason.value === '') {
+        document.getElementById('reason-warning').style.display = 'block';
+        reason.classList.add('is-invalid');
+        isValid = false;
+      }
+
+      if (!confidence) {
+        document.getElementById('confidence-warning').style.display = 'block';
+        document.querySelectorAll('input[name="confidence"]').forEach(el => el.classList.add('is-invalid'));
+        isValid = false;
+      }
+
+      return isValid;
+    }
   </script>
+
   <script>
     $(document).ready(function () {
       $('input[name="result"]').on('change', function () {
