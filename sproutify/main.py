@@ -273,63 +273,70 @@ def practice():
 
 @main.route("/start")
 def start():
-    tbl = Question
+    tbl_p = Practice
+
     if (
-        tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
-        == 10
+        tbl_p.query.filter(tbl_p.user_id == current_user.id, tbl_p.result != None).count()
+        == 5
     ):
-        return redirect(url_for("main.complete"))
+        tbl = Question
+        if (
+            tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
+            == 10
+        ):
+            return redirect(url_for("main.complete"))
 
-    if tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count() > 0:
-        last_question = tbl.query.filter_by(
-            user_id=current_user.id, result=None
-        ).first()
-        return redirect(
-            url_for(
-                "main.show_solutions_%s" % last_question.version,
-                id=last_question.solution_id,
+        if tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count() > 0:
+            last_question = tbl.query.filter_by(
+                user_id=current_user.id, result=None
+            ).first()
+            return redirect(
+                url_for(
+                    "main.show_solutions_%s" % last_question.version,
+                    id=last_question.solution_id,
+                )
             )
-        )
 
-    if tbl.query.filter(tbl.user_id == current_user.id).count() > 0:
-        last_question = tbl.query.filter_by(user_id=current_user.id).first()
-        return redirect(
-            url_for(
-                "main.show_solutions_%s" % last_question.version,
-                id=last_question.solution_id,
+        if tbl.query.filter(tbl.user_id == current_user.id).count() > 0:
+            last_question = tbl.query.filter_by(user_id=current_user.id).first()
+            return redirect(
+                url_for(
+                    "main.show_solutions_%s" % last_question.version,
+                    id=last_question.solution_id,
+                )
             )
-        )
 
-    random_rows = df.sample(n=10)["Solution ID"].to_list()
-    versions = ["v1", "v2", "v3"]
-    version1 = random.choice(versions)
-    versions.pop(versions.index(version1))
-    version2 = random.choice(versions)
+        random_rows = df.sample(n=10)["Solution ID"].to_list()
+        versions = ["v1", "v2", "v3"]
+        version1 = random.choice(versions)
+        versions.pop(versions.index(version1))
+        version2 = random.choice(versions)
 
-    print(random_rows, version1, version2)
-    for row in random_rows[:5]:
-        question = tbl(
-            user_id=current_user.id,
-            solution_id=row,
-            version=version1,
-        )
-        db.session.add(question)
+        print(random_rows, version1, version2)
+        for row in random_rows[:5]:
+            question = tbl(
+                user_id=current_user.id,
+                solution_id=row,
+                version=version1,
+            )
+            db.session.add(question)
+            db.session.commit()
+        for row in random_rows[5:]:
+            question = tbl(
+                user_id=current_user.id,
+                solution_id=row,
+                version=version2,
+            )
+            db.session.add(question)
+            db.session.commit()
+
+        first_id = random_rows[0]
+        question = tbl.query.filter_by(solution_id=first_id).first()
+        question.started_at = db.func.now()
         db.session.commit()
-    for row in random_rows[5:]:
-        question = tbl(
-            user_id=current_user.id,
-            solution_id=row,
-            version=version2,
-        )
-        db.session.add(question)
-        db.session.commit()
-
-    first_id = random_rows[0]
-    question = tbl.query.filter_by(solution_id=first_id).first()
-    question.started_at = db.func.now()
-    db.session.commit()
-    return redirect(url_for("main.show_solutions_%s" % version1, id=first_id))
-
+        return redirect(url_for("main.show_solutions_%s" % version1, id=first_id))
+    else:
+        return render_template("no_practice.html")
 
 @main.route("/instructions")
 @login_required

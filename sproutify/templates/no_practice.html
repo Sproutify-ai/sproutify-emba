@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Do practice first before start assessment</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 1.1em;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        text-align: center;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 80%;
+      }
+      h1 {
+        color: #343a40;
+      }
+      p {
+        color: #495057;
+      }
+      a {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        color: #ffffff;
+        background-color: #007bff;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+      a:hover {
+        background-color: #0056b3;
+      }
+      .button {
+      display: inline-block;
+      margin: 20px 10px;
+      padding: 10px 20px;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .button.is-primary {
+      background-color: #00d1b2;
+      color: rgb(0, 31, 26);
+
+    }
+    .button:hover {
+      opacity: 0.8;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <h1>You Haven't Completed the Practice!</h1>
+        <p>Please complete the practice of evaluating 5 solutions to familiarize yourself with the tool, solution format, and evaluation process before starting the assignment.</p>        
+      <div>
+        <a href="{{url_for('main.practice')}}" class="button is-primary">Go to Practice</a>
+      </div>
+    </div>
+
+
+  </body>
+
+
+</html>
