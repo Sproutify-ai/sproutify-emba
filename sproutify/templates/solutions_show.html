@@ -97,7 +97,7 @@
                 <p class="warning-text" id="result-warning" style="display: none;">Please select your decision</p>
               </div>
 
-              <div class="field" id="reason-field">
+              <div class="field" id="reason-field" style="display: none;">
                 <label class="label">Fail Reason</label>
                 <div class="control">
                   <div class="select">
@@ -291,6 +291,25 @@
     }
   </script> -->
   <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    var resultRadios = document.querySelectorAll('input[name="result"]');
+    var reasonField = document.getElementById('reason-field');
+    var reasonSelect = document.getElementById('reason');
+
+    resultRadios.forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        if (this.value === 'fail') {
+          reasonField.style.display = 'block';
+          reasonSelect.required = true;
+        } else {
+          reasonField.style.display = 'none';
+          reasonSelect.required = false;
+          reasonSelect.value = '';
+        }
+      });
+    });
+  });
+  
     function validateForm() {
       var result = document.querySelector('input[name="result"]:checked');
       var reason = document.getElementById('reason');
