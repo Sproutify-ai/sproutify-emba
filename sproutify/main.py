@@ -219,10 +219,12 @@ def test():
 @main.route("/practice")
 def practice():
     tbl = Practice
+    num_questions = 3
 
+    # If the user already completed more than num_questions, redirect to complete page
     if (
         tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
-        == 5
+        >= num_questions
     ):
         return redirect(url_for("main.complete"))
 
@@ -248,12 +250,12 @@ def practice():
             )
         )
 
-    random_rows = practice_df["Solution ID"].to_list()[:5]
+    random_rows = practice_df["Solution ID"].to_list()[:num_questions]
     versions = ["v1", "v1"]
     version1 = random.choice(versions)
 
     print(random_rows, version1)
-    for row in random_rows[:5]:
+    for row in random_rows[:num_questions]:
         question = tbl(
             user_id=current_user.id,
             solution_id=row,
@@ -276,7 +278,9 @@ def start():
     tbl_p = Practice
 
     if (
-        tbl_p.query.filter(tbl_p.user_id == current_user.id, tbl_p.result != None).count()
+        tbl_p.query.filter(
+            tbl_p.user_id == current_user.id, tbl_p.result != None
+        ).count()
         == 5
     ):
         tbl = Question
@@ -286,7 +290,10 @@ def start():
         ):
             return redirect(url_for("main.complete"))
 
-        if tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count() > 0:
+        if (
+            tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
+            > 0
+        ):
             last_question = tbl.query.filter_by(
                 user_id=current_user.id, result=None
             ).first()
@@ -337,6 +344,7 @@ def start():
         return redirect(url_for("main.show_solutions_%s" % version1, id=first_id))
     else:
         return render_template("no_practice.html")
+
 
 @main.route("/instructions")
 @login_required
