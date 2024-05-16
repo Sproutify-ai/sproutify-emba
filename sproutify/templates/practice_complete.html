@@ -3,11 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Do practice first before start assessment</title>
+    <title>Complete Practice</title>
     <style>
       body {
         font-family: Arial, sans-serif;
-        font-size: 1.1em;
         background-color: #f8f9fa;
         margin: 0;
         padding: 0;
@@ -22,7 +21,6 @@
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        max-width: 80%;
       }
       h1 {
         color: #343a40;
@@ -52,6 +50,14 @@
         font-size: 18px;
         cursor: pointer;
       }
+      .button.is-secondary {
+        background-color: rgb(255, 255, 255);
+        border-bottom-color: rgb(214, 217, 224);
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        box-shadow: rgba(51, 51, 51, 0.05) 0px 1.5px 3px 0px, rgba(51, 51, 51, 0.05) 0px 3px 6px 0px;
+        color: rgb(46, 51, 61);
+      }
       .button.is-primary {
         background-color: #00d1b2;
         color: rgb(0, 31, 26);
@@ -63,10 +69,13 @@
   </head>
   <body>
     <div class="container">
-      <h1>You Haven't Completed the Practice!</h1>
-      <p>Please complete the practice of evaluating {{ num_practice }} solutions to familiarize yourself with the tool, solution format, and evaluation process before starting the assignment.</p>
+      <h1>Congratulations!</h1>
+      <p>You have completed all practice problems.</p>
+      <p>Please click the "Start Assignment" button to start the assignment.</p>
+      <!-- <a href="https://canvas.uw.edu/">Go to Canvas</a> -->
       <div>
-        <a href="{{ url_for('main.practice') }}" class="button is-primary">Go to Practice</a>
+        <a href="{{ url_for('main.instructions') }}" class="button is-secondary">Back to Instructions</a>
+        <a href="{{ url_for('main.start') }}" class="button is-primary">Start Assignment</a>
       </div>
     </div>
   </body>

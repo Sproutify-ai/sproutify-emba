@@ -17,6 +17,8 @@ csv_path = os.path.join(os.path.dirname(__file__), "static/csv/t.csv")
 # practice version
 practice_path = os.path.join(os.path.dirname(__file__), "static/csv/sample_5_2023.csv")
 
+num_practice = 3
+
 drop_cols = [
     "Solution ID",
     "Challenge Name",
@@ -165,7 +167,7 @@ def show_solutions_generic(id, version, is_practice=False):
             - Question.query.filter_by(user_id=current_user.id, result=None).count()
         )
     else:
-        total_solutions = 5
+        total_solutions = num_practice
         num_questions = (
             total_solutions
             + 1
@@ -187,10 +189,6 @@ def show_solutions_generic(id, version, is_practice=False):
         total_solutions=total_solutions,
         solution_count=num_questions,
     )
-
-
-def show_complete():
-    return render_template("complete.html")
 
 
 @main.context_processor
@@ -219,14 +217,13 @@ def test():
 @main.route("/practice")
 def practice():
     tbl = Practice
-    num_questions = 3
 
     # If the user already completed more than num_questions, redirect to complete page
     if (
         tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
-        >= num_questions
+        >= num_practice
     ):
-        return redirect(url_for("main.complete"))
+        return redirect(url_for("main.practice_complete"))
 
     if tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count() > 0:
         last_question = tbl.query.filter_by(
@@ -250,12 +247,12 @@ def practice():
             )
         )
 
-    random_rows = practice_df["Solution ID"].to_list()[:num_questions]
+    random_rows = practice_df["Solution ID"].to_list()[:num_practice]
     versions = ["v1", "v1"]
     version1 = random.choice(versions)
 
     print(random_rows, version1)
-    for row in random_rows[:num_questions]:
+    for row in random_rows[:num_practice]:
         question = tbl(
             user_id=current_user.id,
             solution_id=row,
@@ -281,7 +278,7 @@ def start():
         tbl_p.query.filter(
             tbl_p.user_id == current_user.id, tbl_p.result != None
         ).count()
-        == 5
+        >= num_practice
     ):
         tbl = Question
         if (
@@ -343,7 +340,7 @@ def start():
         db.session.commit()
         return redirect(url_for("main.show_solutions_%s" % version1, id=first_id))
     else:
-        return render_template("no_practice.html")
+        return render_template("no_practice.html", num_practice=num_practice)
 
 
 @main.route("/instructions")
@@ -399,6 +396,12 @@ def show_solutions_v3(id):
 @login_required
 def complete():
     return render_template("complete.html")
+
+
+@main.route("/practice_complete")
+@login_required
+def practice_complete():
+    return render_template("practice_complete.html")
 
 
 @main.route("/record", methods=["POST"])
