@@ -2,3 +2,28 @@
   --bulma-title-color: #fff;
   --bulma-title-line-height: 1.6;
 } */
+
+.timer-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.timer-text {
+  font-size: 1em;
+  margin-right: 10px;
+}
+
+.timer {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.is-invalid {
+  border-color: red;
+}
+
+.warning-text {
+  color: red;
+  font-size: 0.875em;
+  margin-top: 0.25em;
+}

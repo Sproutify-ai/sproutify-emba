@@ -1,0 +1,355 @@
+<!-- survey.html -->
+{% extends '_base.html' %}
+
+{% block content %}
+<section class="hero is-small">
+  <div class="hero-body">
+      <form action="{{ url_for('main.survey') }}" method="POST" onsubmit="return validateForm()" novalidate>
+          <input type="hidden" name="page" value="{{ page }}">
+
+          {% if page == 1 %}
+          <div class="progress-container">
+              <progress id="progress" class="progress is-primary" value="33" max="100">33%</progress>
+              <div id="progress-text" class="has-text-centered">Page 1 of 3</div>
+          </div>
+          <div class="box">
+              <div class="field">
+                  <label class="label" id="personal_use">1. How frequently have you used generative AI tools (e.g., ChatGPT, Gemini, Bard, Midjourney, etc) for personal activities in the past few months?</label>
+                  <ul>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="personal_use" value="1" />
+                             I do not use generative AI
+                          </label>
+                      </div>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="personal_use" value="2" />
+                             I have tried it once or twice
+                          </label>
+                      </div>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="personal_use" value="3" />
+                             I use it occasionally (less than once a week)
+                          </label>
+                      </div>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="personal_use" value="4" />
+                             I use it regularly (1-3 times a week)
+                          </label>
+                      </div>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="personal_use" value="5" />
+                             I use it very frequently (daily or almost daily)
+                          </label>
+                      </div>
+                  </ul>
+                  <p class="warning-text" id="personal_use-warning" style="display: none;">Please select your decision</p>
+              </div>
+              <div class="field">
+                  <label class="label" id="professional_use">
+                    2. How frequently have you used generative AI tools (e.g., ChatGPT, Gemini, Bard, Midjourney, etc) for professional activities in the past few months?
+                  </label>
+                    <ul>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="professional_use" value="1" />
+                             I do not use generative AI
+                          </label>
+                      </div>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="professional_use" value="2" />
+                             I have tried it once or twice
+                          </label>
+                      </div>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="professional_use" value="3" />
+                             I use it occasionally (less than once a week)
+                          </label>
+                      </div>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="professional_use" value="4" />
+                             I use it regularly (1-3 times a week)
+                          </label>
+                      </div>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="professional_use" value="5" />
+                             I use it very frequently (daily or almost daily)
+                          </label>
+                      </div>
+                    </ul>
+                  <p class="warning-text" id="professional_use-warning" style="display: none;">Please select your decision</p>
+              </div>
+              <div class="field">
+                  <label class="label" id="genAI_decisionmaking">
+                    3. Have you previously used Generative AI tools for decision-making or evaluations?
+                </label>
+                    <ul>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="genAI_decisionmaking" value="1" /> Yes</label>
+                      </div>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="genAI_decisionmaking" value="2" /> No</label>
+                      </div>
+                    </ul>
+                  <p class="warning-text" id="genAI_decisionmaking-warning" style="display: none;">Please select your decision</p>
+              </div>
+              <div class="field">
+                <div class="control">
+                    <button class="button is-link" type="submit">Next</button>
+                </div>
+              </div>
+          </div>
+
+          {% elif page == 2 %}
+          <div class="progress-container">
+              <progress id="progress" class="progress is-primary" value="66" max="100">66%</progress>
+              <div id="progress-text" class="has-text-centered">Page 2 of 3</div>
+          </div>
+          <div class="box">
+              <input type="hidden" name="personal_use" value="{{ personal_use }}">
+              <input type="hidden" name="professional_use" value="{{ professional_use }}">
+              <input type="hidden" name="genAI_decisionmaking" value="{{ genAI_decisionmaking }}">
+              <div class="field">
+                  <label class="label" id="trust">
+                    4. How much did you trust the AI tool's recommendations during the screening process?
+                </label>
+                  <div class="control">
+                    <ul>
+                      <label class="radio"><input type="radio" name="trust" value="1" /> 1: No Trust</label>
+                      <label class="radio"><input type="radio" name="trust" value="2" /> 2</label>
+                      <label class="radio"><input type="radio" name="trust" value="3" /> 3</label>
+                      <label class="radio"><input type="radio" name="trust" value="4" /> 4</label>
+                      <label class="radio"><input type="radio" name="trust" value="5" /> 5</label>
+                      <label class="radio"><input type="radio" name="trust" value="6" /> 6</label>
+                      <label class="radio"><input type="radio" name="trust" value="7" /> 7: Completely Trust</label>
+                    </ul>
+                  </div>
+                  <p class="warning-text" id="trust-warning" style="display: none;">Please select your decision</p>
+              </div>
+              <div class="field">
+                  <label class="label" id="rationale">5. Did you find that the AI provided a reasonable rationale for its decisions?</label>
+                  <div class="control">
+                    <ul>
+                      <label class="radio"><input type="radio" name="rationale" value="1" /> 1: Not Reasonable</label>
+                      <label class="radio"><input type="radio" name="rationale" value="2" /> 2</label>
+                      <label class="radio"><input type="radio" name="rationale" value="3" /> 3</label>
+                      <label class="radio"><input type="radio" name="rationale" value="4" /> 4</label>
+                      <label class="radio"><input type="radio" name="rationale" value="5" /> 5</label>
+                      <label class="radio"><input type="radio" name="rationale" value="6" /> 6</label>
+                      <label class="radio"><input type="radio" name="rationale" value="7" /> 7: Completely Reasonable</label>
+                    </ul>
+                  </div>
+                  <p class="warning-text" id="rationale-warning" style="display: none;">Please select your decision</p>
+              </div>
+              <div class="field">
+                  <label class="label" id="willingness_to_use">
+                    6. To what extent would you be willing to use an AI tool to assist with screening decisions in the future?
+                </label>
+                  <div class="control">
+                    <ul>
+                      <label class="radio"><input type="radio" name="willingness_to_use" value="1" /> 1: Not Willing At All</label>
+                      <label class="radio"><input type="radio" name="willingness_to_use" value="2" /> 2</label>
+                      <label class="radio"><input type="radio" name="willingness_to_use" value="3" /> 3</label>
+                      <label class="radio"><input type="radio" name="willingness_to_use" value="4" /> 4</label>
+                      <label class="radio"><input type="radio" name="willingness_to_use" value="5" /> 5</label>
+                      <label class="radio"><input type="radio" name="willingness_to_use" value="6" /> 6</label>
+                      <label class="radio"><input type="radio" name="willingness_to_use" value="7" /> 7: Extremely Willing</label>
+                    </ul>
+                  </div>
+                  <p class="warning-text" id="willingness_to_use-warning" style="display: none;">Please select your decision</p>
+              </div>
+              <div class="field">
+                <label class="label" id="usefulness">
+                  7. Under which of the following conditions did you find the AI's recommendations most useful? Please select the most important reason.
+                </label>
+                  <ul>
+                    <div class="control">
+                        <label class="radio"><input type="radio" name="usefulness" value="1" />
+                           When dealing with information overload.
+                        </label>
+                    </div>
+                    <div class="control">
+                        <label class="radio"><input type="radio" name="usefulness" value="2" />
+                           When needing to speed up decision-making or response time.
+                        </label>
+                    </div>
+                    <div class="control">
+                        <label class="radio"><input type="radio" name="usefulness" value="3" />
+                           When looking for insights or patterns in complex data.
+                        </label>
+                    </div>
+                    <div class="control">
+                        <label class="radio"><input type="radio" name="usefulness" value="4" />
+                           When requiring assistance in unfamiliar topics or areas.
+                        </label>
+                    </div>
+                    <div class="control">
+                        <label class="radio"><input type="radio" name="usefulness" value="5" />
+                           Other
+                        </label>
+                    </div>
+                  </ul>
+                <p class="warning-text" id="usefulness-warning" style="display: none;">Please select your decision</p>
+            </div>
+            <div class="field">
+                <label class="label" id="disagree">
+                  8. What did you do when you disagreed with AI’s recommendation?
+                </label>
+                <div class="control">
+                  <ul>
+                    <textarea class="textarea" name="disagree"></textarea>
+                  </ul>
+                  <p class="warning-text" id="usefulness-warning" style="display: none;">Please explain your strategy</p>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label" id="additional">
+                  9. Is there anything else you would like to share with us?
+                </label>
+                <div class="control">
+                  <ul>
+                    <textarea class="textarea" name="additional"></textarea>
+                  </ul>
+                </div>
+            </div>
+              <div class="field">
+                <div class="control">
+                    <button class="button is-link" type="submit">Next</button>
+                </div>
+              </div>
+          </div>
+
+          {% elif page == 3 %}
+          <div class="progress-container">
+              <progress id="progress" class="progress is-primary" value="100" max="100">100%</progress>
+              <div id="progress-text" class="has-text-centered">Page 3 of 3</div>
+          </div>
+          <div class="box">
+              <input type="hidden" name="personal_use" value="{{ personal_use }}">
+              <input type="hidden" name="professional_use" value="{{ professional_use }}">
+              <input type="hidden" name="genAI_decisionmaking" value="{{ genAI_decisionmaking }}">
+              <input type="hidden" name="trust" value="{{ trust }}">
+              <input type="hidden" name="rationale" value="{{ rationale }}">
+              <input type="hidden" name="willingness_to_use" value="{{ willingness_to_use }}">
+              <input type="hidden" name="usefulness" value="{{ usefulness }}">
+              <input type="hidden" name="disagree" value="{{ disagree }}">
+              <input type="hidden" name="additional" value="{{ additional }}">
+              
+              <div class="field">
+                  <label class="label" id="interview_consent">10. Do you consent to be contacted for an interview about the use of the AI interface?</label>
+                    <ul>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="interview_consent" value="1" /> Yes</label>
+                      </div>
+                      <div class="control">
+                          <label class="radio"><input type="radio" name="interview_consent" value="2" /> No</label>
+                      </div>
+                    </ul>
+                  <p class="warning-text" id="interview_consent-warning" style="display: none;">Please select your decision</p>
+              </div>
+              <div class="field">
+                  <div class="control">
+                      <button class="button is-link" type="submit">Submit</button>
+                  </div>
+              </div>
+          </div>
+
+          {% endif %}
+      </form>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function validateForm() {
+    const page = parseInt(document.querySelector('input[name="page"]').value);
+    let isValid = true;
+
+    if (page === 1) {
+        const personalUse = document.querySelector('input[name="personal_use"]:checked');
+        const professionalUse = document.querySelector('input[name="professional_use"]:checked');
+        const genAIDecisionMaking = document.querySelector('input[name="genAI_decisionmaking"]:checked');
+
+        if (!personalUse) {
+            document.getElementById('personal_use-warning').style.display = 'block';
+            document.querySelectorAll('input[name="personal_use"]').forEach((el) => el.classList.add('is-invalid'));
+            isValid = false;
+        }
+
+        if (!professionalUse) {
+            document.getElementById('professional_use-warning').style.display = 'block';
+            document.querySelectorAll('input[name="professional_use"]').forEach((el) => el.classList.add('is-invalid'));
+            isValid = false;
+        }
+
+        if (!genAIDecisionMaking) {
+            document.getElementById('genAI_decisionmaking-warning').style.display = 'block';
+            document.querySelectorAll('input[name="genAI_decisionmaking"]').forEach((el) => el.classList.add('is-invalid'));
+            isValid = false;
+        }
+    } else if (page === 2) {
+        const trust = document.querySelector('input[name="trust"]:checked');
+        const rationale = document.querySelector('input[name="rationale"]:checked');
+        const willingnessToUse = document.querySelector('input[name="willingness_to_use"]:checked');
+        const usefulness = document.querySelector('input[name="usefulness"]:checked');
+        const disagree = document.querySelector('textarea[name="disagree"]').value.trim();
+        const additional = document.querySelector('textarea[name="additional"]').value.trim();
+
+        if (!trust) {
+            document.getElementById('trust-warning').style.display = 'block';
+            document.querySelectorAll('input[name="trust"]').forEach((el) => el.classList.add('is-invalid'));
+            isValid = false;
+        }
+
+        if (!rationale) {
+            document.getElementById('rationale-warning').style.display = 'block';
+            document.querySelectorAll('input[name="rationale"]').forEach((el) => el.classList.add('is-invalid'));
+            isValid = false;
+        }
+
+        if (!willingnessToUse) {
+            document.getElementById('willingness_to_use-warning').style.display = 'block';
+            document.querySelectorAll('input[name="willingness_to_use"]').forEach((el) => el.classList.add('is-invalid'));
+            isValid = false;
+        }
+
+        if (!usefulness) {
+            document.getElementById('usefulness-warning').style.display = 'block';
+            document.querySelectorAll('input[name="usefulness"]').forEach((el) => el.classList.add('is-invalid'));
+            isValid = false;
+        }
+
+        if (!disagree) {
+            document.getElementById('disagree-warning').style.display = 'block';
+            document.querySelectorAll('textarea[name="disagree"]').forEach((el) => el.classList.add('is-invalid'));
+            isValid = false;
+        }
+
+        // Uncomment if additional is required
+        // if (!additional) {
+        //     document.getElementById('additional-warning').style.display = 'block';
+        //     document.querySelectorAll('textarea[name="additional"]').forEach((el) => el.classList.add('is-invalid'));
+        //     isValid = false;
+        // }
+
+    } else if (page === 3) {
+        const interviewConsent = document.querySelector('input[name="interview_consent"]:checked');
+
+        if (!interviewConsent) {
+            document.getElementById('interview_consent-warning').style.display = 'block';
+            document.querySelectorAll('input[name="interview_consent"]').forEach((el) => el.classList.add('is-invalid'));
+            isValid = false;
+        }
+    }
+
+    return isValid;
+}
+
+function nextPage(currentPage) {
+    if (validateForm()) {
+        const form = document.querySelector('form');
+        form.querySelector('input[name="page"]').value = currentPage + 1;
+        form.submit();
+    }
+}
+</script>
+{% endblock scripts %}

@@ -7,7 +7,7 @@ import pandas as pd
 import json
 
 from . import db
-from .models import Question, Practice
+from .models import Question, Practice, Survey
 
 main = Blueprint("main", __name__)
 
@@ -160,7 +160,7 @@ def show_solutions_generic(id, version, is_practice=False):
         is_pass = all([criteria[key]["is_passed"] for key in criteria.keys()])
 
     if not is_practice:
-        total_solutions = 10
+        total_solutions = 20
         num_questions = (
             total_solutions
             + 1
@@ -274,19 +274,29 @@ def practice():
 def start():
     tbl_p = Practice
 
+    # Check if the user already completed practice
     if (
         tbl_p.query.filter(
             tbl_p.user_id == current_user.id, tbl_p.result != None
         ).count()
         >= num_practice
     ):
+        tbl_s = Survey
         tbl = Question
+        # Check if the user already completed survey
         if (
-            tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
-            == 10
+            tbl_s.query.filter(tbl_s.user_id == current_user.id, tbl_s.updated_at != None).count() 
+            > 0
         ):
             return redirect(url_for("main.complete"))
+        # Check if the user already completed 20 questions
+        elif (
+                tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
+                == 20
+            ):
+            return redirect(url_for("main.survey"))
 
+        
         if (
             tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
             > 0
@@ -310,14 +320,14 @@ def start():
                 )
             )
 
-        random_rows = df.sample(n=10)["Solution ID"].to_list()
+        random_rows = df.sample(n=20)["Solution ID"].to_list()
         versions = ["v1", "v2", "v3"]
         version1 = random.choice(versions)
         versions.pop(versions.index(version1))
         version2 = random.choice(versions)
 
         print(random_rows, version1, version2)
-        for row in random_rows[:5]:
+        for row in random_rows[:10]:
             question = tbl(
                 user_id=current_user.id,
                 solution_id=row,
@@ -325,7 +335,7 @@ def start():
             )
             db.session.add(question)
             db.session.commit()
-        for row in random_rows[5:]:
+        for row in random_rows[10:]:
             question = tbl(
                 user_id=current_user.id,
                 solution_id=row,
@@ -442,4 +452,74 @@ def record():
             )
         )
     else:
-        return redirect(url_for("main.complete"))
+        if is_practice:
+            return redirect(url_for("main.practice_complete"))
+        return redirect(url_for("main.survey"))
+    
+@main.route("/survey", methods=["GET","POST"])
+@login_required
+def survey():
+    if request.method == 'POST':
+        page = int(request.form.get('page'))
+
+        if page == current_user.id:
+            personal_use = request.form.get('personal_use')
+            professional_use = request.form.get('professional_use')
+            genAI_decisionmaking = request.form.get('genAI_decisionmaking')
+            return render_template('survey.html', 
+                                   page=2, 
+                                   personal_use=personal_use, 
+                                   professional_use=professional_use, 
+                                   genAI_decisionmaking=genAI_decisionmaking)
+        elif page == 2:
+            personal_use = request.form.get('personal_use')
+            professional_use = request.form.get('professional_use')
+            genAI_decisionmaking = request.form.get('genAI_decisionmaking')
+            trust = request.form.get('trust')
+            rationale = request.form.get('rationale')
+            willingness_to_use = request.form.get('willingness_to_use')
+            usefulness = request.form.get('usefulness')
+            disagree = request.form.get('disagree')
+            additional = request.form.get('additional')
+
+            return render_template('survey.html', 
+                                   page=3, 
+                                   personal_use=personal_use, 
+                                   professional_use=professional_use, 
+                                   genAI_decisionmaking=genAI_decisionmaking, 
+                                   trust=trust, 
+                                   rationale=rationale, 
+                                   willingness_to_use=willingness_to_use,
+                                   usefulness=usefulness,
+                                   disagree=disagree,
+                                   additional=additional)
+        elif page == 3:
+            personal_use = request.form.get('personal_use')
+            professional_use = request.form.get('professional_use')
+            genAI_decisionmaking = request.form.get('genAI_decisionmaking')
+            trust = request.form.get('trust')
+            rationale = request.form.get('rationale')
+            willingness_to_use = request.form.get('willingness_to_use')
+            usefulness = request.form.get('usefulness')
+            disagree = request.form.get('disagree')
+            additional = request.form.get('additional')
+            interview_consent = request.form.get('interview_consent')
+
+            survey_response = Survey(
+                user_id=1,
+                personal_use_1=personal_use,
+                professional_use_2=professional_use,
+                genAI_decisionmaking_3=genAI_decisionmaking,
+                trust_4=trust,
+                rationale_5=rationale,
+                willingness_to_use_6=willingness_to_use,
+                usefulness_7=usefulness,
+                disagree_8=disagree,
+                additional_9=additional,
+                interview_consent_10=interview_consent
+            )
+            db.session.add(survey_response)
+            db.session.commit()
+            return redirect(url_for('complete'))
+
+    return render_template('survey.html', page=1)
