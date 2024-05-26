@@ -464,7 +464,7 @@ def survey():
     if request.method == "POST":
         page = int(request.form.get("page"))
 
-        if page == current_user.id:
+        if page == 1:
             personal_use = request.form.get("personal_use")
             professional_use = request.form.get("professional_use")
             genAI_decisionmaking = request.form.get("genAI_decisionmaking")
