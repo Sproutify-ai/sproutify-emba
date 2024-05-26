@@ -1,6 +1,6 @@
 # 🌱 Sproutify 🌱
 
-Welcome to Sproutify, a Python AI project.
+Welcome to Sproutify, a Python AI project. MIT Solve version.
 
 ## 🚀 Getting Started
 
