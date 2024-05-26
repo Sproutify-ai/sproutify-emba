@@ -285,18 +285,19 @@ def start():
         tbl = Question
         # Check if the user already completed survey
         if (
-            tbl_s.query.filter(tbl_s.user_id == current_user.id, tbl_s.updated_at != None).count() 
+            tbl_s.query.filter(
+                tbl_s.user_id == current_user.id, tbl_s.updated_at != None
+            ).count()
             > 0
         ):
             return redirect(url_for("main.complete"))
         # Check if the user already completed 20 questions
         elif (
-                tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
-                == 20
-            ):
+            tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
+            == 20
+        ):
             return redirect(url_for("main.survey"))
 
-        
         if (
             tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
             > 0
@@ -455,55 +456,60 @@ def record():
         if is_practice:
             return redirect(url_for("main.practice_complete"))
         return redirect(url_for("main.survey"))
-    
-@main.route("/survey", methods=["GET","POST"])
+
+
+@main.route("/survey", methods=["GET", "POST"])
 @login_required
 def survey():
-    if request.method == 'POST':
-        page = int(request.form.get('page'))
+    if request.method == "POST":
+        page = int(request.form.get("page"))
 
         if page == current_user.id:
-            personal_use = request.form.get('personal_use')
-            professional_use = request.form.get('professional_use')
-            genAI_decisionmaking = request.form.get('genAI_decisionmaking')
-            return render_template('survey.html', 
-                                   page=2, 
-                                   personal_use=personal_use, 
-                                   professional_use=professional_use, 
-                                   genAI_decisionmaking=genAI_decisionmaking)
+            personal_use = request.form.get("personal_use")
+            professional_use = request.form.get("professional_use")
+            genAI_decisionmaking = request.form.get("genAI_decisionmaking")
+            return render_template(
+                "survey.html",
+                page=2,
+                personal_use=personal_use,
+                professional_use=professional_use,
+                genAI_decisionmaking=genAI_decisionmaking,
+            )
         elif page == 2:
-            personal_use = request.form.get('personal_use')
-            professional_use = request.form.get('professional_use')
-            genAI_decisionmaking = request.form.get('genAI_decisionmaking')
-            trust = request.form.get('trust')
-            rationale = request.form.get('rationale')
-            willingness_to_use = request.form.get('willingness_to_use')
-            usefulness = request.form.get('usefulness')
-            disagree = request.form.get('disagree')
-            additional = request.form.get('additional')
+            personal_use = request.form.get("personal_use")
+            professional_use = request.form.get("professional_use")
+            genAI_decisionmaking = request.form.get("genAI_decisionmaking")
+            trust = request.form.get("trust")
+            rationale = request.form.get("rationale")
+            willingness_to_use = request.form.get("willingness_to_use")
+            usefulness = request.form.get("usefulness")
+            disagree = request.form.get("disagree")
+            additional = request.form.get("additional")
 
-            return render_template('survey.html', 
-                                   page=3, 
-                                   personal_use=personal_use, 
-                                   professional_use=professional_use, 
-                                   genAI_decisionmaking=genAI_decisionmaking, 
-                                   trust=trust, 
-                                   rationale=rationale, 
-                                   willingness_to_use=willingness_to_use,
-                                   usefulness=usefulness,
-                                   disagree=disagree,
-                                   additional=additional)
+            return render_template(
+                "survey.html",
+                page=3,
+                personal_use=personal_use,
+                professional_use=professional_use,
+                genAI_decisionmaking=genAI_decisionmaking,
+                trust=trust,
+                rationale=rationale,
+                willingness_to_use=willingness_to_use,
+                usefulness=usefulness,
+                disagree=disagree,
+                additional=additional,
+            )
         elif page == 3:
-            personal_use = request.form.get('personal_use')
-            professional_use = request.form.get('professional_use')
-            genAI_decisionmaking = request.form.get('genAI_decisionmaking')
-            trust = request.form.get('trust')
-            rationale = request.form.get('rationale')
-            willingness_to_use = request.form.get('willingness_to_use')
-            usefulness = request.form.get('usefulness')
-            disagree = request.form.get('disagree')
-            additional = request.form.get('additional')
-            interview_consent = request.form.get('interview_consent')
+            personal_use = request.form.get("personal_use")
+            professional_use = request.form.get("professional_use")
+            genAI_decisionmaking = request.form.get("genAI_decisionmaking")
+            trust = request.form.get("trust")
+            rationale = request.form.get("rationale")
+            willingness_to_use = request.form.get("willingness_to_use")
+            usefulness = request.form.get("usefulness")
+            disagree = request.form.get("disagree")
+            additional = request.form.get("additional")
+            interview_consent = request.form.get("interview_consent")
 
             survey_response = Survey(
                 user_id=1,
@@ -516,10 +522,10 @@ def survey():
                 usefulness_7=usefulness,
                 disagree_8=disagree,
                 additional_9=additional,
-                interview_consent_10=interview_consent
+                interview_consent_10=interview_consent,
             )
             db.session.add(survey_response)
             db.session.commit()
-            return redirect(url_for('complete'))
+            return redirect(url_for("main.complete"))
 
-    return render_template('survey.html', page=1)
+    return render_template("survey.html", page=1)
