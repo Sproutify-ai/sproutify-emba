@@ -296,7 +296,7 @@ def start():
         # Check if the user already completed 20 questions
         elif (
             tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
-            == total_num_questions
+            >= total_num_questions
         ):
             return redirect(url_for("main.survey"))
 
