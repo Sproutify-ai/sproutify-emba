@@ -18,6 +18,8 @@ csv_path = os.path.join(os.path.dirname(__file__), "static/csv/t.csv")
 practice_path = os.path.join(os.path.dirname(__file__), "static/csv/sample_5_2023.csv")
 
 num_practice = 3
+total_num_questions = 14
+num_questions_split = 7
 
 drop_cols = [
     "Solution ID",
@@ -160,7 +162,7 @@ def show_solutions_generic(id, version, is_practice=False):
         is_pass = all([criteria[key]["is_passed"] for key in criteria.keys()])
 
     if not is_practice:
-        total_solutions = 20
+        total_solutions = total_num_questions
         num_questions = (
             total_solutions
             + 1
@@ -294,7 +296,7 @@ def start():
         # Check if the user already completed 20 questions
         elif (
             tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
-            == 20
+            == total_num_questions
         ):
             return redirect(url_for("main.survey"))
 
@@ -321,14 +323,14 @@ def start():
                 )
             )
 
-        random_rows = df.sample(n=20)["Solution ID"].to_list()
+        random_rows = df.sample(n=total_num_questions)["Solution ID"].to_list()
         versions = ["v1", "v2", "v3"]
         version1 = random.choice(versions)
         versions.pop(versions.index(version1))
         version2 = random.choice(versions)
 
         print(random_rows, version1, version2)
-        for row in random_rows[:10]:
+        for row in random_rows[:num_questions_split]:
             question = tbl(
                 user_id=current_user.id,
                 solution_id=row,
@@ -336,7 +338,7 @@ def start():
             )
             db.session.add(question)
             db.session.commit()
-        for row in random_rows[10:]:
+        for row in random_rows[num_questions_split:]:
             question = tbl(
                 user_id=current_user.id,
                 solution_id=row,
