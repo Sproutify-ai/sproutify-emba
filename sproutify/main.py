@@ -514,7 +514,7 @@ def survey():
             interview_consent = request.form.get("interview_consent")
 
             survey_response = Survey(
-                user_id=1,
+                user_id=current_user.id,
                 personal_use_1=personal_use,
                 professional_use_2=professional_use,
                 genAI_decisionmaking_3=genAI_decisionmaking,
