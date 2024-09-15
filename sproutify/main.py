@@ -18,8 +18,8 @@ csv_path = os.path.join(os.path.dirname(__file__), "static/csv/updated_criteria.
 practice_path = os.path.join(os.path.dirname(__file__), "static/csv/sample_5_2023.csv")
 
 num_practice = 1
-total_num_questions = 14
-num_questions_split = 7
+total_num_questions = 6
+num_questions_split = 3
 
 drop_cols = [
     "Solution ID",
