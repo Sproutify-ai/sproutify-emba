@@ -12,12 +12,12 @@ from .models import Question, Practice, Survey
 main = Blueprint("main", __name__)
 
 # assessment version
-csv_path = os.path.join(os.path.dirname(__file__), "static/csv/t.csv")
+csv_path = os.path.join(os.path.dirname(__file__), "static/csv/updated_criteria.csv")
 
 # practice version
 practice_path = os.path.join(os.path.dirname(__file__), "static/csv/sample_5_2023.csv")
 
-num_practice = 3
+num_practice = 1
 total_num_questions = 14
 num_questions_split = 7
 
