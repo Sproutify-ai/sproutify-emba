@@ -182,7 +182,10 @@
                 <a href="#">Criterion 5</a>
               </li>
               <li onclick="showTab('summary')">
-                <a href="#">Solution Summary</a>
+                <a href="#">Summary</a>
+              </li>
+              <li onclick="showTab('challenge')">
+                <a href="#">Challenge Question</a>
               </li>
             </ul>
           </div>
@@ -267,6 +270,49 @@
           <div id="submission-form-summary" style="display: none;">
             <p>{{ solution_summary|replace('\n', '<br>')|safe }}</p>
           </div>
+          <div id="submission-form-challenge" style="display: none;">
+            <div class="content">
+              <h3>Challenge Question</h3>
+              <p>Every person has the right to access the full range of quality health services they need, when and where they’re
+                needed. While there has been some progress towards these goals over the last few decades, much of that progress
+                has
+                now slowed or reversed. Currently, half the world lacks access to comprehensive health services. Two billion
+                people
+                face financial hardship due to out-of-pocket healthcare costs. Under-resourced communities (including but not
+                limited
+                to women and girls, ethnic minorities, people with disabilities, and older adults) are often disproportionately
+                affected and experience systematically worse health outcomes.
+              </p>
+          
+              <p>Technology and innovation have an important role to play in improving health and well-being for all. New
+                technologies
+                can improve health outcomes and access, but only when utilized effectively. Innovation can help these technologies
+                be
+                more affordable, scalable, sustainable, and community-focused. Opportunities for positive change exist across many
+                areas of care including primary care, mental health, and infectious diseases.
+              </p>
+          
+              <p>MIT Solve seeks exceptional solutions—rooted in and driven by communities—that leverage technology to increase
+                access
+                to quality care and good health. While we are excited to select and support innovators across any health area, we
+                have
+                a particular interest in solutions that:
+              </p>
+          
+              <ul>
+                <li>Ensure health-related data is collected ethically and effectively, and that AI and other insights are
+                  accurate,
+                  targeted, and actionable.
+                </li>
+                <li>Increase capacity and resilience of health systems, including workforce, supply chains, and other
+                  infrastructure.
+                </li>
+                <li>Increase access to and quality of health services for medically underserved groups around the world (such as
+                  refugees and other displaced people, women and children, older adults, and LGBTQ+ individuals).
+                </li>
+              </ul>
+            </div>
+          </div>
           <div class="is-flex is-justify-content-flex-end">
             <button class="button mt-5 js-modal-trigger" data-target="modal-js-example">Go to survey</button>
           </div>
@@ -300,7 +346,7 @@
   <script>
     function showTab(tabName) {
       console.log(tabName)
-      const tabs = ['all', 'c1', 'c2', 'c3', 'c4', 'c5', 'summary']
+      const tabs = ['all', 'c1', 'c2', 'c3', 'c4', 'c5', 'summary', 'challenge']
       tabs.forEach((tab) => {
         document.getElementById('submission-form-' + tab).style.display = tab === tabName ? 'block' : 'none'
       })

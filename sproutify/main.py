@@ -12,7 +12,9 @@ from .models import Question, Practice, Survey
 main = Blueprint("main", __name__)
 
 # assessment version
-csv_path = os.path.join(os.path.dirname(__file__), "static/csv/updated_criteria.csv")
+csv_path = os.path.join(
+    os.path.dirname(__file__), "static/csv/Updated_Criteria_With_Selected_vf.csv"
+)
 
 # practice version
 practice_path = os.path.join(os.path.dirname(__file__), "static/csv/sample_5_2023.csv")
@@ -42,6 +44,7 @@ drop_cols = [
     "summary",
 ]
 df = pd.read_csv(csv_path)
+df = df[df["Selected"] == 1]
 practice_df = pd.read_csv(practice_path)
 
 
