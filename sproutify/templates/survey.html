@@ -188,11 +188,11 @@
             <input type="hidden" name="disagree" value="{{ disagree }}" />
             <input type="hidden" name="additional" value="{{ additional }}" />
 
-            <div class="field">
+            <div class="field" style="display: none;">
               <label class="label" id="interview_consent">10. Do you consent to be contacted for an interview about the use of the AI interface?</label>
               <ul>
                 <div class="control">
-                  <label class="radio"><input type="radio" name="interview_consent" value="1" />Yes</label>
+                  <label class="radio"><input type="radio" name="interview_consent" value="1" checked />Yes</label>
                 </div>
                 <div class="control">
                   <label class="radio"><input type="radio" name="interview_consent" value="2" />No</label>
@@ -200,6 +200,8 @@
               </ul>
               <p class="warning-text" id="interview_consent-warning" style="display: none;">Please select your decision</p>
             </div>
+            <p>Thank you for your time! Please submit the survey to complete the study.</p>
+            <br>
             <div class="field">
               <div class="control">
                 <button class="button is-link" type="submit">Submit</button>
@@ -287,11 +289,11 @@
       } else if (page === 3) {
         const interviewConsent = document.querySelector('input[name="interview_consent"]:checked')
     
-        if (!interviewConsent) {
-          document.getElementById('interview_consent-warning').style.display = 'block'
-          document.querySelectorAll('input[name="interview_consent"]').forEach((el) => el.classList.add('is-invalid'))
-          isValid = false
-        }
+        // if (!interviewConsent) {
+        //   document.getElementById('interview_consent-warning').style.display = 'block'
+        //   document.querySelectorAll('input[name="interview_consent"]').forEach((el) => el.classList.add('is-invalid'))
+        //   isValid = false
+        // }
       }
     
       console.log(isValid)
