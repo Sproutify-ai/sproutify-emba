@@ -13,7 +13,7 @@ main = Blueprint("main", __name__)
 
 # assessment version
 csv_path = os.path.join(
-    os.path.dirname(__file__), "static/csv/filtered_solutions_3_19.csv"
+    os.path.dirname(__file__), "static/csv/Updated_Criteria_With_Selected_vf (2).csv"
 )
 
 # practice version
