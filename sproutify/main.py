@@ -326,7 +326,7 @@ def start():
                 )
             )
 
-        random_rows = df.sample(n=total_num_questions)["Solution ID"].to_list()
+        random_rows = df.sample(n=total_num_questions, replace=True)["Solution ID"].to_list()
         versions = ["v1", "v2", "v3"]
         version1 = random.choice(versions)
         versions.pop(versions.index(version1))
