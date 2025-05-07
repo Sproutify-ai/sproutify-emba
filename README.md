@@ -50,8 +50,8 @@ Contributions, issues, and feature requests are welcome!
 
 ## 🙏 Acknowledgments
 
-Thanks to all contributors who have helped to improve this project.
-
+Thanks to all contributors who have helped to improve this project. 
+The app mainly was coded and designed by Ian Chen, Pei-Hsin Wang, and Camila Lin (University of Washington), with the input of Léonard Boussioux, Jacqueline Lane, Charles Ayoubi and MIT Solve.
 
 
 ## NOTES
