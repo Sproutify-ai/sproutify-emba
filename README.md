@@ -1,6 +1,22 @@
 # 🌱 Sproutify 🌱
 
-Welcome to Sproutify, a Python AI project for human-AI evaluations of startup ideas.
+Welcome to Sproutify, a Python AI project for human-AI collaborative evaluation of early-stage innovations.
+
+## 📋 About the Project
+
+Sproutify was developed to explore the impact of AI-assisted decision-making in innovation screening. Based on research conducted by Lane, Boussioux, et al. (2025), this web application implements a screening interface that can operate in three distinct modes:
+
+1. **Human-only evaluation** (control)
+2. **Black-box AI recommendations** (without explanations)
+3. **Narrative AI assistance** (with detailed justifications)
+
+The application facilitates rapid screening of early-stage innovations against predefined criteria, with an option to incorporate AI recommendations with varying degrees of transparency.
+
+## 🎯 Research Background
+
+This project stems from research on the "human-AI oversight paradox" - the phenomenon where AI systems intended to augment human decision-making may inadvertently reduce critical engagement as AI capabilities improve. The field experiment conducted with 228 evaluators screening 48 early-stage innovations revealed that evaluators given AI assistance were 19% more likely to align with AI recommendations compared to those making unassisted decisions.
+
+Interestingly, while narrative explanations increased human alignment with AI recommendations, particularly for rejection decisions, they did not improve decision quality compared to simple recommendations without justifications. Both AI-assisted conditions, however, led to higher-quality screening outcomes than unassisted evaluation.
 
 ## 🚀 Getting Started
 
