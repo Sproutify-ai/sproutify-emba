@@ -56,29 +56,63 @@ To switch different versions of the solution, you can use the following URLs:
 - `requirements.txt`: Project dependencies.
 - `start.sh`: Script to start the application.
 
+### Evaluation Process
+
+The screening interface presents solutions alongside five hierarchical criteria:
+
+1. **Completeness and intelligibility**: Is the solution application complete, appropriate, and intelligible?
+2. **Development stage**: Is the solution at least at the prototype stage?
+3. **Challenge alignment**: Does the solution address the challenge question?
+4. **Technology integration**: Is the solution powered by technology?
+5. **Overall quality**: Is the quality good enough for external review?
+
+Evaluators assess submissions sequentially against these criteria, failing solutions at the first criterion they do not meet. Only solutions passing all five criteria advance to the next evaluation stage.
+
+## 📊 Key Features
+
+- Three distinct evaluation interfaces (human-only, black-box AI, narrative AI)
+- Structured five-criteria hierarchical evaluation process
+- AI-generated recommendations calibrated with few-shot learning from past decisions
+- Timer functionality to limit decision time per solution
+- Mouse tracking for analyzing user engagement
+- Confidence scoring for each decision
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+## 🔬 Research Implementation
+
+The AI recommendation system is based on an LLM trained through few-shot learning on past screening decisions. It evaluates each solution against the five criteria and provides:
+
+- Pass/fail recommendations for each criterion
+- Confidence scores (interpreted as probabilities)
+- In the narrative condition, approximately 200-word rationales explaining the decision
+
+The interface design includes visual indicators (green checkmarks for 'pass' and red X marks for 'fail') consistent across AI-assisted conditions.
+
 ## 📝 License
 
 This project is licensed under the MIT License.
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome!
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
 
-## 🙏 Acknowledgments
+## 👥 Contributors
 
-Thanks to all contributors who have helped to improve this project. 
-The app mainly was coded and designed by Ian Chen, Pei-Hsin Wang, and Camila Lin (University of Washington), with the input of Léonard Boussioux, Jacqueline Lane, Charles Ayoubi and MIT Solve.
+The original research and experimental design was conducted by:
+- Jacqueline N. Lane (Harvard Business School & Digital Data and Design Institute at Harvard)
+- Léonard Boussioux (University of Washington)
+- Charles Ayoubi (Harvard Business School)
+- Ying Hao Chen (University of Washington)
+- Camila Lin (University of Washington)
+- Rebecca Spens (MIT Solve)
+- Pooja Wagh (MIT Solve) 
+- Pei-Hsin Wang (University of Washington)
 
+The application was primarily developed by Ian Chen, Pei-Hsin Wang, and Camila Lin (University of Washington), with input from Léonard Boussioux, Jacqueline Lane, Charles Ayoubi and MIT Solve.
 
-## NOTES
+## 📄 Abstract
 
-The original experiment intent
-1. No Justification v2
-2. With Justification v3
-
-Business target
-1. Make non-expert screners be as fast and as similar to the expert screeners
-2. We want the process to be fast
-3. The goal is to be super lazy! Just trust AI!
-
-V2 just give the first failure reason.
+This field experiment investigated whether AI-generated narrative explanations enhance or diminish human oversight in early-stage innovation screening. With 228 evaluators screening 48 innovations under three conditions (human-only, black-box AI recommendations, and narrative AI with explanations), the research revealed a human-AI oversight paradox: screeners with AI assistance were 19% more likely to align with AI recommendations, particularly when AI suggested rejection. Despite increased scrutiny of AI rejection recommendations (shown by higher mouse activity), narrative explanations still increased deference to AI. Evaluators were equally influenced by substantive quality and mere persuasiveness, using narrative coherence as a primary heuristic. While both AI-assisted conditions yielded higher-quality screening outcomes than unassisted evaluation, narrative explanations provided no incremental quality benefits beyond black-box recommendations despite increasing compliance. These findings suggest that high-volume information processing tasks may inherently benefit from algorithmic assistance, challenging how organizations balance efficiency with meaningful human judgment.
