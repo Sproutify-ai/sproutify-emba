@@ -36,48 +36,7 @@
     <div class="container">
       <div class="columns">
         <div class="column is-one-third">
-          <div class="timer-wrapper">
-            <div class="timer-text">Remaining time</div>
-            <div class="timer" id="timer">2:30</div>
-          </div>
-          <script>
-            let countdown
-            const timerElement = document.getElementById('timer')
-            let timeLeft = 150 // 2 minutes and 30 seconds in seconds
-            let isWindowFocused = true // Track if the window is focused
-            
-            function updateTimer() {
-              if (isWindowFocused) {
-                const minutes = Math.floor(timeLeft / 60)
-                let seconds = timeLeft % 60
-            
-                seconds = seconds < 10 ? '0' + seconds : seconds
-            
-                timerElement.innerHTML = `${minutes}:${seconds}`
-            
-                if (timeLeft === 0) {
-                  clearInterval(countdown)
-                  timerElement.innerHTML = 'Time is up!'
-                }
-            
-                timeLeft--
-              }
-            }
-            
-            // Start the countdown timer
-            countdown = setInterval(updateTimer, 1000)
-            
-            // Handle window focus event
-            window.onfocus = function () {
-              isWindowFocused = true
-            }
-            
-            // Handle window blur event
-            window.onblur = function () {
-              isWindowFocused = false
-            }
-          </script>
-          <div class="mt-3"></div> <!-- Add a div with margin-top -->
+          <!-- Timer removed -->
           <h1 class="title">{{ tags['Name'] }}</h1>
           <nav class="level">
             <div class="level-left">
@@ -93,8 +52,18 @@
             <progress class="progress is-primary" value="{{ solution_count }}" max="{{ total_solutions }}">{{ solution_count }} / {{ total_solutions }}</progress>
             <p class="has-text-centered">{{ solution_count }} / {{ total_solutions }} Solutions</p>
           </div>
+          {% include '_ai_v1.html' %}
+          <div style="display: none;">
+          {% if request.endpoint == 'main.show_solutions_v1' %}
+            {% include '_ai_v1.html' %}
+          {% elif request.endpoint == 'main.show_solutions_v2' %}
+            {% include '_ai_v2.html' %}
+          {% elif request.endpoint == 'main.show_solutions_v3' %}
+            {% include '_ai_v3.html' %}
+          {% endif %}
         </div>
 
+          </div>
         <div class="column is-two-thirds">
           <form action="/record" method="POST" onsubmit="return validateForm()" novalidate>
             {% if is_practice %}
@@ -105,27 +74,75 @@
               <div class="field">
                 <label class="label">Decision</label>
                 <div class="control">
-                  <label class="radio"><input type="radio" name="result" value="pass" />Pass</label>
+                  <div class="field is-grouped is-align-items-center mb-2">
+                    <label class="radio"><input type="radio" name="result" value="pass" />Pass</label>
+                  </div>
                   <label class="radio"><input type="radio" name="result" value="fail" />Fail</label>
                 </div>
                 <p class="warning-text" id="result-warning" style="display: none;">Please select your decision</p>
               </div>
 
-              <div class="field" id="reason-field" style="display: none;">
-                <label class="label">Fail Reason</label>
+              <div class="field" id="reason-field" style="display: block;">
+                <label class="label">Fail Reasons (select all that apply)</label>
                 <div class="control">
-                  <div class="select">
-                    <select name="reason" id="reason" required>
-                      <option value="">Select a reason</option>
-                      <option value="1">1 - The solution is incomplete, inappropriate, and not intelligible</option>
-                      <option value="2">2 - The solution does not reach prototype stage</option>
-                      <option value="3">3 - The solution does not address the challenge question</option>
-                      <option value="4">4 - The solution is not powered by technology</option>
-                      <option value="5">5 - The quality of the solution is not good enough</option>
-                    </select>
+                  <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
+                    <label class="checkbox" style="display: block;">
+                      <input type="checkbox" name="reason[]" value="1" data-criterion="1" />
+                      1 - The solution is incomplete, inappropriate, and not intelligible
+                    </label>
+                  </div>
+                  <div class="field criterion-justification-field" data-criterion="1" style="margin-bottom: 0.75rem;">
+                    <div class="control">
+                      <textarea class="textarea criterion-justification" name="criterion_justification[1]" rows="2" placeholder="Explain why it fails or pass criterion 1"></textarea>
+                    </div>
+                  </div>
+                  <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
+                    <label class="checkbox" style="display: block;">
+                      <input type="checkbox" name="reason[]" value="2" data-criterion="2" />
+                      2 - The solution does not reach prototype stage
+                    </label>
+                  </div>
+                  <div class="field criterion-justification-field" data-criterion="2" style="margin-bottom: 0.75rem;">
+                    <div class="control">
+                      <textarea class="textarea criterion-justification" name="criterion_justification[2]" rows="2" placeholder="Explain why it fails or pass criterion 2"></textarea>
+                    </div>
+                  </div>
+                  <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
+                    <label class="checkbox" style="display: block;">
+                      <input type="checkbox" name="reason[]" value="3" data-criterion="3" />
+                      3 - The solution does not address the challenge question
+                    </label>
+                  </div>
+                  <div class="field criterion-justification-field" data-criterion="3" style="margin-bottom: 0.75rem;">
+                    <div class="control">
+                      <textarea class="textarea criterion-justification" name="criterion_justification[3]" rows="2" placeholder="Explain why it fails or pass criterion 3"></textarea>
+                    </div>
+                  </div>
+                  <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
+                    <label class="checkbox" style="display: block;">
+                      <input type="checkbox" name="reason[]" value="4" data-criterion="4" />
+                      4 - The solution is not powered by technology
+                    </label>
+                  </div>
+                  <div class="field criterion-justification-field" data-criterion="4" style="margin-bottom: 0.75rem;">
+                    <div class="control">
+                      <textarea class="textarea criterion-justification" name="criterion_justification[4]" rows="2" placeholder="Explain why it fails or pass criterion 4"></textarea>
+                    </div>
+                  </div>
+                  <div class="field is-grouped is-align-items-center">
+                    <label class="checkbox" style="display: block;">
+                      <input type="checkbox" name="reason[]" value="5" data-criterion="5" />
+                      5 - The quality of the solution is not good enough
+                    </label>
+                  </div>
+                  <div class="field criterion-justification-field" data-criterion="5">
+                    <div class="control">
+                      <textarea class="textarea criterion-justification" name="criterion_justification[5]" rows="2" placeholder="Explain why it fails or pass criterion 5"></textarea>
+                    </div>
                   </div>
                 </div>
-                <p class="warning-text" id="reason-warning" style="display: none;">Please select the main reason for failure</p>
+                <p class="warning-text" id="reason-warning" style="display: none;">Please select at least one failure reason</p>
+                <p class="warning-text" id="criteria-justif-warning" style="display: none;">Provide a short justification for each selected criterion</p>
               </div>
 
               <div class="field">
@@ -140,6 +157,8 @@
                 <p class="warning-text" id="confidence-warning" style="display: none;">Please select your confidence level</p>
               </div>
 
+              
+
               <div class="field">
                 <div class="control">
                   <button class="button is-primary" type="submit">Next</button>
@@ -147,48 +166,37 @@
               </div>
             </div>
           </form>
-        </div>
-      </div>
 
-      <div class="columns">
-        <div class="column is-one-third">
-          {% if request.endpoint == 'main.show_solutions_v1' %}
-            {% include '_ai_v1.html' %}
-          {% elif request.endpoint == 'main.show_solutions_v2' %}
-            {% include '_ai_v2.html' %}
-          {% elif request.endpoint == 'main.show_solutions_v3' %}
-            {% include '_ai_v3.html' %}
-          {% endif %}
-        </div>
-        <div class="column is-two-thirds">
           <div class="tabs">
             <ul>
               <li class="is-active" onclick="showTab('all')">
-                <a href="#">All</a>
+                <a href="javascript:void(0)">All</a>
               </li>
               <li onclick="showTab('c1')">
-                <a href="#">Criterion 1</a>
+                <a href="javascript:void(0)">Criterion 1</a>
               </li>
               <li onclick="showTab('c2')">
-                <a href="#">Criterion 2</a>
+                <a href="javascript:void(0)">Criterion 2</a>
               </li>
               <li onclick="showTab('c3')">
-                <a href="#">Criterion 3</a>
+                <a href="javascript:void(0)">Criterion 3</a>
               </li>
               <li onclick="showTab('c4')">
-                <a href="#">Criterion 4</a>
+                <a href="javascript:void(0)">Criterion 4</a>
               </li>
               <li onclick="showTab('c5')">
-                <a href="#">Criterion 5</a>
+                <a href="javascript:void(0)">Criterion 5</a>
               </li>
               <li onclick="showTab('summary')">
-                <a href="#">Summary</a>
+                <a href="javascript:void(0)">Summary</a>
               </li>
               <li onclick="showTab('challenge')">
-                <a href="#">Challenge Question</a>
+                <a href="javascript:void(0)">Challenge Question</a>
               </li>
             </ul>
           </div>
+
+          <!-- Solution text tabs/content -->
           <div id="submission-form-all" style="display: block;">
             {% for key, value in solution_all.items() %}
               <div class="card">
@@ -313,11 +321,10 @@
               </ul>
             </div>
           </div>
-          <div class="is-flex is-justify-content-flex-end">
-            <button style="display: none;" class="button mt-5 js-modal-trigger" data-target="modal-js-example">Go to survey</button>
-          </div>
         </div>
       </div>
+
+      
     </div>
   </section>
 
@@ -394,49 +401,65 @@
     
     function validateForm() {
       var result = document.querySelector('input[name="result"]:checked')
-      var reason = document.getElementById('reason')
+      var reasonField = document.getElementById('reason-field')
+      var reasonOptions = document.querySelectorAll('input[name="reason[]"]')
       var confidence = document.querySelector('input[name="confidence"]:checked')
       var isValid = true
-    
+
       // Reset warnings and classes
       document.getElementById('result-warning').style.display = 'none'
       document.getElementById('reason-warning').style.display = 'none'
       document.getElementById('confidence-warning').style.display = 'none'
       document.querySelectorAll('.is-invalid').forEach((el) => el.classList.remove('is-invalid'))
-    
+
       if (!result) {
         document.getElementById('result-warning').style.display = 'block'
         document.querySelectorAll('input[name="result"]').forEach((el) => el.classList.add('is-invalid'))
         isValid = false
       }
-    
-      if (result && result.value === 'fail' && reason.value === '') {
+      var hasReason = Array.from(reasonOptions).some((option) => option.checked)
+      if (result && result.value === 'fail' && !hasReason) {
         document.getElementById('reason-warning').style.display = 'block'
-        reason.classList.add('is-invalid')
+        reasonField.classList.add('is-invalid')
         isValid = false
       }
-    
+
+      if (result && result.value === 'fail') {
+        var missingJustification = false
+        reasonOptions.forEach((checkbox) => {
+          if (checkbox.checked) {
+            var criterion = checkbox.dataset.criterion
+            var justif = document.querySelector('textarea[name="criterion_justification[' + criterion + ']"]')
+            if (!justif.value || !justif.value.trim()) {
+              missingJustification = true
+              justif.classList.add('is-invalid')
+            }
+          }
+        })
+        if (missingJustification) {
+          document.getElementById('criteria-justif-warning').style.display = 'block'
+          isValid = false
+        }
+      }
+
       if (!confidence) {
         document.getElementById('confidence-warning').style.display = 'block'
         document.querySelectorAll('input[name="confidence"]').forEach((el) => el.classList.add('is-invalid'))
         isValid = false
       }
-    
+
       return isValid
     }
+
   </script>
 
   <script>
     $(document).ready(function () {
-      $('input[name="result"]').on('change', function () {
-        if ($(this).val() === 'fail') {
-          $('#reason-field').show()
-          $('#reason').prop('required', true)
-        } else {
-          $('#reason-field').hide()
-          $('#reason').prop('required', false)
-          $('#reason').val('')
-        }
+      // Reason section and justification boxes are always visible now.
+      // Clear per-criterion warning when user types.
+      $('.criterion-justification').on('input', function () {
+        $(this).removeClass('is-invalid')
+        $('#criteria-justif-warning').hide()
       })
     })
   </script>

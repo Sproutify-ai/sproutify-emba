@@ -71,8 +71,7 @@
       <div class="px-6 py-5 my-6 notification is-warning">
         <p>
           <strong>Important: Please Read</strong>
-          <li>Please start the assessment AFTER completing the practice.</li>
-          <li>Once you begin the assessment, do not return to the previous page using your browser’s navigation buttons.</li>
+          <li>When you begin the assessment, do not return to the previous page using your browser’s navigation buttons.</li>
           <li>Please allow 30 minutes to complete the assessment in one sitting.</li>
         </p>
       </div>
@@ -82,11 +81,8 @@
   <section class="hero is-small">
     <div class="py-4 hero-body">
       <div class="container has-text-centered">
-        <div class="columns">
-          <div class="column">
-            <a href="{{ url_for('main.practice') }}" class="button is-secondary is-large">Start Practice</a>
-          </div>
-          <div class="column">
+        <div class="columns is-centered">
+          <div class="column is-one-third has-text-centered">
             <a href="{{ url_for('main.start') }}" class="button is-primary is-large">Start Study</a>
           </div>
         </div>

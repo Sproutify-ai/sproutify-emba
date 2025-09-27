@@ -277,86 +277,70 @@ def practice():
 
 @main.route("/start")
 def start():
-    tbl_p = Practice
+    # Directly start the main study without requiring practice
+    tbl_s = Survey
+    tbl = Question
 
-    # Check if the user already completed practice
+    # Completed survey already → done
     if (
-        tbl_p.query.filter(
-            tbl_p.user_id == current_user.id, tbl_p.result != None
-        ).count()
-        >= num_practice
+        tbl_s.query.filter(tbl_s.user_id == current_user.id, tbl_s.updated_at != None).count()
+        > 0
     ):
-        tbl_s = Survey
-        tbl = Question
-        # Check if the user already completed survey
-        if (
-            tbl_s.query.filter(
-                tbl_s.user_id == current_user.id, tbl_s.updated_at != None
-            ).count()
-            > 0
-        ):
-            return redirect(url_for("main.complete"))
-        # Check if the user already completed 20 questions
-        elif (
-            tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
-            >= total_num_questions
-        ):
-            return redirect(url_for("main.survey"))
+        return redirect(url_for("main.complete"))
 
-        if (
-            tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count()
-            > 0
-        ):
-            last_question = tbl.query.filter_by(
-                user_id=current_user.id, result=None
-            ).first()
-            return redirect(
-                url_for(
-                    "main.show_solutions_%s" % last_question.version,
-                    id=last_question.solution_id,
-                )
+    # Completed all questions → go to survey
+    if tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count() >= total_num_questions:
+        return redirect(url_for("main.survey"))
+
+    # In-progress question
+    last_question = tbl.query.filter_by(user_id=current_user.id, result=None).first()
+    if last_question:
+        return redirect(
+            url_for(
+                "main.show_solutions_%s" % last_question.version,
+                id=last_question.solution_id,
             )
+        )
 
-        if tbl.query.filter(tbl.user_id == current_user.id).count() > 0:
-            last_question = tbl.query.filter_by(user_id=current_user.id).first()
-            return redirect(
-                url_for(
-                    "main.show_solutions_%s" % last_question.version,
-                    id=last_question.solution_id,
-                )
+    # Resume existing set
+    any_question = tbl.query.filter(tbl.user_id == current_user.id).first()
+    if any_question:
+        return redirect(
+            url_for(
+                "main.show_solutions_%s" % any_question.version,
+                id=any_question.solution_id,
             )
+        )
 
-        random_rows = df.sample(n=total_num_questions)["Solution ID"].to_list()
-        versions = ["v1", "v2", "v3"]
-        version1 = random.choice(versions)
-        versions.pop(versions.index(version1))
-        version2 = random.choice(versions)
+    # Seed new question set and start
+    random_rows = df.sample(n=total_num_questions)["Solution ID"].to_list()
+    versions = ["v1", "v2", "v3"]
+    version1 = random.choice(versions)
+    versions.pop(versions.index(version1))
+    version2 = random.choice(versions)
 
-        print(random_rows, version1, version2)
-        for row in random_rows[:num_questions_split]:
-            question = tbl(
-                user_id=current_user.id,
-                solution_id=row,
-                version=version1,
-            )
-            db.session.add(question)
-            db.session.commit()
-        for row in random_rows[num_questions_split:]:
-            question = tbl(
-                user_id=current_user.id,
-                solution_id=row,
-                version=version2,
-            )
-            db.session.add(question)
-            db.session.commit()
-
-        first_id = random_rows[0]
-        question = tbl.query.filter_by(solution_id=first_id).first()
-        question.started_at = db.func.now()
+    for row in random_rows[:num_questions_split]:
+        question = tbl(
+            user_id=current_user.id,
+            solution_id=row,
+            version=version1,
+        )
+        db.session.add(question)
         db.session.commit()
-        return redirect(url_for("main.show_solutions_%s" % version1, id=first_id))
-    else:
-        return render_template("no_practice.html", num_practice=num_practice)
+    for row in random_rows[num_questions_split:]:
+        question = tbl(
+            user_id=current_user.id,
+            solution_id=row,
+            version=version2,
+        )
+        db.session.add(question)
+        db.session.commit()
+
+    first_id = random_rows[0]
+    question = tbl.query.filter_by(solution_id=first_id).first()
+    question.started_at = db.func.now()
+    db.session.commit()
+    return redirect(url_for("main.show_solutions_%s" % version1, id=first_id))
 
 
 @main.route("/instructions")
@@ -427,10 +411,36 @@ def record():
     is_practice = form.get("is_practice")
     solution_id = form.get("solution_id")
     result = form.get("result")
-    reason = form.get("reason")
+    reasons = form.getlist("reason[]")
+    reason = json.dumps(reasons) if reasons else None
     confidence = form.get("confidence")
+    # General reflection and probabilities removed from the form
+    reflection = None
+    pass_probability = None
+    criterion_probabilities_json = None
 
-    print(form, is_practice, solution_id, result, reason, confidence)
+    # Collect per-criterion free-text justifications
+    criterion_justifications = {}
+    for key, value in form.items():
+        if key.startswith("criterion_justification["):
+            criterion = key[len("criterion_justification[") : -1]
+            if value is not None:
+                text = value.strip()
+                if text:
+                    criterion_justifications[criterion] = text
+    criterion_justifications_json = (
+        json.dumps(criterion_justifications) if criterion_justifications else None
+    )
+
+    print(
+        form,
+        is_practice,
+        solution_id,
+        result,
+        reason,
+        confidence,
+        criterion_justifications_json,
+    )
 
     tbl = Question
     if is_practice:
@@ -442,6 +452,7 @@ def record():
     question.result = result
     question.reason = reason
     question.confidence = confidence
+    question.criterion_justifications = criterion_justifications_json
     question.completed_at = db.func.now()
     db.session.commit()
 
