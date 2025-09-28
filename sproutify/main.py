@@ -423,7 +423,8 @@ def record():
     result = form.get("result")
     reasons = form.getlist("reason[]")
     reason = json.dumps(reasons) if reasons else None
-    confidence = form.get("confidence")
+    # Overall confidence removed; we capture per-criterion below
+    confidence = None
     # General reflection and probabilities removed from the form
     reflection = None
     pass_probability = None
@@ -442,6 +443,20 @@ def record():
         json.dumps(criterion_justifications) if criterion_justifications else None
     )
 
+    # Collect per-criterion confidences (1-5)
+    criterion_confidences = {}
+    for key, value in form.items():
+        if key.startswith("criterion_confidence["):
+            criterion = key[len("criterion_confidence[") : -1]
+            if value:
+                try:
+                    criterion_confidences[criterion] = int(value)
+                except ValueError:
+                    continue
+    criterion_confidences_json = (
+        json.dumps(criterion_confidences) if criterion_confidences else None
+    )
+
     print(
         form,
         is_practice,
@@ -450,6 +465,7 @@ def record():
         reason,
         confidence,
         criterion_justifications_json,
+        criterion_confidences_json,
     )
 
     tbl = Question
@@ -463,6 +479,7 @@ def record():
     question.reason = reason
     question.confidence = confidence
     question.criterion_justifications = criterion_justifications_json
+    question.criterion_confidences = criterion_confidences_json
     question.completed_at = db.func.now()
     db.session.commit()
 

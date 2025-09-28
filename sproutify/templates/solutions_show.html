@@ -1,6 +1,14 @@
 {% extends '_base.html' %}
 {% block head %}
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <style>
+    .criterion-item { border: 1px solid #e6e6e6; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; background: #fff; }
+    .criterion-item .checkbox { font-weight: 600; }
+    .criterion-item .label.is-size-7 { color: #6b7280; margin-bottom: 4px; }
+    .criterion-item .radio { margin-right: 10px; font-size: 0.95em; }
+    .criterion-item.active { border-color: #3273dc; background: #f8fbff; box-shadow: 0 0 0 1px rgba(50,115,220,.08) inset; }
+    .criterion-item textarea.textarea { margin-top: 6px; }
+  </style>
 {% endblock %}
 <!--                         {% block style %}
   <style>
@@ -85,77 +93,128 @@
               <div class="field" id="reason-field" style="display: block;">
                 <label class="label">Fail Reasons (select all that apply)</label>
                 <div class="control">
-                  <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
-                    <label class="checkbox" style="display: block;">
-                      <input type="checkbox" name="reason[]" value="1" data-criterion="1" />
-                      1 - The solution is incomplete, inappropriate, and not intelligible
-                    </label>
-                  </div>
-                  <div class="field criterion-justification-field" data-criterion="1" style="margin-bottom: 0.75rem;">
-                    <div class="control">
-                      <textarea class="textarea criterion-justification" name="criterion_justification[1]" rows="2" placeholder="Explain why it fails or pass criterion 1"></textarea>
+                  <div class="criterion-item" data-criterion="1">
+                    <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
+                      <label class="checkbox" style="display: block;">
+                        <input type="checkbox" name="reason[]" value="1" data-criterion="1" />
+                        1 - The solution is incomplete, inappropriate, and not intelligible
+                      </label>
+                    </div>
+                    <div class="field" data-criterion="1">
+                      <label class="label is-size-7">Confidence for Criterion 1</label>
+                      <div class="control">
+                        <label class="radio"><input type="radio" name="criterion_confidence[1]" value="1" />1 - Not at all confident</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[1]" value="2" />2</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[1]" value="3" />3</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[1]" value="4" />4</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[1]" value="5" />5 - Extremely confident</label>
+                      </div>
+                    </div>
+                    <div class="field criterion-justification-field" data-criterion="1" style="margin-bottom: 0.75rem;">
+                      <div class="control">
+                        <textarea class="textarea criterion-justification" name="criterion_justification[1]" rows="2" placeholder="Explain why it fails or pass criterion 1"></textarea>
+                      </div>
                     </div>
                   </div>
-                  <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
-                    <label class="checkbox" style="display: block;">
-                      <input type="checkbox" name="reason[]" value="2" data-criterion="2" />
-                      2 - The solution does not reach prototype stage
-                    </label>
-                  </div>
-                  <div class="field criterion-justification-field" data-criterion="2" style="margin-bottom: 0.75rem;">
-                    <div class="control">
-                      <textarea class="textarea criterion-justification" name="criterion_justification[2]" rows="2" placeholder="Explain why it fails or pass criterion 2"></textarea>
+                  <div class="criterion-item" data-criterion="2">
+                    <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
+                      <label class="checkbox" style="display: block;">
+                        <input type="checkbox" name="reason[]" value="2" data-criterion="2" />
+                        2 - The solution does not reach prototype stage
+                      </label>
+                    </div>
+                    <div class="field" data-criterion="2">
+                      <label class="label is-size-7">Confidence for Criterion 2</label>
+                      <div class="control">
+                        <label class="radio"><input type="radio" name="criterion_confidence[2]" value="1" />1 - Not at all confident</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[2]" value="2" />2</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[2]" value="3" />3</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[2]" value="4" />4</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[2]" value="5" />5 - Extremely confident</label>
+                      </div>
+                    </div>
+                    <div class="field criterion-justification-field" data-criterion="2" style="margin-bottom: 0.75rem;">
+                      <div class="control">
+                        <textarea class="textarea criterion-justification" name="criterion_justification[2]" rows="2" placeholder="Explain why it fails or pass criterion 2"></textarea>
+                      </div>
                     </div>
                   </div>
-                  <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
-                    <label class="checkbox" style="display: block;">
-                      <input type="checkbox" name="reason[]" value="3" data-criterion="3" />
-                      3 - The solution does not address the challenge question
-                    </label>
-                  </div>
-                  <div class="field criterion-justification-field" data-criterion="3" style="margin-bottom: 0.75rem;">
-                    <div class="control">
-                      <textarea class="textarea criterion-justification" name="criterion_justification[3]" rows="2" placeholder="Explain why it fails or pass criterion 3"></textarea>
+                  <div class="criterion-item" data-criterion="3">
+                    <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
+                      <label class="checkbox" style="display: block;">
+                        <input type="checkbox" name="reason[]" value="3" data-criterion="3" />
+                        3 - The solution does not address the challenge question
+                      </label>
+                    </div>
+                    <div class="field" data-criterion="3">
+                      <label class="label is-size-7">Confidence for Criterion 3</label>
+                      <div class="control">
+                        <label class="radio"><input type="radio" name="criterion_confidence[3]" value="1" />1 - Not at all confident</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[3]" value="2" />2</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[3]" value="3" />3</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[3]" value="4" />4</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[3]" value="5" />5 - Extremely confident</label>
+                      </div>
+                    </div>
+                    <div class="field criterion-justification-field" data-criterion="3" style="margin-bottom: 0.75rem;">
+                      <div class="control">
+                        <textarea class="textarea criterion-justification" name="criterion_justification[3]" rows="2" placeholder="Explain why it fails or pass criterion 3"></textarea>
+                      </div>
                     </div>
                   </div>
-                  <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
-                    <label class="checkbox" style="display: block;">
-                      <input type="checkbox" name="reason[]" value="4" data-criterion="4" />
-                      4 - The solution is not powered by technology
-                    </label>
-                  </div>
-                  <div class="field criterion-justification-field" data-criterion="4" style="margin-bottom: 0.75rem;">
-                    <div class="control">
-                      <textarea class="textarea criterion-justification" name="criterion_justification[4]" rows="2" placeholder="Explain why it fails or pass criterion 4"></textarea>
+                  <div class="criterion-item" data-criterion="4">
+                    <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
+                      <label class="checkbox" style="display: block;">
+                        <input type="checkbox" name="reason[]" value="4" data-criterion="4" />
+                        4 - The solution is not powered by technology
+                      </label>
+                    </div>
+                    <div class="field" data-criterion="4">
+                      <label class="label is-size-7">Confidence for Criterion 4</label>
+                      <div class="control">
+                        <label class="radio"><input type="radio" name="criterion_confidence[4]" value="1" />1 - Not at all confident</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[4]" value="2" />2</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[4]" value="3" />3</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[4]" value="4" />4</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[4]" value="5" />5 - Extremely confident</label>
+                      </div>
+                    </div>
+                    <div class="field criterion-justification-field" data-criterion="4" style="margin-bottom: 0.75rem;">
+                      <div class="control">
+                        <textarea class="textarea criterion-justification" name="criterion_justification[4]" rows="2" placeholder="Explain why it fails or pass criterion 4"></textarea>
+                      </div>
                     </div>
                   </div>
-                  <div class="field is-grouped is-align-items-center">
-                    <label class="checkbox" style="display: block;">
-                      <input type="checkbox" name="reason[]" value="5" data-criterion="5" />
-                      5 - The quality of the solution is not good enough
-                    </label>
-                  </div>
-                  <div class="field criterion-justification-field" data-criterion="5">
-                    <div class="control">
-                      <textarea class="textarea criterion-justification" name="criterion_justification[5]" rows="2" placeholder="Explain why it fails or pass criterion 5"></textarea>
+                  <div class="criterion-item" data-criterion="5">
+                    <div class="field is-grouped is-align-items-center">
+                      <label class="checkbox" style="display: block;">
+                        <input type="checkbox" name="reason[]" value="5" data-criterion="5" />
+                        5 - The quality of the solution is not good enough
+                      </label>
+                    </div>
+                    <div class="field" data-criterion="5">
+                      <label class="label is-size-7">Confidence for Criterion 5</label>
+                      <div class="control">
+                        <label class="radio"><input type="radio" name="criterion_confidence[5]" value="1" />1 - Not at all confident</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[5]" value="2" />2</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[5]" value="3" />3</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[5]" value="4" />4</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[5]" value="5" />5 - Extremely confident</label>
+                      </div>
+                    </div>
+                    <div class="field criterion-justification-field" data-criterion="5">
+                      <div class="control">
+                        <textarea class="textarea criterion-justification" name="criterion_justification[5]" rows="2" placeholder="Explain why it fails or pass criterion 5"></textarea>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <p class="warning-text" id="reason-warning" style="display: none;">Please select at least one failure reason</p>
                 <p class="warning-text" id="criteria-justif-warning" style="display: none;">Provide a short justification for each selected criterion</p>
+                <p class="warning-text" id="criteria-conf-warning" style="display: none;">Select a confidence (1-5) for each criterion</p>
               </div>
 
-              <div class="field">
-                <label class="label">How confident are you with the decision?</label>
-                <div class="control">
-                  <label class="radio"><input type="radio" name="confidence" value="1" />1 - Not at all confident</label>
-                  <label class="radio"><input type="radio" name="confidence" value="2" />2</label>
-                  <label class="radio"><input type="radio" name="confidence" value="3" />3</label>
-                  <label class="radio"><input type="radio" name="confidence" value="4" />4</label>
-                  <label class="radio"><input type="radio" name="confidence" value="5" />5 - Extremely confident</label>
-                </div>
-                <p class="warning-text" id="confidence-warning" style="display: none;">Please select your confidence level</p>
-              </div>
+              
 
               
 
@@ -366,7 +425,7 @@
   <!--                           <script>
     function validateForm() {
       var result = document.querySelector('input[name="result"]:checked')
-      var confidence = document.querySelector('input[name="confidence"]:checked')
+      // per-criterion confidence radios only
     
       if (!result) {
         alert('Please select a decision.')
@@ -403,13 +462,13 @@
       var result = document.querySelector('input[name="result"]:checked')
       var reasonField = document.getElementById('reason-field')
       var reasonOptions = document.querySelectorAll('input[name="reason[]"]')
-      var confidence = document.querySelector('input[name="confidence"]:checked')
+      // overall confidence removed
       var isValid = true
 
       // Reset warnings and classes
       document.getElementById('result-warning').style.display = 'none'
       document.getElementById('reason-warning').style.display = 'none'
-      document.getElementById('confidence-warning').style.display = 'none'
+      document.getElementById('criteria-conf-warning').style.display = 'none'
       document.querySelectorAll('.is-invalid').forEach((el) => el.classList.remove('is-invalid'))
 
       if (!result) {
@@ -442,9 +501,14 @@
         }
       }
 
-      if (!confidence) {
-        document.getElementById('confidence-warning').style.display = 'block'
-        document.querySelectorAll('input[name="confidence"]').forEach((el) => el.classList.add('is-invalid'))
+      // Ensure each criterion has a confidence 1-5 selected
+      var missingCriterionConfidence = false
+      ;['1','2','3','4','5'].forEach(function (c) {
+        var selected = document.querySelector('input[name="criterion_confidence[' + c + ']\"]:checked')
+        if (!selected) missingCriterionConfidence = true
+      })
+      if (missingCriterionConfidence) {
+        document.getElementById('criteria-conf-warning').style.display = 'block'
         isValid = false
       }
 
@@ -462,11 +526,21 @@
         $('#criteria-justif-warning').hide()
       })
 
+      // Visual emphasis on selected criteria containers
+      var $reasons = $('input[name="reason[]"]')
+      function toggleActive(cbx) {
+        var c = $(cbx).data('criterion')
+        var $wrap = $('.criterion-item[data-criterion="' + c + '"]')
+        if (cbx.checked) $wrap.addClass('active')
+        else $wrap.removeClass('active')
+      }
+      $reasons.on('change', function(){ toggleActive(this) })
+      $reasons.each(function(){ toggleActive(this) })
+
       // Auto-select Fail when any failure criterion is checked.
       // Disable Pass while any failure criterion is selected.
       var $passRadio = $('input[name="result"][value="pass"]')
       var $failRadio = $('input[name="result"][value="fail"]')
-      var $reasons = $('input[name="reason[]"]')
 
       function syncDecisionWithReasons() {
         var anyChecked = $reasons.is(':checked')
