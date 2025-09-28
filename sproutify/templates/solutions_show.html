@@ -461,6 +461,26 @@
         $(this).removeClass('is-invalid')
         $('#criteria-justif-warning').hide()
       })
+
+      // Auto-select Fail when any failure criterion is checked.
+      // Disable Pass while any failure criterion is selected.
+      var $passRadio = $('input[name="result"][value="pass"]')
+      var $failRadio = $('input[name="result"][value="fail"]')
+      var $reasons = $('input[name="reason[]"]')
+
+      function syncDecisionWithReasons() {
+        var anyChecked = $reasons.is(':checked')
+        if (anyChecked) {
+          $failRadio.prop('checked', true)
+          $passRadio.prop('disabled', true)
+        } else {
+          $passRadio.prop('disabled', false)
+        }
+      }
+
+      $reasons.on('change', syncDecisionWithReasons)
+      // Initial sync in case of persisted values
+      syncDecisionWithReasons()
     })
   </script>
 

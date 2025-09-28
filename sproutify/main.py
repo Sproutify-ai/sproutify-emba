@@ -288,9 +288,9 @@ def start():
     ):
         return redirect(url_for("main.complete"))
 
-    # Completed all questions → go to survey
+    # Completed all questions → go to complete
     if tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count() >= total_num_questions:
-        return redirect(url_for("main.survey"))
+        return redirect(url_for("main.complete"))
 
     # In-progress question
     last_question = tbl.query.filter_by(user_id=current_user.id, result=None).first()
@@ -471,7 +471,8 @@ def record():
     else:
         if is_practice:
             return redirect(url_for("main.practice_complete"))
-        return redirect(url_for("main.survey"))
+        # Skip survey; go straight to completion page
+        return redirect(url_for("main.complete"))
 
 
 @main.route("/survey", methods=["GET", "POST"])
