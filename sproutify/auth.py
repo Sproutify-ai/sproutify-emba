@@ -17,7 +17,15 @@ def login():
 
 @auth.route("/login", methods=["POST"])
 def login_post():
-    email = request.form.get("email")
+    screener = request.form.get("screener")
+    if not screener:
+        # Fallback: allow email for backward compatibility
+        email = request.form.get("email") or "anonymous@sproutify.local"
+        name = "Anonymous"
+    else:
+        slug = screener.lower().replace(" ", "-")
+        email = f"{slug}@sproutify.local"
+        name = screener
     # password = request.form.get("password")
 
     # no password required
@@ -32,11 +40,17 @@ def login_post():
     if not user:
         user = User(
             email=email,
+            name=name,
             password=generate_password_hash(password, method="scrypt"),
         )
 
         db.session.add(user)
         db.session.commit()
+    else:
+        # Ensure name is set/updated
+        if user.name != name:
+            user.name = name
+            db.session.commit()
 
     login_user(user, remember=remember)
     return redirect(url_for("main.instructions"))

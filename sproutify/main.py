@@ -20,8 +20,8 @@ csv_path = os.path.join(
 practice_path = os.path.join(os.path.dirname(__file__), "static/csv/sample_5_2023.csv")
 
 num_practice = 2
-total_num_questions = 10
-num_questions_split = 2
+total_num_questions = 24
+num_questions_split = 12
 
 drop_cols = [
     "Solution ID",
@@ -44,8 +44,15 @@ drop_cols = [
     "summary",
 ]
 df = pd.read_csv(csv_path)
-df = df[df["Selected"] == 1]
 practice_df = pd.read_csv(practice_path)
+
+# Fixed screener assignments (solution IDs per screener)
+assignments_path = os.path.join(os.path.dirname(__file__), "static", "assignments.json")
+try:
+    with open(assignments_path, "r", encoding="utf-8") as f:
+        SCREENER_ASSIGNMENTS = json.load(f)
+except Exception:
+    SCREENER_ASSIGNMENTS = {}
 
 
 def parse_criteria(selected_results, version):
@@ -312,35 +319,38 @@ def start():
             )
         )
 
-    # Seed new question set and start
-    random_rows = df.sample(n=total_num_questions)["Solution ID"].to_list()
-    versions = ["v1", "v2", "v3"]
-    version1 = random.choice(versions)
-    versions.pop(versions.index(version1))
-    version2 = random.choice(versions)
+    # Seed new question set and start — always v1, using fixed assignments per screener
+    # Determine screener key
+    screener_key = (current_user.name or (current_user.email.split('@')[0] if current_user.email else "")).strip()
+    # Normalize to match JSON keys
+    mapping = {
+        "pooja": "Pooja",
+        "rebecca": "Rebecca",
+        "screener-3": "Screener 3",
+        "screener 3": "Screener 3",
+        "screener-4": "Screener 4",
+        "screener 4": "Screener 4",
+    }
+    screener_key_norm = mapping.get(screener_key.lower(), screener_key)
+    assigned_ids = SCREENER_ASSIGNMENTS.get(screener_key_norm)
+    if not assigned_ids:
+        # Fallback to sampling if no assignment found
+        assigned_ids = df.sample(n=total_num_questions)["Solution ID"].to_list()
 
-    for row in random_rows[:num_questions_split]:
+    for row in assigned_ids:
         question = tbl(
             user_id=current_user.id,
             solution_id=row,
-            version=version1,
-        )
-        db.session.add(question)
-        db.session.commit()
-    for row in random_rows[num_questions_split:]:
-        question = tbl(
-            user_id=current_user.id,
-            solution_id=row,
-            version=version2,
+            version="v1",
         )
         db.session.add(question)
         db.session.commit()
 
-    first_id = random_rows[0]
+    first_id = assigned_ids[0]
     question = tbl.query.filter_by(solution_id=first_id).first()
     question.started_at = db.func.now()
     db.session.commit()
-    return redirect(url_for("main.show_solutions_%s" % version1, id=first_id))
+    return redirect(url_for("main.show_solutions_v1", id=first_id))
 
 
 @main.route("/instructions")
