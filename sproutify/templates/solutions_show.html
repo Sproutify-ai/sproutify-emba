@@ -8,6 +8,16 @@
     .criterion-item .radio { margin-right: 10px; font-size: 0.95em; }
     .criterion-item.active { border-color: #3273dc; background: #f8fbff; box-shadow: 0 0 0 1px rgba(50,115,220,.08) inset; }
     .criterion-item textarea.textarea { margin-top: 6px; }
+    .endpoint-hint { font-size: 0.72em; color: #8793a0; }
+    .confidence-hints { display: flex; justify-content: space-between; margin-top: 2px; }
+    .decision-row { display: flex; gap: 16px; align-items: center; flex-wrap: nowrap; }
+    .decision-row .radio { margin-right: 0; }
+    .confidence-row { display: flex; gap: 10px; align-items: center; flex-wrap: nowrap; }
+    .confidence-row .radio { margin-right: 6px; white-space: nowrap; }
+    .confidence-row input[type="radio"] { margin-right: 4px; }
+    /* Independent scrolling panes */
+    .pane-left { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; padding-right: 8px; }
+    .pane-right { /* right uses page scroll; no special positioning needed */ }
   </style>
 {% endblock %}
 <!--                         {% block style %}
@@ -44,35 +54,13 @@
     <div class="container">
       <div class="columns">
         <div class="column is-one-third">
+          <div class="pane-left">
           <!-- Timer removed -->
           <h1 class="title">{{ tags['Name'] }}</h1>
-          <nav class="level">
-            <div class="level-left">
-              <p class="level-item has-text-centered">
-                <span class="tag is-primary">{{ tags['Solution ID'] }}</span>
-              </p>
-              <p class="level-item has-text-centered">
-                <span class="tag is-warning">{{ tags['Challenge Name'] }}</span>
-              </p>
-            </div>
-          </nav>
           <div class="progress-container">
             <progress class="progress is-primary" value="{{ solution_count }}" max="{{ total_solutions }}">{{ solution_count }} / {{ total_solutions }}</progress>
             <p class="has-text-centered">{{ solution_count }} / {{ total_solutions }} Solutions</p>
           </div>
-          {% include '_ai_v1.html' %}
-          <div style="display: none;">
-          {% if request.endpoint == 'main.show_solutions_v1' %}
-            {% include '_ai_v1.html' %}
-          {% elif request.endpoint == 'main.show_solutions_v2' %}
-            {% include '_ai_v2.html' %}
-          {% elif request.endpoint == 'main.show_solutions_v3' %}
-            {% include '_ai_v3.html' %}
-          {% endif %}
-        </div>
-
-          </div>
-        <div class="column is-two-thirds">
           <form action="/record" method="POST" onsubmit="return validateForm()" novalidate>
             {% if is_practice %}
               <input type="hidden" name="is_practice" value="1" />
@@ -81,10 +69,8 @@
             <div class="box">
               <div class="field">
                 <label class="label">Decision</label>
-                <div class="control">
-                  <div class="field is-grouped is-align-items-center mb-2">
-                    <label class="radio"><input type="radio" name="result" value="pass" />Pass</label>
-                  </div>
+                <div class="control decision-row">
+                  <label class="radio"><input type="radio" name="result" value="pass" />Pass</label>
                   <label class="radio"><input type="radio" name="result" value="fail" />Fail</label>
                 </div>
                 <p class="warning-text" id="result-warning" style="display: none;">Please select your decision</p>
@@ -99,15 +85,21 @@
                         <input type="checkbox" name="reason[]" value="1" data-criterion="1" />
                         1 - The solution is incomplete, inappropriate, and not intelligible
                       </label>
+                      <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[0] }}">
+                        <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
+                      </button>
                     </div>
                     <div class="field" data-criterion="1">
-                      <label class="label is-size-7">Confidence for Criterion 1</label>
-                      <div class="control">
-                        <label class="radio"><input type="radio" name="criterion_confidence[1]" value="1" />1 - Not at all confident</label>
+                      <div class="control confidence-row">
+                        <label class="radio"><input type="radio" name="criterion_confidence[1]" value="1" />1</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[1]" value="2" />2</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[1]" value="3" />3</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[1]" value="4" />4</label>
-                        <label class="radio"><input type="radio" name="criterion_confidence[1]" value="5" />5 - Extremely confident</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[1]" value="5" />5</label>
+                      </div>
+                      <div class="confidence-hints">
+                        <span class="endpoint-hint">1 Not at all confident</span>
+                        <span class="endpoint-hint">5 Extremely confident</span>
                       </div>
                     </div>
                     <div class="field criterion-justification-field" data-criterion="1" style="margin-bottom: 0.75rem;">
@@ -122,15 +114,21 @@
                         <input type="checkbox" name="reason[]" value="2" data-criterion="2" />
                         2 - The solution does not reach prototype stage
                       </label>
+                      <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[1] }}">
+                        <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
+                      </button>
                     </div>
                     <div class="field" data-criterion="2">
-                      <label class="label is-size-7">Confidence for Criterion 2</label>
-                      <div class="control">
-                        <label class="radio"><input type="radio" name="criterion_confidence[2]" value="1" />1 - Not at all confident</label>
+                      <div class="control confidence-row">
+                        <label class="radio"><input type="radio" name="criterion_confidence[2]" value="1" />1</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[2]" value="2" />2</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[2]" value="3" />3</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[2]" value="4" />4</label>
-                        <label class="radio"><input type="radio" name="criterion_confidence[2]" value="5" />5 - Extremely confident</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[2]" value="5" />5</label>
+                      </div>
+                      <div class="confidence-hints">
+                        <span class="endpoint-hint">1 Not at all confident</span>
+                        <span class="endpoint-hint">5 Extremely confident</span>
                       </div>
                     </div>
                     <div class="field criterion-justification-field" data-criterion="2" style="margin-bottom: 0.75rem;">
@@ -145,15 +143,21 @@
                         <input type="checkbox" name="reason[]" value="3" data-criterion="3" />
                         3 - The solution does not address the challenge question
                       </label>
+                      <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[2] }}">
+                        <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
+                      </button>
                     </div>
                     <div class="field" data-criterion="3">
-                      <label class="label is-size-7">Confidence for Criterion 3</label>
-                      <div class="control">
-                        <label class="radio"><input type="radio" name="criterion_confidence[3]" value="1" />1 - Not at all confident</label>
+                      <div class="control confidence-row">
+                        <label class="radio"><input type="radio" name="criterion_confidence[3]" value="1" />1</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[3]" value="2" />2</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[3]" value="3" />3</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[3]" value="4" />4</label>
-                        <label class="radio"><input type="radio" name="criterion_confidence[3]" value="5" />5 - Extremely confident</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[3]" value="5" />5</label>
+                      </div>
+                      <div class="confidence-hints">
+                        <span class="endpoint-hint">1 Not at all confident</span>
+                        <span class="endpoint-hint">5 Extremely confident</span>
                       </div>
                     </div>
                     <div class="field criterion-justification-field" data-criterion="3" style="margin-bottom: 0.75rem;">
@@ -168,15 +172,21 @@
                         <input type="checkbox" name="reason[]" value="4" data-criterion="4" />
                         4 - The solution is not powered by technology
                       </label>
+                      <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[3] }}">
+                        <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
+                      </button>
                     </div>
                     <div class="field" data-criterion="4">
-                      <label class="label is-size-7">Confidence for Criterion 4</label>
-                      <div class="control">
-                        <label class="radio"><input type="radio" name="criterion_confidence[4]" value="1" />1 - Not at all confident</label>
+                      <div class="control confidence-row">
+                        <label class="radio"><input type="radio" name="criterion_confidence[4]" value="1" />1</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[4]" value="2" />2</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[4]" value="3" />3</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[4]" value="4" />4</label>
-                        <label class="radio"><input type="radio" name="criterion_confidence[4]" value="5" />5 - Extremely confident</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[4]" value="5" />5</label>
+                      </div>
+                      <div class="confidence-hints">
+                        <span class="endpoint-hint">1 Not at all confident</span>
+                        <span class="endpoint-hint">5 Extremely confident</span>
                       </div>
                     </div>
                     <div class="field criterion-justification-field" data-criterion="4" style="margin-bottom: 0.75rem;">
@@ -191,15 +201,21 @@
                         <input type="checkbox" name="reason[]" value="5" data-criterion="5" />
                         5 - The quality of the solution is not good enough
                       </label>
+                      <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[4] }}">
+                        <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
+                      </button>
                     </div>
                     <div class="field" data-criterion="5">
-                      <label class="label is-size-7">Confidence for Criterion 5</label>
-                      <div class="control">
-                        <label class="radio"><input type="radio" name="criterion_confidence[5]" value="1" />1 - Not at all confident</label>
+                      <div class="control confidence-row">
+                        <label class="radio"><input type="radio" name="criterion_confidence[5]" value="1" />1</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[5]" value="2" />2</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[5]" value="3" />3</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[5]" value="4" />4</label>
-                        <label class="radio"><input type="radio" name="criterion_confidence[5]" value="5" />5 - Extremely confident</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[5]" value="5" />5</label>
+                      </div>
+                      <div class="confidence-hints">
+                        <span class="endpoint-hint">1 Not at all confident</span>
+                        <span class="endpoint-hint">5 Extremely confident</span>
                       </div>
                     </div>
                     <div class="field criterion-justification-field" data-criterion="5">
@@ -208,23 +224,27 @@
                       </div>
                     </div>
                   </div>
-                </div>
-                <p class="warning-text" id="reason-warning" style="display: none;">Please select at least one failure reason</p>
-                <p class="warning-text" id="criteria-justif-warning" style="display: none;">Provide a short justification for each selected criterion</p>
-                <p class="warning-text" id="criteria-conf-warning" style="display: none;">Select a confidence (1-5) for each criterion</p>
               </div>
+              <p class="warning-text" id="reason-warning" style="display: none;">Please select at least one failure reason</p>
+              <p class="warning-text" id="criteria-justif-warning" style="display: none;">Provide a short justification for each selected criterion</p>
+              <p class="warning-text" id="criteria-conf-warning" style="display: none;">Select a confidence (1-5) for each criterion</p>
+            </div>
 
-              
+            
 
-              
+            
 
-              <div class="field">
-                <div class="control">
-                  <button class="button is-primary" type="submit">Next</button>
-                </div>
+            <div class="field">
+              <div class="control">
+                <button class="button is-primary" type="submit">Next</button>
               </div>
             </div>
-          </form>
+          </div>
+        </form>
+        </div>
+        </div>
+
+        <div class="column is-two-thirds pane-right">
 
           <div class="tabs">
             <ul>
