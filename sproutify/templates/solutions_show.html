@@ -6,7 +6,18 @@
     .criterion-item .checkbox { font-weight: 600; }
     .criterion-item .label.is-size-7 { color: #6b7280; margin-bottom: 4px; }
     .criterion-item .radio { margin-right: 10px; font-size: 0.95em; }
-    .criterion-item.active { border-color: #3273dc; background: #f8fbff; box-shadow: 0 0 0 1px rgba(50,115,220,.08) inset; }
+    /* Active (selected fail reason) in red theme */
+    .criterion-item.active {
+      border-color: #f14668;               /* Bulma danger */
+      background: #fff5f5;                 /* light red tint */
+      box-shadow: 0 0 0 1px rgba(241, 70, 104, 0.12) inset;
+    }
+    /* Passing state (confidence chosen with no fail) */
+    .criterion-item.passing {
+      border-color: #48c78e;               /* Bulma success */
+      background: #f4fff8;                 /* light green tint */
+      box-shadow: 0 0 0 1px rgba(72, 199, 142, 0.12) inset;
+    }
     .criterion-item textarea.textarea { margin-top: 6px; }
     .endpoint-hint { font-size: 0.72em; color: #8793a0; }
     .confidence-hints { display: flex; justify-content: space-between; margin-top: 2px; }
@@ -51,9 +62,9 @@
 
 {% block content %}
   <section class="section">
-    <div class="container">
-      <div class="columns">
-        <div class="column is-one-third">
+    <div class="container is-fullhd">
+      <div class="columns is-variable is-1">
+        <div class="column is-12-mobile is-6-tablet is-5-desktop is-4-widescreen is-4-fullhd">
           <div class="pane-left">
           <!-- Timer removed -->
           <h1 class="title">{{ tags['Name'] }}</h1>
@@ -244,7 +255,7 @@
         </div>
         </div>
 
-        <div class="column is-two-thirds pane-right">
+        <div class="column is-12-mobile is-6-tablet is-7-desktop is-8-widescreen is-8-fullhd pane-right">
 
           <div class="tabs">
             <ul>
@@ -548,14 +559,29 @@
 
       // Visual emphasis on selected criteria containers
       var $reasons = $('input[name="reason[]"]')
-      function toggleActive(cbx) {
-        var c = $(cbx).data('criterion')
+
+      function syncCriterionVisual(c) {
         var $wrap = $('.criterion-item[data-criterion="' + c + '"]')
-        if (cbx.checked) $wrap.addClass('active')
-        else $wrap.removeClass('active')
+        var failChecked = $('input[name="reason[]"][data-criterion="' + c + '"]').is(':checked')
+        var confSelected = $('input[name="criterion_confidence[' + c + ']\"]:checked').length > 0
+
+        if (failChecked) {
+          $wrap.addClass('active').removeClass('passing')
+        } else if (confSelected) {
+          $wrap.addClass('passing').removeClass('active')
+        } else {
+          $wrap.removeClass('active passing')
+        }
       }
-      $reasons.on('change', function(){ toggleActive(this) })
-      $reasons.each(function(){ toggleActive(this) })
+
+      $reasons.on('change', function(){ syncCriterionVisual($(this).data('criterion')) })
+      // Confidence change → green highlight when not failed
+      $(document).on('change', 'input[name^="criterion_confidence["]', function () {
+        var c = this.name.match(/criterion_confidence\[(\d)\]/)[1]
+        syncCriterionVisual(c)
+      })
+      // Initial sync in case of persisted values
+      ;['1','2','3','4','5'].forEach(function(c){ syncCriterionVisual(c) })
 
       // Auto-select Fail when any failure criterion is checked.
       // Disable Pass while any failure criterion is selected.
