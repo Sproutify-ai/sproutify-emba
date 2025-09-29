@@ -330,6 +330,10 @@ def start():
         "screener 3": "Screener 3",
         "screener-4": "Screener 4",
         "screener 4": "Screener 4",
+        "screener-5": "Screener 5",
+        "screener 5": "Screener 5",
+        "screener-6": "Screener 6",
+        "screener 6": "Screener 6",
     }
     screener_key_norm = mapping.get(screener_key.lower(), screener_key)
     assigned_ids = SCREENER_ASSIGNMENTS.get(screener_key_norm)
