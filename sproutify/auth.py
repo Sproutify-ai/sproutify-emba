@@ -23,9 +23,16 @@ def login_post():
         email = request.form.get("email") or "anonymous@sproutify.local"
         name = "Anonymous"
     else:
-        slug = screener.lower().replace(" ", "-")
-        email = f"{slug}@sproutify.local"
-        name = screener
+        if screener.lower().replace(" ", "-") == "other-user":
+            email = request.form.get("email", "").strip()
+            if not email:
+                flash("Please enter your email")
+                return redirect(url_for("auth.login"))
+            name = email  # display email in navbar for test users
+        else:
+            slug = screener.lower().replace(" ", "-")
+            email = f"{slug}@sproutify.local"
+            name = screener
     # password = request.form.get("password")
 
     # no password required

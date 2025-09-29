@@ -78,27 +78,21 @@
             {% endif %}
             <input type="hidden" name="solution_id" value="{{ tags['Solution ID'] }}" />
             <div class="box">
-              <div class="field">
-                <label class="label">Decision</label>
-                <div class="control decision-row">
-                  <label class="radio"><input type="radio" name="result" value="pass" />Pass</label>
-                  <label class="radio"><input type="radio" name="result" value="fail" />Fail</label>
-                </div>
-                <p class="warning-text" id="result-warning" style="display: none;">Please select your decision</p>
-              </div>
-
               <div class="field" id="reason-field" style="display: block;">
-                <label class="label">Fail Reasons (select all that apply)</label>
+                <label class="label">Criteria</label>
                 <div class="control">
                   <div class="criterion-item" data-criterion="1">
-                    <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
-                      <label class="checkbox" style="display: block;">
-                        <input type="checkbox" name="reason[]" value="1" data-criterion="1" />
-                        1 - The solution is incomplete, inappropriate, and not intelligible
-                      </label>
+                    <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem; justify-content: space-between;">
+                      <div class="has-text-weight-semibold">1 - The solution is incomplete, inappropriate, and not intelligible</div>
                       <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[0] }}">
                         <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
                       </button>
+                    </div>
+                    <div class="field">
+                      <div class="control decision-row">
+                        <label class="radio"><input type="radio" name="criterion_result[1]" value="pass" />Pass</label>
+                        <label class="radio"><input type="radio" name="criterion_result[1]" value="fail" />Fail</label>
+                      </div>
                     </div>
                     <div class="field" data-criterion="1">
                       <div class="control confidence-row">
@@ -120,14 +114,17 @@
                     </div>
                   </div>
                   <div class="criterion-item" data-criterion="2">
-                    <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
-                      <label class="checkbox" style="display: block;">
-                        <input type="checkbox" name="reason[]" value="2" data-criterion="2" />
-                        2 - The solution does not reach prototype stage
-                      </label>
+                    <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem; justify-content: space-between;">
+                      <div class="has-text-weight-semibold">2 - The solution does not reach prototype stage</div>
                       <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[1] }}">
                         <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
                       </button>
+                    </div>
+                    <div class="field">
+                      <div class="control decision-row">
+                        <label class="radio"><input type="radio" name="criterion_result[2]" value="pass" />Pass</label>
+                        <label class="radio"><input type="radio" name="criterion_result[2]" value="fail" />Fail</label>
+                      </div>
                     </div>
                     <div class="field" data-criterion="2">
                       <div class="control confidence-row">
@@ -149,14 +146,17 @@
                     </div>
                   </div>
                   <div class="criterion-item" data-criterion="3">
-                    <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
-                      <label class="checkbox" style="display: block;">
-                        <input type="checkbox" name="reason[]" value="3" data-criterion="3" />
-                        3 - The solution does not address the challenge question
-                      </label>
+                    <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem; justify-content: space-between;">
+                      <div class="has-text-weight-semibold">3 - The solution does not address the challenge question</div>
                       <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[2] }}">
                         <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
                       </button>
+                    </div>
+                    <div class="field">
+                      <div class="control decision-row">
+                        <label class="radio"><input type="radio" name="criterion_result[3]" value="pass" />Pass</label>
+                        <label class="radio"><input type="radio" name="criterion_result[3]" value="fail" />Fail</label>
+                      </div>
                     </div>
                     <div class="field" data-criterion="3">
                       <div class="control confidence-row">
@@ -178,14 +178,17 @@
                     </div>
                   </div>
                   <div class="criterion-item" data-criterion="4">
-                    <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem;">
-                      <label class="checkbox" style="display: block;">
-                        <input type="checkbox" name="reason[]" value="4" data-criterion="4" />
-                        4 - The solution is not powered by technology
-                      </label>
+                    <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem; justify-content: space-between;">
+                      <div class="has-text-weight-semibold">4 - The solution is not powered by technology</div>
                       <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[3] }}">
                         <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
                       </button>
+                    </div>
+                    <div class="field">
+                      <div class="control decision-row">
+                        <label class="radio"><input type="radio" name="criterion_result[4]" value="pass" />Pass</label>
+                        <label class="radio"><input type="radio" name="criterion_result[4]" value="fail" />Fail</label>
+                      </div>
                     </div>
                     <div class="field" data-criterion="4">
                       <div class="control confidence-row">
@@ -207,14 +210,17 @@
                     </div>
                   </div>
                   <div class="criterion-item" data-criterion="5">
-                    <div class="field is-grouped is-align-items-center">
-                      <label class="checkbox" style="display: block;">
-                        <input type="checkbox" name="reason[]" value="5" data-criterion="5" />
-                        5 - The quality of the solution is not good enough
-                      </label>
+                    <div class="field is-grouped is-align-items-center" style="justify-content: space-between;">
+                      <div class="has-text-weight-semibold">5 - The quality of the solution is not good enough</div>
                       <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[4] }}">
                         <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
                       </button>
+                    </div>
+                    <div class="field">
+                      <div class="control decision-row">
+                        <label class="radio"><input type="radio" name="criterion_result[5]" value="pass" />Pass</label>
+                        <label class="radio"><input type="radio" name="criterion_result[5]" value="fail" />Fail</label>
+                      </div>
                     </div>
                     <div class="field" data-criterion="5">
                       <div class="control confidence-row">
@@ -236,9 +242,9 @@
                     </div>
                   </div>
               </div>
-              <p class="warning-text" id="reason-warning" style="display: none;">Please select at least one failure reason</p>
-              <p class="warning-text" id="criteria-justif-warning" style="display: none;">Provide a short justification for each selected criterion</p>
-              <p class="warning-text" id="criteria-conf-warning" style="display: none;">Select a confidence (1-5) for each criterion</p>
+                <p class="warning-text" id="criteria-pf-warning" style="display: none;">Please select Pass/Fail for each criterion</p>
+                <p class="warning-text" id="criteria-justif-warning" style="display: none;">Provide a short justification for each selected criterion</p>
+                <p class="warning-text" id="criteria-conf-warning" style="display: none;">Select a confidence (1-5) for each criterion</p>
             </div>
 
             
@@ -490,46 +496,37 @@
     // })
     
     function validateForm() {
-      var result = document.querySelector('input[name="result"]:checked')
       var reasonField = document.getElementById('reason-field')
-      var reasonOptions = document.querySelectorAll('input[name="reason[]"]')
       // overall confidence removed
       var isValid = true
 
       // Reset warnings and classes
-      document.getElementById('result-warning').style.display = 'none'
-      document.getElementById('reason-warning').style.display = 'none'
+      document.getElementById('criteria-pf-warning').style.display = 'none'
       document.getElementById('criteria-conf-warning').style.display = 'none'
       document.querySelectorAll('.is-invalid').forEach((el) => el.classList.remove('is-invalid'))
 
-      if (!result) {
-        document.getElementById('result-warning').style.display = 'block'
-        document.querySelectorAll('input[name="result"]').forEach((el) => el.classList.add('is-invalid'))
-        isValid = false
-      }
-      var hasReason = Array.from(reasonOptions).some((option) => option.checked)
-      if (result && result.value === 'fail' && !hasReason) {
-        document.getElementById('reason-warning').style.display = 'block'
-        reasonField.classList.add('is-invalid')
+      // Ensure pass/fail selected for each criterion, and require justification for fails
+      var missingPF = false
+      var missingJustification = false
+      ;['1','2','3','4','5'].forEach(function (c) {
+        var pf = document.querySelector('input[name="criterion_result[' + c + ']\"]:checked')
+        if (!pf) missingPF = true
+        if (pf && pf.value === 'fail') {
+          var justif = document.querySelector('textarea[name="criterion_justification[' + c + ']\"]')
+          if (!justif.value || !justif.value.trim()) {
+            missingJustification = true
+            justif.classList.add('is-invalid')
+          }
+        }
+      })
+      if (missingPF) {
+        document.getElementById('criteria-pf-warning').style.display = 'block'
         isValid = false
       }
 
-      if (result && result.value === 'fail') {
-        var missingJustification = false
-        reasonOptions.forEach((checkbox) => {
-          if (checkbox.checked) {
-            var criterion = checkbox.dataset.criterion
-            var justif = document.querySelector('textarea[name="criterion_justification[' + criterion + ']"]')
-            if (!justif.value || !justif.value.trim()) {
-              missingJustification = true
-              justif.classList.add('is-invalid')
-            }
-          }
-        })
-        if (missingJustification) {
-          document.getElementById('criteria-justif-warning').style.display = 'block'
-          isValid = false
-        }
+      if (missingJustification) {
+        document.getElementById('criteria-justif-warning').style.display = 'block'
+        isValid = false
       }
 
       // Ensure each criterion has a confidence 1-5 selected
@@ -558,23 +555,25 @@
       })
 
       // Visual emphasis on selected criteria containers
-      var $reasons = $('input[name="reason[]"]')
-
       function syncCriterionVisual(c) {
         var $wrap = $('.criterion-item[data-criterion="' + c + '"]')
-        var failChecked = $('input[name="reason[]"][data-criterion="' + c + '"]').is(':checked')
+        var pf = $('input[name="criterion_result[' + c + ']\"]:checked').val()
         var confSelected = $('input[name="criterion_confidence[' + c + ']\"]:checked').length > 0
 
-        if (failChecked) {
+        if (pf === 'fail') {
           $wrap.addClass('active').removeClass('passing')
-        } else if (confSelected) {
+        } else if (pf === 'pass' || confSelected) {
           $wrap.addClass('passing').removeClass('active')
         } else {
           $wrap.removeClass('active passing')
         }
       }
 
-      $reasons.on('change', function(){ syncCriterionVisual($(this).data('criterion')) })
+      // Pass/fail per criterion
+      $(document).on('change', 'input[name^="criterion_result["]', function(){
+        var c = this.name.match(/criterion_result\[(\d)\]/)[1]
+        syncCriterionVisual(c)
+      })
       // Confidence change → green highlight when not failed
       $(document).on('change', 'input[name^="criterion_confidence["]', function () {
         var c = this.name.match(/criterion_confidence\[(\d)\]/)[1]
@@ -582,25 +581,6 @@
       })
       // Initial sync in case of persisted values
       ;['1','2','3','4','5'].forEach(function(c){ syncCriterionVisual(c) })
-
-      // Auto-select Fail when any failure criterion is checked.
-      // Disable Pass while any failure criterion is selected.
-      var $passRadio = $('input[name="result"][value="pass"]')
-      var $failRadio = $('input[name="result"][value="fail"]')
-
-      function syncDecisionWithReasons() {
-        var anyChecked = $reasons.is(':checked')
-        if (anyChecked) {
-          $failRadio.prop('checked', true)
-          $passRadio.prop('disabled', true)
-        } else {
-          $passRadio.prop('disabled', false)
-        }
-      }
-
-      $reasons.on('change', syncDecisionWithReasons)
-      // Initial sync in case of persisted values
-      syncDecisionWithReasons()
     })
   </script>
 

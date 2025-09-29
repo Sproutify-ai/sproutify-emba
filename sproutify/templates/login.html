@@ -14,7 +14,7 @@
           <label class="label">Select your screener identity</label>
           <div class="control">
             <div class="select is-fullwidth is-large">
-              <select name="screener" required>
+              <select name="screener" id="screener-select" required>
                 <option value="" disabled selected>Choose...</option>
                 <option value="Pooja">Pooja</option>
                 <option value="Rebecca">Rebecca</option>
@@ -22,8 +22,16 @@
                 <option value="Screener 4">Screener 4</option>
                 <option value="Screener 5">Screener 5</option>
                 <option value="Screener 6">Screener 6</option>
+                <option value="Other User">Other User</option>
               </select>
             </div>
+          </div>
+        </div>
+
+        <div class="field" id="email-field" style="display: none;">
+          <label class="label">Your Email</label>
+          <div class="control">
+            <input class="input is-large" type="email" name="email" id="email-input" placeholder="name@example.com" />
           </div>
         </div>
 
@@ -42,4 +50,23 @@
       <p class="has-text-grey is-size-7 mt-3">We’re so grateful to you!</p>
     </div>
   </div>
+  <script>
+    (function(){
+      var sel = document.getElementById('screener-select')
+      var emailField = document.getElementById('email-field')
+      var emailInput = document.getElementById('email-input')
+      function toggleEmail(){
+        if (sel.value === 'Other User') {
+          emailField.style.display = 'block'
+          emailInput.required = true
+        } else {
+          emailField.style.display = 'none'
+          emailInput.required = false
+          emailInput.value = ''
+        }
+      }
+      sel.addEventListener('change', toggleEmail)
+      toggleEmail()
+    })()
+  </script>
 {% endblock %}

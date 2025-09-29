@@ -173,18 +173,14 @@ def show_solutions_generic(id, version, is_practice=False):
 
     if not is_practice:
         total_solutions = total_num_questions
-        num_questions = (
-            total_solutions
-            + 1
-            - Question.query.filter_by(user_id=current_user.id, result=None).count()
-        )
+        remaining = Question.query.filter_by(user_id=current_user.id, result=None).count()
     else:
         total_solutions = num_practice
-        num_questions = (
-            total_solutions
-            + 1
-            - Practice.query.filter_by(user_id=current_user.id, result=None).count()
-        )
+        remaining = Practice.query.filter_by(user_id=current_user.id, result=None).count()
+
+    completed = max(0, total_solutions - remaining)
+    # If there is a current pending item, show completed+1; clamp to total for safety
+    num_questions = min(total_solutions, (completed + 1) if remaining > 0 else total_solutions)
 
     return render_template(
         "solutions_show.html",
@@ -424,9 +420,19 @@ def record():
     form = request.form
     is_practice = form.get("is_practice")
     solution_id = form.get("solution_id")
-    result = form.get("result")
-    reasons = form.getlist("reason[]")
+    # Build per-criterion results and derive overall
+    criterion_results = {}
+    failed = []
+    for key, value in form.items():
+        if key.startswith("criterion_result["):
+            criterion = key[len("criterion_result[") : -1]
+            if value in ("pass", "fail"):
+                criterion_results[criterion] = value
+                if value == "fail":
+                    failed.append(criterion)
+    reasons = failed
     reason = json.dumps(reasons) if reasons else None
+    result = "fail" if failed else "pass"
     # Overall confidence removed; we capture per-criterion below
     confidence = None
     # General reflection and probabilities removed from the form
@@ -469,6 +475,7 @@ def record():
         reason,
         confidence,
         criterion_justifications_json,
+        json.dumps(criterion_results),
         criterion_confidences_json,
     )
 
