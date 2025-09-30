@@ -19,6 +19,7 @@
       box-shadow: 0 0 0 1px rgba(72, 199, 142, 0.12) inset;
     }
     .criterion-item textarea.textarea { margin-top: 6px; }
+    .criterion-justification { min-height: 40px; overflow-y: hidden; resize: none; }
     .endpoint-hint { font-size: 0.72em; color: #8793a0; }
     .confidence-hints { display: flex; justify-content: space-between; margin-top: 2px; }
     .decision-row { display: flex; gap: 16px; align-items: center; flex-wrap: nowrap; }
@@ -29,6 +30,12 @@
     /* Independent scrolling panes */
     .pane-left { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; padding-right: 8px; }
     .pane-right { /* right uses page scroll; no special positioning needed */ }
+    /* Wider viewport usage */
+    .wide-container { padding-left: 8px; padding-right: 8px; }
+    .wide-columns > .column { padding-left: 8px; padding-right: 8px; }
+    .solution-title { margin-bottom: 6px; }
+    .progress-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .progress-row .progress { flex: 1; margin: 0; }
   </style>
 {% endblock %}
 <!--                         {% block style %}
@@ -62,15 +69,15 @@
 
 {% block content %}
   <section class="section">
-    <div class="container is-fullhd">
-      <div class="columns is-variable is-1">
+    <div class="container is-fluid wide-container">
+      <div class="columns wide-columns">
         <div class="column is-12-mobile is-6-tablet is-5-desktop is-4-widescreen is-4-fullhd">
           <div class="pane-left">
           <!-- Timer removed -->
-          <h1 class="title">{{ tags['Name'] }}</h1>
-          <div class="progress-container">
-            <progress class="progress is-primary" value="{{ solution_count }}" max="{{ total_solutions }}">{{ solution_count }} / {{ total_solutions }}</progress>
-            <p class="has-text-centered">{{ solution_count }} / {{ total_solutions }} Solutions</p>
+          <h2 class="title is-4 solution-title">{{ tags['Name'] }}</h2>
+          <div class="progress-row">
+            <progress class="progress is-primary is-small" value="{{ solution_count }}" max="{{ total_solutions }}">{{ solution_count }} / {{ total_solutions }}</progress>
+            <span class="progress-count is-size-7">{{ solution_count }} / {{ total_solutions }}</span>
           </div>
           <form action="/record" method="POST" onsubmit="return validateForm()" novalidate>
             {% if is_practice %}
@@ -79,11 +86,11 @@
             <input type="hidden" name="solution_id" value="{{ tags['Solution ID'] }}" />
             <div class="box">
               <div class="field" id="reason-field" style="display: block;">
-                <label class="label">Criteria</label>
+                <label class="label">For each criterion, please select Pass/Fail, your confidence, and a brief reasoning.</label>
                 <div class="control">
                   <div class="criterion-item" data-criterion="1">
                     <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem; justify-content: space-between;">
-                      <div class="has-text-weight-semibold">1 - The solution is incomplete, inappropriate, and not intelligible</div>
+                      <div class="has-text-weight-semibold">1 - Solution is complete, appropriate, and intelligible.</div>
                       <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[0] }}">
                         <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
                       </button>
@@ -96,26 +103,22 @@
                     </div>
                     <div class="field" data-criterion="1">
                       <div class="control confidence-row">
-                        <label class="radio"><input type="radio" name="criterion_confidence[1]" value="1" />1</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[1]" value="1" />1 <span class="endpoint-hint">Not at all confident</span></label>
                         <label class="radio"><input type="radio" name="criterion_confidence[1]" value="2" />2</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[1]" value="3" />3</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[1]" value="4" />4</label>
-                        <label class="radio"><input type="radio" name="criterion_confidence[1]" value="5" />5</label>
-                      </div>
-                      <div class="confidence-hints">
-                        <span class="endpoint-hint">1 Not at all confident</span>
-                        <span class="endpoint-hint">5 Extremely confident</span>
+                        <label class="radio"><input type="radio" name="criterion_confidence[1]" value="5" />5 <span class="endpoint-hint">Extremely confident</span></label>
                       </div>
                     </div>
                     <div class="field criterion-justification-field" data-criterion="1" style="margin-bottom: 0.75rem;">
                       <div class="control">
-                        <textarea class="textarea criterion-justification" name="criterion_justification[1]" rows="2" placeholder="Explain why it fails or pass criterion 1"></textarea>
+                        <textarea class="textarea criterion-justification" name="criterion_justification[1]" rows="1" placeholder="Explain why it fails or pass criterion 1"></textarea>
                       </div>
                     </div>
                   </div>
                   <div class="criterion-item" data-criterion="2">
                     <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem; justify-content: space-between;">
-                      <div class="has-text-weight-semibold">2 - The solution does not reach prototype stage</div>
+                      <div class="has-text-weight-semibold">2 - Solution at least at prototype stage.</div>
                       <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[1] }}">
                         <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
                       </button>
@@ -128,26 +131,22 @@
                     </div>
                     <div class="field" data-criterion="2">
                       <div class="control confidence-row">
-                        <label class="radio"><input type="radio" name="criterion_confidence[2]" value="1" />1</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[2]" value="1" />1 <span class="endpoint-hint">Not at all confident</span></label>
                         <label class="radio"><input type="radio" name="criterion_confidence[2]" value="2" />2</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[2]" value="3" />3</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[2]" value="4" />4</label>
-                        <label class="radio"><input type="radio" name="criterion_confidence[2]" value="5" />5</label>
-                      </div>
-                      <div class="confidence-hints">
-                        <span class="endpoint-hint">1 Not at all confident</span>
-                        <span class="endpoint-hint">5 Extremely confident</span>
+                        <label class="radio"><input type="radio" name="criterion_confidence[2]" value="5" />5 <span class="endpoint-hint">Extremely confident</span></label>
                       </div>
                     </div>
                     <div class="field criterion-justification-field" data-criterion="2" style="margin-bottom: 0.75rem;">
                       <div class="control">
-                        <textarea class="textarea criterion-justification" name="criterion_justification[2]" rows="2" placeholder="Explain why it fails or pass criterion 2"></textarea>
+                        <textarea class="textarea criterion-justification" name="criterion_justification[2]" rows="1" placeholder="Explain why it fails or pass criterion 2"></textarea>
                       </div>
                     </div>
                   </div>
                   <div class="criterion-item" data-criterion="3">
                     <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem; justify-content: space-between;">
-                      <div class="has-text-weight-semibold">3 - The solution does not address the challenge question</div>
+                      <div class="has-text-weight-semibold">3 - Solution addresses the challenge question.</div>
                       <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[2] }}">
                         <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
                       </button>
@@ -160,26 +159,22 @@
                     </div>
                     <div class="field" data-criterion="3">
                       <div class="control confidence-row">
-                        <label class="radio"><input type="radio" name="criterion_confidence[3]" value="1" />1</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[3]" value="1" />1 <span class="endpoint-hint">Not at all confident</span></label>
                         <label class="radio"><input type="radio" name="criterion_confidence[3]" value="2" />2</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[3]" value="3" />3</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[3]" value="4" />4</label>
-                        <label class="radio"><input type="radio" name="criterion_confidence[3]" value="5" />5</label>
-                      </div>
-                      <div class="confidence-hints">
-                        <span class="endpoint-hint">1 Not at all confident</span>
-                        <span class="endpoint-hint">5 Extremely confident</span>
+                        <label class="radio"><input type="radio" name="criterion_confidence[3]" value="5" />5 <span class="endpoint-hint">Extremely confident</span></label>
                       </div>
                     </div>
                     <div class="field criterion-justification-field" data-criterion="3" style="margin-bottom: 0.75rem;">
                       <div class="control">
-                        <textarea class="textarea criterion-justification" name="criterion_justification[3]" rows="2" placeholder="Explain why it fails or pass criterion 3"></textarea>
+                        <textarea class="textarea criterion-justification" name="criterion_justification[3]" rows="1" placeholder="Explain why it fails or pass criterion 3"></textarea>
                       </div>
                     </div>
                   </div>
                   <div class="criterion-item" data-criterion="4">
                     <div class="field is-grouped is-align-items-center" style="margin-bottom: 0.5rem; justify-content: space-between;">
-                      <div class="has-text-weight-semibold">4 - The solution is not powered by technology</div>
+                      <div class="has-text-weight-semibold">4 - Solution is powered by technology.</div>
                       <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[3] }}">
                         <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
                       </button>
@@ -192,26 +187,22 @@
                     </div>
                     <div class="field" data-criterion="4">
                       <div class="control confidence-row">
-                        <label class="radio"><input type="radio" name="criterion_confidence[4]" value="1" />1</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[4]" value="1" />1 <span class="endpoint-hint">Not at all confident</span></label>
                         <label class="radio"><input type="radio" name="criterion_confidence[4]" value="2" />2</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[4]" value="3" />3</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[4]" value="4" />4</label>
-                        <label class="radio"><input type="radio" name="criterion_confidence[4]" value="5" />5</label>
-                      </div>
-                      <div class="confidence-hints">
-                        <span class="endpoint-hint">1 Not at all confident</span>
-                        <span class="endpoint-hint">5 Extremely confident</span>
+                        <label class="radio"><input type="radio" name="criterion_confidence[4]" value="5" />5 <span class="endpoint-hint">Extremely confident</span></label>
                       </div>
                     </div>
                     <div class="field criterion-justification-field" data-criterion="4" style="margin-bottom: 0.75rem;">
                       <div class="control">
-                        <textarea class="textarea criterion-justification" name="criterion_justification[4]" rows="2" placeholder="Explain why it fails or pass criterion 4"></textarea>
+                        <textarea class="textarea criterion-justification" name="criterion_justification[4]" rows="1" placeholder="Explain why it fails or pass criterion 4"></textarea>
                       </div>
                     </div>
                   </div>
                   <div class="criterion-item" data-criterion="5">
                     <div class="field is-grouped is-align-items-center" style="justify-content: space-between;">
-                      <div class="has-text-weight-semibold">5 - The quality of the solution is not good enough</div>
+                      <div class="has-text-weight-semibold">5 - Quality of the solution is good enough.</div>
                       <button type="button" class="button is-small is-light is-rounded is-pulled-right has-tooltip-left has-tooltip-multiline" data-tooltip="{{ tooltips[4] }}">
                         <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
                       </button>
@@ -224,20 +215,16 @@
                     </div>
                     <div class="field" data-criterion="5">
                       <div class="control confidence-row">
-                        <label class="radio"><input type="radio" name="criterion_confidence[5]" value="1" />1</label>
+                        <label class="radio"><input type="radio" name="criterion_confidence[5]" value="1" />1 <span class="endpoint-hint">Not at all confident</span></label>
                         <label class="radio"><input type="radio" name="criterion_confidence[5]" value="2" />2</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[5]" value="3" />3</label>
                         <label class="radio"><input type="radio" name="criterion_confidence[5]" value="4" />4</label>
-                        <label class="radio"><input type="radio" name="criterion_confidence[5]" value="5" />5</label>
-                      </div>
-                      <div class="confidence-hints">
-                        <span class="endpoint-hint">1 Not at all confident</span>
-                        <span class="endpoint-hint">5 Extremely confident</span>
+                        <label class="radio"><input type="radio" name="criterion_confidence[5]" value="5" />5 <span class="endpoint-hint">Extremely confident</span></label>
                       </div>
                     </div>
                     <div class="field criterion-justification-field" data-criterion="5">
                       <div class="control">
-                        <textarea class="textarea criterion-justification" name="criterion_justification[5]" rows="2" placeholder="Explain why it fails or pass criterion 5"></textarea>
+                        <textarea class="textarea criterion-justification" name="criterion_justification[5]" rows="1" placeholder="Explain why it fails or pass criterion 5"></textarea>
                       </div>
                     </div>
                   </div>
@@ -553,6 +540,14 @@
         $(this).removeClass('is-invalid')
         $('#criteria-justif-warning').hide()
       })
+
+      // Auto-resize justification textareas
+      function autoSize(el){
+        el.style.height = 'auto'
+        el.style.height = (el.scrollHeight) + 'px'
+      }
+      $('.criterion-justification').each(function(){ autoSize(this) })
+      $(document).on('input', '.criterion-justification', function(){ autoSize(this) })
 
       // Visual emphasis on selected criteria containers
       function syncCriterionVisual(c) {
