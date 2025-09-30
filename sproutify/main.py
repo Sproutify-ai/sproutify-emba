@@ -322,10 +322,15 @@ def start():
     mapping = {
         "pooja": "Pooja",
         "rebecca": "Rebecca",
-        "screener-3": "Screener 3",
-        "screener 3": "Screener 3",
-        "screener-4": "Screener 4",
-        "screener 4": "Screener 4",
+        # renamed screeners
+        "tessa": "Tessa",
+        "samuel": "Samuel",
+        # legacy aliases mapped to new names
+        "screener-3": "Tessa",
+        "screener 3": "Tessa",
+        "screener-4": "Samuel",
+        "screener 4": "Samuel",
+        # additional
         "screener-5": "Screener 5",
         "screener 5": "Screener 5",
         "screener-6": "Screener 6",
