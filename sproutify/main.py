@@ -295,8 +295,22 @@ def start():
     if tbl.query.filter(tbl.user_id == current_user.id, tbl.result != None).count() >= total_num_questions:
         return redirect(url_for("main.complete"))
 
-    # In-progress question
-    last_question = tbl.query.filter_by(user_id=current_user.id, result=None).first()
+    # In-progress question: prefer the most recently started, else the first unresolved
+    last_question = (
+        tbl.query.filter(
+            tbl.user_id == current_user.id,
+            tbl.result == None,
+            tbl.started_at != None,
+        )
+        .order_by(db.desc(tbl.started_at))
+        .first()
+    )
+    if not last_question:
+        last_question = (
+            tbl.query.filter_by(user_id=current_user.id, result=None)
+            .order_by(tbl.id.asc())
+            .first()
+        )
     if last_question:
         return redirect(
             url_for(
@@ -305,8 +319,8 @@ def start():
             )
         )
 
-    # Resume existing set
-    any_question = tbl.query.filter(tbl.user_id == current_user.id).first()
+    # Resume existing set (pick the earliest created)
+    any_question = tbl.query.filter(tbl.user_id == current_user.id).order_by(tbl.id.asc()).first()
     if any_question:
         return redirect(
             url_for(
